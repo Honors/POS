@@ -277,9 +277,8 @@ public class ProductInfoGUI extends JFrame implements ActionListener, Confirmabl
 		}
 		if (action.equals("see_conflicts")){
 			writeToOutput("conflict");
-			SearchGUI se = new SearchGUI(inventory, parentWindow, "UPC='" + UPC.getText() + "'", key);
-			se.setSize(450, 600);
-			se.setVisible(true);
+			new SearchGUI(inventory, parentWindow, "UPC='" + UPC.getText() + "'", key);
+
 		}
 	}
 	
