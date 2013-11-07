@@ -1,0 +1,16 @@
+SKU,UPC,NAME,BRAND,COLOR,SIZE,TYPE,GENDER,CLIENT,DATE,NOTES,PRICE,QUANTITY
+"1","Nblms","Nike Blue T-Shirt","Nike","BLUE","SMALL","T-Shirt","MALE","General","04/04/13","Plain Blue Nike Shirt
+Order of 14 recieved April 4th
+General Stock","25.99","14"
+"2","Ardwm","Addidas Running Shorts","Addidas","RED","MEDIUM","Running Shorts","FEMALE","Track","04/03/13","Running shorts for girls track team
+Red with Watterson Eagle Logo
+Received April 3","29.99","3"
+"3","Awtmm","ASICS White Jacket","Asics","WHITE","MEDIUM","Warm Up Jacket","MALE","Wrestling","04/01/13","Mens wrestling team warm up jacket
+White with ASICS logo and Watterson Wrestling on front
+Shipment of 8 received April 1","39.99","8"
+"4","Nblms","Nike Pro Combat Shorts","Nike","BLACK","SMALL","Combat Shorts","MALE","General","04/05/13","Nike Pro Combat Shorts Black
+Order of 2 recieved April 5th
+General Stock","44.99","2"
+"5","Nrdml","Nike Red T-Shirt","Nike","RED","LARGE","T-Shirt","MALE","General","04/05/13","Plain Red Nike Shirt
+Order of 30 recieved April 5th
+General Stock","25.99","30"
