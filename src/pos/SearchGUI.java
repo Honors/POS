@@ -30,6 +30,7 @@ public class SearchGUI extends JFrame implements ActionListener{
 		parentWindow = g;
 		inventory = m;
 		searchResults = new ArrayList<SearchItem>();
+		key = _key;
 		
 		content = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
