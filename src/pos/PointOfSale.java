@@ -93,7 +93,6 @@ public class PointOfSale extends JFrame implements ActionListener{
 		c.insets = new Insets(5,3,5,5);
 		content.add(cancel, c);
 		
-		
 		setTitle("POS Login");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setContentPane(content);

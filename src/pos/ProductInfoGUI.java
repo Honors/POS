@@ -233,7 +233,13 @@ public class ProductInfoGUI extends JFrame implements ActionListener, Confirmabl
 				i.SKU = inventory.getMaxSKU() + 1;
 				if (UPC.getText().length() * Name.getText().length() > 0){
 					if (inventory.search("UPC='" + i.UPC + "'").size() > 0 && !confirmed){
-						new ConfirmWindow(this, "Duplicate UPC/product.\nPress \"CREATE NEW\" to create new entry.\n Press \"SEE CONFLICTS\" to see a list of\nconflicting products", "CREATE NEW", "create_new", "SEE CONFLICTS", "see_conflicts");
+						Object[] options = {"CREATE NEW", "SEE CONFLICTS"};
+						int n = JOptionPane.showOptionDialog(new JFrame(), "Duplicate UPC/product.\nPress \"CREATE NEW\" to create new entry.\n Press \"SEE CONFLICTS\" to see a list of\nconflicting products", "Notice", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+						if(n == 0){
+							actionConfirmed("create_new");
+						} else {
+							actionConfirmed("see_conflicts");
+						}
 					}
 					else{
 						String r = inventory.insertItem(i);
@@ -251,7 +257,11 @@ public class ProductInfoGUI extends JFrame implements ActionListener, Confirmabl
 			
 		}
 		if (s.equals("delete")){
-			new ConfirmWindow(this, "Are you sure you wish to delete this product record?\nThis action is PERMANENT.", "delete");
+			int n = JOptionPane.showConfirmDialog(new JFrame(), "Are you sure you wish to delete this product record?\nThis action is PERMANENT.", "Delete...", JOptionPane.YES_NO_OPTION);
+			if(n == 0){
+				actionConfirmed("delete");
+			}
+			
 		}
 		
 	}
