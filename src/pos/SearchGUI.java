@@ -3,6 +3,7 @@ package pos;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -92,8 +93,16 @@ public class SearchGUI extends JFrame implements ActionListener{
 			searchBar.setText("SKU > -1");
 		}
 		ArrayList<Item> i = inventory.search(searchBar.getText());
+		boolean colorized = true;
 		while (!i.isEmpty()){
 			SearchItem s = new SearchItem(this, i.remove(0), key);
+			s.setOpaque(true);
+			s.setBorder(new EmptyBorder(5,5,5,5));
+			if(colorized)
+				s.setBackground(new Color(0xD4EBF2));
+			else
+				s.setBackground(Color.WHITE);
+			colorized = !colorized;
 			searchResults.add(s);
 			resultsPanel.add(s);
 		}
