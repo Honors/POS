@@ -10,6 +10,7 @@ public class InventoryManager {
 	public InventoryManager(String host, String username, String password){
 		try{
 			con = DriverManager.getConnection(host, username, password);
+			System.out.println(con);
 			System.out.println("CONNECTION SUCCESSFUL");
 			con.setAutoCommit(false);
 		} catch (Exception e){

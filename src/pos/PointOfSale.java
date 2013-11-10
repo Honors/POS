@@ -101,10 +101,13 @@ public class PointOfSale extends JFrame implements ActionListener{
 		setResizable(false);
 		setVisible(true);
 		
+		autoLogin();
+	}
+	
+	public void autoLogin(){
 		fieldUser.setText("nicky");
 		fieldPass.setText("dicarloisthebest");
 		submit.doClick();
-		
 	}
 	
 	public static void main(String[] args) {
