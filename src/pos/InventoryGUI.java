@@ -1,169 +1,156 @@
 package pos;
-	 
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 
-import java.util.Date;
+public class InventoryGUI extends JFrame implements OutputWindow, ActionListener, Confirmable {
 
-@SuppressWarnings("serial")
-public class InventoryGUI extends JFrame implements ActionListener, OutputWindow, Confirmable{
+	private static final long serialVersionUID = -1245352016605793408L;
+
+	private JTextArea ICoutput;
+	private JScrollPane ICoutputPane;
+	private JTextField ICtextEntry;
+	private JPanel ICContent, IMContent, RMContent;
+	private JTabbedPane tabs;
+	private JToggleButton ICmodeAdd, ICmodeSubtract, ICmodeReturn;
+	private ButtonGroup ICmodes;
 	
-	private String path;
-	private InventoryManager inventory;
 	private Keys key;
-	private JPanel content;
-	private JTextField textEntry;
-	private JButton addButton;
-	private JButton searchButton;
-	private JButton dumpButton;
-	private JButton restoreButton;
-	private JButton queryButton;
-	private JTextArea output;
-	private JScrollPane outputPane;
+	private InventoryManager inventory;
 	
-	
-	public InventoryGUI(InventoryManager i, String p){
-		path = p;
-		key = new Keys(path);
+	public InventoryGUI(InventoryManager i, Keys keys){
 		inventory = i;
+		key = keys;
 		
-		content = new JPanel(new GridBagLayout());
+		ICContent = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.ipady = 5;
 		c.insets = new Insets(5,5,0,5);
 		c.fill = GridBagConstraints.BOTH;
+		c.anchor = GridBagConstraints.NORTH;
 		c.weightx = .5;
 		
-		textEntry = new JTextField(30);
+		ICtextEntry = new JTextField();
+		ICtextEntry.addActionListener(this);
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 5;
-		c.anchor = GridBagConstraints.NORTH;
-		content.add(textEntry, c);
+		c.gridwidth = 3;
+		ICContent.add(ICtextEntry, c);
 		
-		addButton = new JButton("ADD");
-		addButton.addActionListener(this);
-		addButton.setActionCommand("add");
-		addButton.setMnemonic(KeyEvent.VK_A);
+		ICmodes = new ButtonGroup();
+		
+		ICmodeAdd = new JToggleButton("Add");
+		ICmodeAdd.setSelected(true);
+		ICmodeAdd.addActionListener(this);
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 1;
-		content.add(addButton, c);
+		ICmodes.add(ICmodeAdd);
+		ICContent.add(ICmodeAdd, c);
 		
-		searchButton = new JButton("SEARCH");
-		searchButton.setActionCommand("search");
-		searchButton.addActionListener(this);
-		searchButton.setMnemonic(KeyEvent.VK_S);
+		ICmodeSubtract = new JToggleButton("Subtract");
+		ICmodeSubtract.addActionListener(this);
 		c.gridx = 1;
-		c.insets = new Insets(5,3,0,5);
-		content.add(searchButton, c);
+		c.gridy = 1;
+		ICmodes.add(ICmodeSubtract);
+		c.insets = new Insets(5,0,0,5);
+		ICContent.add(ICmodeSubtract, c);
 		
-		dumpButton = new JButton("DUMP");
-		dumpButton.setActionCommand("dump");
-		dumpButton.addActionListener(this);
-		dumpButton.setMnemonic(KeyEvent.VK_D);
+		ICmodeReturn = new JToggleButton("Return");
+		ICmodeReturn.addActionListener(this);
 		c.gridx = 2;
-		content.add(dumpButton, c);
+		c.gridy = 1;
+		ICmodes.add(ICmodeReturn);
+		ICContent.add(ICmodeReturn, c);
 		
-		restoreButton = new JButton("RESTORE");
-		restoreButton.setActionCommand("restore");
-		restoreButton.addActionListener(this);
-		restoreButton.setMnemonic(KeyEvent.VK_R);
-		c.gridx = 3;
-		content.add(restoreButton, c);
-		
-		queryButton = new JButton("QUERY");
-		queryButton.setActionCommand("query");
-		queryButton.addActionListener(this);
-		queryButton.setMnemonic(KeyEvent.VK_Q);
-		c.gridx = 4;
-		content.add(queryButton, c);
-		
-		output = new JTextArea();
-		output.setEditable(false);
-		output.setLineWrap(true);
-		output.setWrapStyleWord(true);
-		outputPane = new JScrollPane(output);
+		ICoutput = new JTextArea();
+		ICoutput.setLineWrap(true);
+		ICoutput.setWrapStyleWord(true);
+		ICoutputPane = new JScrollPane(ICoutput);
 		c.gridx = 0;
 		c.gridy = 2;
+		c.gridwidth = 3;
 		c.ipadx = 449;
 		c.ipady = 552;
-		c.weighty = 1;
-		c.gridwidth = 5;
 		c.insets = new Insets(5,5,5,5);
-		content.add(outputPane, c);
+		ICContent.add(ICoutputPane, c);
 		
-		setTitle("POS");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setContentPane(content);
+		IMContent = new JPanel(new GridBagLayout());
+		//TODO build IMContent
+		
+		RMContent = new JPanel(new GridBagLayout());
+		//TODO build RMContent
+		
+		tabs = new JTabbedPane();
+		tabs.addTab("Inventory Control", ICContent);
+		tabs.addTab("Inventory Maintenance", IMContent);
+		tabs.addTab("Returns Maintenance", RMContent);
+		
+		setTitle("Inventory");
+		setContentPane(tabs);
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+		ICtextEntry.requestFocus();
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		String s = e.getActionCommand();
-		if (s.equals("add")){
-			new ProductInfoGUI(inventory, this, new Item(textEntry.getText(), key), key, true);
+	public void actionPerformed(ActionEvent event) {
+		ICtextEntry.requestFocus();
+		
+		if(event.getSource().equals(ICtextEntry)){
+			if(ICmodeAdd.isSelected()){
+				actionConfirmed("add");
+			}
+			
+			if(ICmodeSubtract.isSelected()){
+				actionConfirmed("subtract");
+			}
+			
+			if(ICmodeReturn.isSelected()){
+				actionConfirmed("return");
+			}
 		}
-		if (s.equals("search")){
-			new SearchGUI(inventory, this, textEntry.getText(), key);
+	}
+	
+	@Override
+	public void actionConfirmed(String action) {
+		if(action.equals("add")){
+			
 		}
-		if (s.equals("dump")){
-			int n = JOptionPane.showConfirmDialog(this, "Are you sure?\nThis will overwrite any existing dumps with the same name.", "Dump", JOptionPane.YES_NO_OPTION);
-			if(n == 0)
-				actionConfirmed("dump");
+		
+		if(action.equals("subtract")){
+			
 		}
-		if (s.equals("restore")){
-			int n = JOptionPane.showConfirmDialog(this, "Are you sure?\nThis will overwrite the current database and cannot be un-done.\nIt is reccomended that you make a backup first", "Restore", JOptionPane.YES_NO_OPTION);
-			if(n == 0)
-				actionConfirmed("restore");
+		
+		if(action.equals("return")){
+			
 		}
-		if (s.equals("query")){
-			int n = JOptionPane.showConfirmDialog(this, "Are you sure?\nThis cannot be un-done", "Query", JOptionPane.YES_NO_OPTION);
-			if(n == 0)
-				actionConfirmed("query");
-		}
-		textEntry.setText("");
+	}
+
+	@Override
+	public void writeToOutput(String s) {
+		ICoutput.append(s);
 		
 	}
-	
-	public void writeToOutput(String s){
-		output.append(s);
+
+	@Override
+	public void clearOutput() {
+		ICoutput.setText("");
+		
 	}
-	
-	public void clearOutput(){
-		output.setText("");
-	}
-	
-	public void actionConfirmed(String action){
-		if (action.equals("dump")){
-			String f = textEntry.getText();
-			if (f.length() < 1 || f.charAt(1) != ':'){
-				f = path + "\\backups\\" + new Date().toString().replace(' ', '_').replace(':', '_') + ".csv";
-			}
-			BackupWriter backup = new BackupWriter(f, this, inventory);
-			try{
-				backup.dumpToCSV();
-			} catch (Exception r){
-				System.out.println(r);
-			}
-			backup.close();
-		}
-		if (action.equals("restore")){
-			inventory.restoreFromBackup(textEntry.getText());
-		}
-		if (action.equals("query")){
-			writeToOutput("\n" + inventory.exec(textEntry.getText()) + "\n");
-		}
-	}
-	
 }

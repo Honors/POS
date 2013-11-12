@@ -58,7 +58,7 @@ public class Item {
 	
 	public String toStringFormatted(){
 		String s = "";
-		s += "SKU: " + SKU;
+		//s += "SKU: " + SKU;
 		s += "\nUPC: " + UPC;
 		s += "\nName: " + name;
 		s += "\nPrice: " + price;
@@ -69,7 +69,7 @@ public class Item {
 	
 	public String toStringInsert(){
 		String s = "";
-		s += SKU;
+		//s += SKU;
 		s += ", '" + UPC;
 		s += "', '" + name;
 		s += "', '" + brand;
@@ -88,7 +88,7 @@ public class Item {
 	
 	public String toSrtingCSV(){
 		String s = "\"";
-		s += SKU;
+		//s += SKU;
 		s += "\",\""  + UPC;
 		s += "\",\""  + name;
 		s += "\",\""  + brand;
@@ -108,7 +108,7 @@ public class Item {
 	
 	public String toStringUpdate(){
 		String s = "SKU=";
-		s += SKU;
+		//s += SKU;
 		s += ", UPC='" + UPC;
 		s += "', NAME='" + name;
 		s += "', BRAND='" + brand;

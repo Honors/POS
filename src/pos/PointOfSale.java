@@ -117,7 +117,7 @@ public class PointOfSale extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 		if(e.getActionCommand().equals("submit")){
 			InventoryManager inventory = new InventoryManager("jdbc:derby:" + fieldUrl.getText() + "\\databases\\inventory", fieldUser.getText(), fieldPass.getPassword().toString());
-			new InventoryGUI(inventory, "c:\\POS");
+			new HomeGUI(inventory, "c:\\POS");
 			this.setVisible(false);
 		}
 		if(e.getActionCommand().equals("cancel")){
