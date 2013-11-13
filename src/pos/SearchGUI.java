@@ -9,13 +9,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
-public class SearchGUI extends JFrame implements ActionListener{
-	
-	public OutputWindow parentWindow;
-	public InventoryManager inventory;
+public class SearchGUI extends JFramePOS implements ActionListener{
 	
 	private JPanel content;
 	private JPanel resultsPanel;
@@ -26,10 +22,8 @@ public class SearchGUI extends JFrame implements ActionListener{
 	private Keys key;
 	
 	public SearchGUI(InventoryManager m, OutputWindow g, String query, Keys _key){
-		super("Search Window");
+		super(m, g);
 		
-		parentWindow = g;
-		inventory = m;
 		searchResults = new ArrayList<SearchItem>();
 		key = _key;
 		
@@ -41,7 +35,6 @@ public class SearchGUI extends JFrame implements ActionListener{
 		
 		resultsPanel = new JPanel();
 		resultsPanel.setLayout(new BoxLayout(resultsPanel, 1));
-		resultsPanel.setBorder(new EmptyBorder(5,5,5,5));
 		
 		searchBar = new JTextField(30);
 		searchBar.setText(query);
@@ -97,7 +90,6 @@ public class SearchGUI extends JFrame implements ActionListener{
 		while (!i.isEmpty()){
 			SearchItem s = new SearchItem(this, i.remove(0), key);
 			s.setOpaque(true);
-			s.setBorder(new EmptyBorder(5,5,5,5));
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));
 			else

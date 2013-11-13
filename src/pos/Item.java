@@ -59,7 +59,7 @@ public class Item {
 	public String toStringFormatted(){
 		String s = "";
 		//s += "SKU: " + SKU;
-		s += "\nUPC: " + UPC;
+		s += "UPC: " + UPC;
 		s += "\nName: " + name;
 		s += "\nPrice: " + price;
 		s += "\nCost: " + cost;

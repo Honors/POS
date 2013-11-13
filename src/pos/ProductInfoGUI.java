@@ -26,7 +26,7 @@ public class ProductInfoGUI extends JFrame implements ActionListener, Confirmabl
 	boolean confirmed = false;
 	
 	public ProductInfoGUI(InventoryManager im, OutputWindow g, Item i, Keys _key, boolean isNew){
-		super(i.name);
+		//super(i.name);
 		if (i.SKU > -1){
 			update = true;
 		}

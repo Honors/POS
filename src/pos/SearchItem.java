@@ -4,17 +4,19 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
 public class SearchItem extends JTextArea implements MouseListener{
 	Item item;
 	Keys key;
-	SearchGUI parentWindow;
+	JFramePOS parentWindow;
 	
-	public SearchItem(SearchGUI p, Item i, Keys _key){
+	public SearchItem(JFramePOS p, Item i, Keys _key){
 		parentWindow = p;
 		item = i;
 		key = _key;
+		setBorder(new EmptyBorder(5,5,5,5));
 		setText(i.toStringFormatted());
 		setEditable(false);
 		this.addMouseListener(this);
