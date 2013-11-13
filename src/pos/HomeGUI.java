@@ -14,7 +14,6 @@ import javax.swing.*;
 public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 	
 	private String path;
-	private Keys key;
 	private JPanel content;
 	private JButton inventoryButton;
 	private JButton searchButton;
@@ -24,9 +23,8 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 	
 	
 	public HomeGUI(InventoryManager i, String p){
-		super(i, null);
+		super(i, null, new Keys(p));
 		path = p;
-		key = new Keys(path);
 		
 		content = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -89,16 +87,16 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		String s = e.getActionCommand();
 		
 		if (s.equals("inventory")){
-			new InventoryGUI(inventory, path, key);
+			new InventoryGUI(inventory, path, keys);
 		}
 		
 		if (s.equals("search")){
-			new SearchGUI(inventory, this, "", key);
+			new SearchGUI(inventory, this, "", keys);
 		}
 		
 		if (s.equals("report")){
 			//TODO ReportGUI and systems
-			//ProductInfoGUI p = new ProductInfoGUI(inventory, this, new Item("", key),key, true);
+			new ProductInfoGUI(inventory, this, new Item("", keys),keys, true);
 		}
 	}
 	

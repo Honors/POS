@@ -218,7 +218,7 @@ public class ProductInfoGUI extends JFrame implements ActionListener, Confirmabl
 		String s = e.getActionCommand();
 		if (s.equals("submit")){
 			Item i = new Item(0, UPC.getText(), Name.getText(), Brand.getSelectedItem().toString(), Color.getSelectedItem().toString(), Size.getSelectedItem().toString(), Type.getSelectedItem().toString(), Gender.getSelectedItem().toString(), Client.getText(), Date.getText(), Notes.getText(), Price.getText(), Cost.getText(), Integer.parseInt(Quantity.getText()));
-			if (update){
+			if (update){ 
 				writeToOutput("\n\n:::::" + inventory.search("UPC='" + i.UPC + "'").get(0).SKU);
 				i.SKU = inventory.search("UPC='" + i.UPC + "'").get(0).SKU;
 				if (UPC.getText().length() * Name.getText().length() > 0){
@@ -283,7 +283,7 @@ public class ProductInfoGUI extends JFrame implements ActionListener, Confirmabl
 	}
 	
 	public void writeToOutput(String s){
-		parentWindow.writeToOutput(s);
+		//parentWindow.writeToOutput(s);
 	}
 
 }

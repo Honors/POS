@@ -30,7 +30,6 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	private static final long serialVersionUID = -1245352016605793408L;
 
 	private String path;
-	private ArrayList<SearchItem> searchResults;
 	
 	private JTextArea ICOutput;
 	private JScrollPane IMOutput, RMOutput;
@@ -39,16 +38,12 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	private JPanel ICContent, IMContent, RMContent, IMResults, RMResults;
 	private JTabbedPane tabs;
 	private JToggleButton ICModeIncoming, ICModeOutgoing, ICModeReturn;
-	private JButton IMBackup, IMRestore, RMBackup;
+	private JButton IMBackup, IMRestore, RMBackup, IMAdd;
 	private ButtonGroup ICModes;
 	
-	private Keys key;
-	
 	public InventoryGUI(InventoryManager i, String p, Keys keys){
-		super(i,null);
-		key = keys;
+		super(i,null,keys);
 		path = p;
-		searchResults = new ArrayList<SearchItem>();
 		
 		ICContent = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -115,32 +110,36 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		IMTextEntry.addActionListener(this);
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 2;
+		c.gridwidth = 3;
 		IMContent.add(IMTextEntry, c);
 		
-		IMBackup = new JButton("BACKUP");
-		IMBackup.addActionListener(this);
-		IMBackup.setActionCommand("backup");
+		IMAdd = new JButton("ADD");
+		IMAdd.addActionListener(this);
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 1;
+		IMContent.add(IMAdd, c);
+		
+		IMBackup = new JButton("BACKUP");
+		IMBackup.addActionListener(this);
+		c.gridx = 1;
+		c.gridy = 1;
+		c.insets = new Insets(5,0,0,5);
 		IMContent.add(IMBackup, c);
 		
 		IMRestore = new JButton("RESTORE");
 		IMRestore.addActionListener(this);
-		IMRestore.setActionCommand("restore");
-		c.gridx = 1;
+		c.gridx = 2;
 		c.gridy = 1;
-		c.insets = new Insets(5,0,0,5);
 		IMContent.add(IMRestore, c);
 		
 		IMResults = new JPanel();
-		IMResults.setLayout(new BoxLayout(IMResults, 1));
+		IMResults.setLayout(new GridBagLayout());
 		
 		IMOutput = new JScrollPane(IMResults);
 		c.gridx = 0;
 		c.gridy = 2;
-		c.gridwidth = 2;
+		c.gridwidth = 3;
 		c.weighty = 1;
 		c.insets = new Insets(5,5,5,5);
 		IMContent.add(IMOutput, c);
@@ -208,6 +207,14 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 			}
 		}
 		
+		if(event.getSource().equals(IMTextEntry)){
+			actionConfirmed("IMsearch");
+		}
+		
+		if(event.getSource().equals(IMAdd)){
+			actionConfirmed("add");
+		}
+		
 		if(event.getSource().equals(IMBackup)){
 			int n = JOptionPane.showConfirmDialog(this, "Are you sure?\nThis will overwrite any existing exports with the same name.", "Backup", JOptionPane.YES_NO_OPTION);
 			if(n == 0)
@@ -233,6 +240,14 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		
 		if(action.equals("return")){
 			
+		}
+		
+		if(action.equals("IMsearch")){
+			updateInventory();
+		}
+		
+		if(action.equals("add")){
+			new ProductInfoGUI(inventory, this, new Item("", keys),keys, true);
 		}
 		
 		if (action.equals("backup")){
@@ -269,23 +284,35 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 
 	
 	public void updateInventory(){
+		//Make Search for UPC, not SKU
 		IMResults.removeAll();
-		if (IMTextEntry.getText().length() < 2){
-			IMTextEntry.setText("SKU > -1");
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.FIRST_LINE_START;
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 1;
+		c.gridx = 0;
+		c.gridy = 0;
+		String search = IMTextEntry.getText();
+		ArrayList<Item> i;
+		if (search.length() == 0){
+			i = inventory.search("SKU > -1");
+		} else {
+			i = inventory.search("UPC = '" + search + "'");
 		}
-		ArrayList<Item> i = inventory.search(IMTextEntry.getText());
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchItem s = new SearchItem(this, i.remove(0), key);
+			SearchItem s = new SearchItem(this, i.remove(0), keys);
 			s.setOpaque(true);
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));
 			else
 				s.setBackground(Color.WHITE);
 			colorized = !colorized;
-			searchResults.add(s);
-			IMResults.add(s);
+			IMResults.add(s, c);
+			c.gridy++;
 		}
+		c.weighty = 1;
+		IMResults.add(new JPanel(), c);
 		this.paintAll(getGraphics());
 	}
 	

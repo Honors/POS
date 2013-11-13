@@ -19,13 +19,11 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 	private JButton searchButton;
 	private JScrollPane outputPane;
 	private ArrayList<SearchItem> searchResults;
-	private Keys key;
 	
 	public SearchGUI(InventoryManager m, OutputWindow g, String query, Keys _key){
-		super(m, g);
+		super(m, g, _key);
 		
 		searchResults = new ArrayList<SearchItem>();
-		key = _key;
 		
 		content = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -33,8 +31,7 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		c.anchor = GridBagConstraints.NORTH;
 		c.ipady = 5;
 		
-		resultsPanel = new JPanel();
-		resultsPanel.setLayout(new BoxLayout(resultsPanel, 1));
+		resultsPanel = new JPanel(new GridBagLayout());
 		
 		searchBar = new JTextField(30);
 		searchBar.setText(query);
@@ -82,13 +79,19 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 	
 	public void updateResults(){
 		resultsPanel.removeAll();
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.FIRST_LINE_START;
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 1;
+		c.gridx = 0;
+		c.gridy = 0;
 		if (searchBar.getText().length() < 2){
 			searchBar.setText("SKU > -1");
 		}
 		ArrayList<Item> i = inventory.search(searchBar.getText());
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchItem s = new SearchItem(this, i.remove(0), key);
+			SearchItem s = new SearchItem(this, i.remove(0), keys);
 			s.setOpaque(true);
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));
@@ -96,8 +99,11 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 				s.setBackground(Color.WHITE);
 			colorized = !colorized;
 			searchResults.add(s);
-			resultsPanel.add(s);
+			resultsPanel.add(s, c);
+			c.gridy++;
 		}
+		c.weighty = 1;
+		resultsPanel.add(new JPanel(), c);
 		this.paintAll(getGraphics());
 	}
 }
