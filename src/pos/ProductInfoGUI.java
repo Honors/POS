@@ -277,7 +277,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	}
 	
 	public void writeToOutput(String s){
-		//parentWindow.writeToOutput(s);
+		parentWindow.writeToOutput(s);
 	}
 
 }

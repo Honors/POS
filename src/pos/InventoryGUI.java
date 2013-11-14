@@ -19,7 +19,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -39,8 +38,8 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	private JButton IMBackup, IMRestore, RMBackup, IMAdd, ICEnter, IMEnter, RMEnter;
 	private ButtonGroup ICModes;
 	
-	public InventoryGUI(InventoryManager i, String p, Keys keys){
-		super(i,null,keys);
+	public InventoryGUI(InventoryManager i, OutputWindow out, String p, Keys keys){
+		super(i,out,keys);
 		path = p;
 		
 		ICContent = new JPanel(new GridBagLayout());
@@ -327,7 +326,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	@Override
 	public void writeToOutput(String s) {
 		ICOutput.append(s);
-		
+		parentWindow.writeToOutput(s);
 	}
 
 	@Override

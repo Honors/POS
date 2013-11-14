@@ -98,7 +98,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		String s = e.getActionCommand();
 		
 		if (s.equals("inventory")){
-			new InventoryGUI(inventory, path, keys);
+			new InventoryGUI(inventory, this, path, keys);
 		}
 		
 		if (s.equals("search")){
@@ -112,6 +112,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 	
 	public void writeToOutput(String s){
 		output.append(s);
+		//Log to the text file
 	}
 	
 	public void clearOutput(){
