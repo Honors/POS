@@ -10,12 +10,9 @@ import java.awt.Insets;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
-public class ProductInfoGUI extends JFrame implements ActionListener, Confirmable{
+public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirmable{
 	
 	private Item item;
-	private Keys key;
-	private OutputWindow parentWindow;
-	private InventoryManager inventory;
 	private JPanel content;
 	private JTextField UPC, Name, Client, Date, Price, Cost, Quantity; 
 	private JComboBox<Object> Brand, Color, Size, Type, Gender;
@@ -26,14 +23,11 @@ public class ProductInfoGUI extends JFrame implements ActionListener, Confirmabl
 	boolean confirmed = false;
 	
 	public ProductInfoGUI(InventoryManager im, OutputWindow g, Item i, Keys _key, boolean isNew){
-		//super(i.name);
+		super(im,g,_key);
 		if (i.SKU > -1){
 			update = true;
 		}
-		inventory = im;
-		parentWindow = g;
 		item = i;
-		key = _key;
 		writeToOutput("\n\n::" + item.toStringUpdate());
 		
 		content = new JPanel(new GridBagLayout());
@@ -99,7 +93,7 @@ public class ProductInfoGUI extends JFrame implements ActionListener, Confirmabl
 		c.gridy = 3;
 		content.add(new JLabel("Brand"), c);
 		
-		Brand = new JComboBox<Object>(key.brands.toArray());
+		Brand = new JComboBox<Object>(keys.brands.toArray());
 		if(item.brand != null)
 			Brand.setSelectedItem(item.brand);
 		c.gridx = 1;
@@ -110,7 +104,7 @@ public class ProductInfoGUI extends JFrame implements ActionListener, Confirmabl
 		c.gridy = 3;
 		content.add(new JLabel("Color"), c);
 		
-		Color = new JComboBox<Object>(key.colors.toArray());
+		Color = new JComboBox<Object>(keys.colors.toArray());
 		if(item.color != null)
 			Color.setSelectedItem(item.color);
 		c.gridx = 3;
@@ -131,7 +125,7 @@ public class ProductInfoGUI extends JFrame implements ActionListener, Confirmabl
 		c.gridy = 4;
 		content.add(new JLabel("Gender"), c);
 		
-		Gender = new JComboBox<Object>(key.genders.toArray());
+		Gender = new JComboBox<Object>(keys.genders.toArray());
 		if(item.gender != null)
 			Gender.setSelectedItem(item.gender);
 		c.gridx = 3;
@@ -142,7 +136,7 @@ public class ProductInfoGUI extends JFrame implements ActionListener, Confirmabl
 		c.gridy = 5;
 		content.add(new JLabel("Type"), c);
 		
-		Type = new JComboBox<Object>(key.types.toArray());
+		Type = new JComboBox<Object>(keys.types.toArray());
 		if(item.type != null)
 			Type.setSelectedItem(item.type);
 		c.gridx = 1;
@@ -153,7 +147,7 @@ public class ProductInfoGUI extends JFrame implements ActionListener, Confirmabl
 		c.gridy = 5;
 		content.add(new JLabel("Size"), c);
 		
-		Size = new JComboBox<Object>(key.sizes.toArray());
+		Size = new JComboBox<Object>(keys.sizes.toArray());
 		if(item.size != null)
 			Size.setSelectedItem(item.size);
 		c.gridx = 3;
@@ -277,7 +271,7 @@ public class ProductInfoGUI extends JFrame implements ActionListener, Confirmabl
 		}
 		if (action.equals("see_conflicts")){
 			writeToOutput("conflict");
-			new SearchGUI(inventory, parentWindow, "UPC='" + UPC.getText() + "'", key);
+			new SearchGUI(inventory, parentWindow, "UPC='" + UPC.getText() + "'", keys);
 
 		}
 	}

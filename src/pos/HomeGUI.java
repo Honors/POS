@@ -4,6 +4,7 @@ package pos;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -13,11 +14,13 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 	
+	//TODO create logo
+	private ImageIcon imgLogo;
+	
 	private String path;
 	private JPanel content;
-	private JButton inventoryButton;
-	private JButton searchButton;
-	private JButton reportButton;
+	private JLabel logo;
+	private JButton inventoryButton, searchButton, reportButton;
 	private JTextArea output;
 	private JScrollPane outputPane;
 	
@@ -34,14 +37,21 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		c.anchor = GridBagConstraints.NORTH;
 		c.weightx = .5;
 		
+		logo = new JLabel(imgLogo);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 3;
+		c.ipady = 140;
+		content.add(logo, c);
+		
 		inventoryButton = new JButton("INVENTORY");
 		inventoryButton.addActionListener(this);
 		inventoryButton.setActionCommand("inventory");
 		inventoryButton.setMnemonic(KeyEvent.VK_A);
 		c.gridx = 0;
-		c.gridy = 0;
+		c.gridy = 1;
 		c.gridwidth = 1;
-		
+		c.ipady = 5;
 		content.add(inventoryButton, c);
 		
 		searchButton = new JButton("SEARCH");
@@ -79,7 +89,8 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		setContentPane(content);
 		pack();
 		setLocationRelativeTo(null);
-		setVisible(true);		
+		setVisible(true);
+		System.out.println(logo.getSize());
 	}
 	
 	@Override
@@ -96,7 +107,6 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		
 		if (s.equals("report")){
 			//TODO ReportGUI and systems
-			new ProductInfoGUI(inventory, this, new Item("", keys),keys, true);
 		}
 	}
 	

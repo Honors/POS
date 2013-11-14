@@ -34,6 +34,8 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		resultsPanel = new JPanel(new GridBagLayout());
 		
 		searchBar = new JTextField(30);
+		searchBar.addActionListener(this);
+		searchBar.setActionCommand("search");
 		searchBar.setText(query);
 		c.gridx = 0;
 		c.gridy = 0;

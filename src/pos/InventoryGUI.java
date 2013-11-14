@@ -12,10 +12,8 @@ import java.util.Date;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -35,10 +33,10 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	private JScrollPane IMOutput, RMOutput;
 	private JScrollPane ICOutputPane;
 	private JTextField ICTextEntry, IMTextEntry, RMTextEntry;
-	private JPanel ICContent, IMContent, RMContent, IMResults, RMResults;
+	private JPanel ICContent, IMContent, RMContent, IMResults, RMResults, ICSearchBar, IMSearchBar, RMSearchBar;
 	private JTabbedPane tabs;
 	private JToggleButton ICModeIncoming, ICModeOutgoing, ICModeReturn;
-	private JButton IMBackup, IMRestore, RMBackup, IMAdd;
+	private JButton IMBackup, IMRestore, RMBackup, IMAdd, ICEnter, IMEnter, RMEnter;
 	private ButtonGroup ICModes;
 	
 	public InventoryGUI(InventoryManager i, String p, Keys keys){
@@ -48,17 +46,34 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		ICContent = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.ipady = 5;
-		c.insets = new Insets(5,5,0,5);
+		c.insets = new Insets(7,5,0,5);
 		c.fill = GridBagConstraints.BOTH;
 		c.anchor = GridBagConstraints.NORTH;
-		c.weightx = .5;
+		
+		ICSearchBar = new JPanel(new GridBagLayout());
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 3;
+		ICContent.add(ICSearchBar, c);	
 		
 		ICTextEntry = new JTextField();
 		ICTextEntry.addActionListener(this);
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 3;
-		ICContent.add(ICTextEntry, c);
+		c.gridwidth = 1;
+		c.weightx = 1;
+		c.insets = new Insets(0,0,0,5);
+		ICSearchBar.add(ICTextEntry, c);
+		
+		ICEnter = new JButton("ENTER");
+		ICEnter.addActionListener(this);
+		ICEnter.setOpaque(true);
+		ICEnter.setBackground(new Color(0x98CC98));
+		c.gridx = 1;
+		c.gridy = 0;
+		c.weightx = 0;
+		c.insets = new Insets(0,0,0,0);
+		ICSearchBar.add(ICEnter, c);
 		
 		ICModes = new ButtonGroup();
 		
@@ -67,7 +82,8 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		ICModeIncoming.addActionListener(this);
 		c.gridx = 0;
 		c.gridy = 1;
-		c.gridwidth = 1;
+		c.weightx = .5;
+		c.insets = new Insets(5,5,0,5);
 		ICModes.add(ICModeIncoming);
 		ICContent.add(ICModeIncoming, c);
 		
@@ -75,8 +91,8 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		ICModeOutgoing.addActionListener(this);
 		c.gridx = 1;
 		c.gridy = 1;
-		ICModes.add(ICModeOutgoing);
 		c.insets = new Insets(5,0,0,5);
+		ICModes.add(ICModeOutgoing);
 		ICContent.add(ICModeOutgoing, c);
 		
 		ICModeReturn = new JToggleButton("RETURN");
@@ -100,24 +116,42 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		
 
 		IMContent = new JPanel(new GridBagLayout());
-		//TODO build IMContent
 		c.ipady = 5;
 		c.ipadx = 0;
 		c.gridwidth = 1;
-		c.insets = new Insets(5,5,0,5);
+		c.insets = new Insets(6,5,0,5);
+		
+		IMSearchBar = new JPanel(new GridBagLayout());
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 3;
+		IMContent.add(IMSearchBar, c);
 		
 		IMTextEntry = new JTextField();
 		IMTextEntry.addActionListener(this);
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 3;
-		IMContent.add(IMTextEntry, c);
+		c.gridwidth = 1;
+		c.weightx = 1;
+		c.insets = new Insets(0,0,0,5);
+		IMSearchBar.add(IMTextEntry, c);
+		
+		IMEnter = new JButton("ENTER");
+		IMEnter.addActionListener(this);
+		IMEnter.setOpaque(true);
+		IMEnter.setBackground(new Color(0x98CC98));
+		c.gridx = 1;
+		c.gridy = 0;
+		c.weightx = 0;
+		c.insets = new Insets(0,0,0,0);
+		IMSearchBar.add(IMEnter, c);
 		
 		IMAdd = new JButton("ADD");
 		IMAdd.addActionListener(this);
 		c.gridx = 0;
 		c.gridy = 1;
-		c.gridwidth = 1;
+		c.weightx = .5;
+		c.insets = new Insets(5,5,0,5);
 		IMContent.add(IMAdd, c);
 		
 		IMBackup = new JButton("BACKUP");
@@ -144,23 +178,43 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		c.insets = new Insets(5,5,5,5);
 		IMContent.add(IMOutput, c);
 		
+		
 		RMContent = new JPanel(new GridBagLayout());
 		c.ipady = 5;
 		c.ipadx = 0;
 		c.weighty = 0;
 		c.gridwidth = 1;
-		c.insets = new Insets(5,5,0,5);
+		c.insets = new Insets(6,5,0,5);
+		
+		RMSearchBar = new JPanel(new GridBagLayout());
+		c.gridx = 0;
+		c.gridy = 0;
+		RMContent.add(RMSearchBar, c);
 		
 		RMTextEntry = new JTextField();
 		RMTextEntry.addActionListener(this);
 		c.gridx = 0;
 		c.gridy = 0;
-		RMContent.add(RMTextEntry, c);
+		c.insets = new Insets(0,0,0,5);
+		c.weightx = 1;
+		RMSearchBar.add(RMTextEntry, c);
+		
+		RMEnter = new JButton("ENTER");
+		RMEnter.addActionListener(this);
+		RMEnter.setOpaque(true);
+		RMEnter.setBackground(new Color(0x98CC98));
+		c.gridx = 1;
+		c.gridy = 0;
+		c.insets = new Insets(0,0,0,0);
+		c.weightx = 0;
+		RMSearchBar.add(RMEnter, c);
 		
 		RMBackup = new JButton("BACKUP");
 		RMBackup.addActionListener(this);
 		c.gridx = 0;
 		c.gridy = 1;
+		c.weightx = .5;
+		c.insets = new Insets(5,5,0,5);
 		RMContent.add(RMBackup, c);
 		
 		RMResults = new JPanel();
@@ -193,7 +247,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	public void actionPerformed(ActionEvent event) {
 		ICTextEntry.requestFocus();
 		
-		if(event.getSource().equals(ICTextEntry)){
+		if(event.getSource().equals(ICTextEntry) || event.getSource().equals(ICEnter)){
 			if(ICModeIncoming.isSelected()){
 				actionConfirmed("incoming");
 			}
