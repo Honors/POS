@@ -300,7 +300,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		
 		if(action.equals("add")){
-			new ProductInfoGUI(inventory, this, new Item("", keys),keys, true);
+			new ProductInfoGUI(inventory, this, new Item("", keys),keys, true, true);
 		}
 		
 		if (action.equals("backup")){
@@ -348,13 +348,13 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		String search = IMTextEntry.getText();
 		ArrayList<Item> i;
 		if (search.length() == 0){
-			i = inventory.search("SKU > -1");
+			i = inventory.searchInventory("SKU > -1");
 		} else {
-			i = inventory.search("UPC = '" + search + "'");
+			i = inventory.searchInventory("UPC = '" + search + "'");
 		}
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchItem s = new SearchItem(this, i.remove(0), keys);
+			SearchItem s = new SearchItem(this, i.remove(0), keys, true);
 			s.setOpaque(true);
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));

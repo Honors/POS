@@ -8,14 +8,18 @@ import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
 public class SearchItem extends JTextArea implements MouseListener{
-	Item item;
-	Keys key;
-	JFramePOS parentWindow;
 	
-	public SearchItem(JFramePOS p, Item i, Keys _key){
+	private boolean isEditable;
+	
+	private Item item;
+	private Keys key;
+	private JFramePOS parentWindow;
+	
+	public SearchItem(JFramePOS p, Item i, Keys _key, boolean editable){
 		parentWindow = p;
 		item = i;
 		key = _key;
+		isEditable = editable;
 		setBorder(new EmptyBorder(5,5,5,5));
 		setText(i.toStringFormatted());
 		setEditable(false);
@@ -23,7 +27,7 @@ public class SearchItem extends JTextArea implements MouseListener{
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		new ProductInfoGUI(parentWindow.inventory, parentWindow.parentWindow, item, key, false);
+		new ProductInfoGUI(parentWindow.inventory, parentWindow.parentWindow, item, key, false, isEditable);
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {

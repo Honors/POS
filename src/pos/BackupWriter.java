@@ -21,7 +21,7 @@ public class BackupWriter {
 	}
 	
 	public void dumpToCSV(){
-		dumpToCSV(inventory.search("SKU > -1"));
+		dumpToCSV(inventory.searchInventory("SKU > -1"));
 	}
 	
 	public void dumpToCSV(ArrayList<Item> i){

@@ -17,7 +17,7 @@ public class InventoryManager {
 		}
 	}
 	
-	public ArrayList<Item> search(String s){
+	public ArrayList<Item> searchInventory(String s){
 		ArrayList<Item> results = new ArrayList<Item>();
 		try{
 			ResultSet r = con.prepareStatement("SELECT * FROM INVENTORY WHERE " + s).executeQuery();
@@ -59,7 +59,7 @@ public class InventoryManager {
 		return s;
 	}
 	
-	public String updateItem(Item i){
+	public String updateInventoryItem(Item i){
 		try{
 			con.prepareStatement("UPDATE Inventory SET " + i.toStringUpdate() + " WHERE SKU=" + i.SKU).execute();
 			con.commit();
@@ -70,8 +70,8 @@ public class InventoryManager {
 		}
 	}
 	
-	public String insertItem(Item i){
-		if (getItem(i.SKU).SKU != -1){
+	public String insertInventoryItem(Item i){
+		if (getInventoryItem(i.SKU).SKU != -1){
 			return "FAILED: DUPLICATE SKU";
 		}
 		try{
@@ -84,7 +84,7 @@ public class InventoryManager {
 		return "SUCCESS: ITEM INSERTED";
 	}
 	
-	public String removeItem(Item i){
+	public String removeInventoryItem(Item i){
 		try{
 			con.prepareStatement("DELETE FROM INVENTORY WHERE SKU=" + i.SKU).execute();
 			con.commit();
@@ -95,7 +95,7 @@ public class InventoryManager {
 		return "SUCCESS: ITEM REMOVED";
 	}
 	
-	public Item getItem(int SKU){
+	public Item getInventoryItem(int SKU){
 		Item i = new Item();
 		try{
 			ResultSet r = con.prepareStatement("SELECT * FROM Inventory WHERE SKU = " + SKU).executeQuery();
@@ -123,7 +123,7 @@ public class InventoryManager {
 		return i;
 	}
 	
-	public int getNumberOfItems(){
+	public int getNumberOfInventoryItems(){
 		try{
 			ResultSet r = con.prepareStatement("SELECT COUNT(SKU) AS SKUs From Inventory").executeQuery();
 			con.commit();
@@ -135,7 +135,7 @@ public class InventoryManager {
 		return -1;
 	}
 	
-	public int getMaxSKU(){
+	public int getMaxInventorySKU(){
 		int i = -1;
 		try{
 			ResultSet r = con.prepareStatement("SELECT * From Inventory").executeQuery();
@@ -149,7 +149,7 @@ public class InventoryManager {
 		return i;
 	}
 	
-	public String dumpAllFormatted(){
+	public String dumpAllInventoryFormatted(){
 		String s  = "";
 		try{
 			ResultSet r = con.prepareStatement("SELECT * From Inventory").executeQuery();
@@ -179,17 +179,17 @@ public class InventoryManager {
 		return s;
 	}
 	
-	public void restoreFromBackup(String filename){
+	public void restoreInventoryFromBackup(String filename){
 		BackupReader backup = new BackupReader(filename);
 		ArrayList<Item> i = backup.readFromLog();
-		deleteAll();
+		deleteAllInventory();
 		while (!i.isEmpty()){
-			insertItem(i.remove(0));
+			insertInventoryItem(i.remove(0));
 		} 
 		
 	}
 	
-	public void deleteAll(){
+	public void deleteAllInventory(){
 		try{
 			con.prepareStatement("DELETE FROM INVENTORY").execute();
 		} catch(Exception e){

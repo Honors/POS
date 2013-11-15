@@ -35,7 +35,6 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		
 		searchBar = new JTextField(30);
 		searchBar.addActionListener(this);
-		searchBar.setActionCommand("search");
 		searchBar.setText(query);
 		c.gridx = 0;
 		c.gridy = 0;
@@ -45,7 +44,6 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		
 		searchButton = new JButton("SEARCH");
 		searchButton.addActionListener(this);
-		searchButton.setActionCommand("search");
 		c.gridx = 1;
 		c.gridy = 0;
 		c.weightx = 0;
@@ -72,9 +70,8 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		updateResults();
 	}
 	
-	public void actionPerformed(ActionEvent e) {
-		String s = e.getActionCommand();
-		if (s.equals("search")){
+	public void actionPerformed(ActionEvent event) {
+		if (event.getSource().equals(searchBar) || event.getSource().equals(searchButton)){
 			updateResults();
 		}
 	}
@@ -90,10 +87,10 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		if (searchBar.getText().length() < 2){
 			searchBar.setText("SKU > -1");
 		}
-		ArrayList<Item> i = inventory.search(searchBar.getText());
+		ArrayList<Item> i = inventory.searchInventory(searchBar.getText());
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchItem s = new SearchItem(this, i.remove(0), keys);
+			SearchItem s = new SearchItem(this, i.remove(0), keys, false);
 			s.setOpaque(true);
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));
