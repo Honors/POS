@@ -2,6 +2,7 @@ package pos;
 
 
 public class Item {
+	
 	public int SKU;
 	public String UPC;
 	public String name;
