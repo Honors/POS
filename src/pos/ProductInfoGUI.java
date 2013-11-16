@@ -25,10 +25,11 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	private JTextArea notes;
 	private JButton Submit, Delete;
 	
+	private boolean isNew, isEditable, isReturn;
 	private boolean update = false;
 	private boolean confirmed = false;
-	
-	public ProductInfoGUI(InventoryManager im, OutputWindow g, Item i, Keys _key, boolean isNew, boolean isEditable){
+	//TODO: Allow for return info
+	public ProductInfoGUI(InventoryManager im, OutputWindow g, Item i, Keys _key, int status){
 		super(im,g,_key);
 		if (i.SKU > -1){
 			update = true;
@@ -36,9 +37,23 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		item = i;
 		writeToOutput("\n\n::" + item.toStringUpdate());
 		
-		if(isNew)
+		if(status == Item.NEW_PRODUCT){
+			isNew = true;
 			isEditable = true;
-		
+			isReturn = false;
+		} else if(status == Item.EDIT_PRODUCT){
+			isNew = false;
+			isEditable = true;
+			isReturn = false;
+		} else if(status == Item.VIEW_PRODUCT){
+			isNew = false;
+			isEditable = false;
+			isReturn = false;
+		} else if(status == Item.RETURN_PRODUCT){
+			isNew = false;
+			isEditable = false;
+			isReturn = true;
+		}
 		
 		GridBagConstraints lLabelCollumn = new GridBagConstraints();
 		lLabelCollumn.anchor = GridBagConstraints.LINE_END;

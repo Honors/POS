@@ -35,7 +35,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	private JPanel ICContent, IMContent, RMContent, IMResults, RMResults, ICSearchBar, IMSearchBar, RMSearchBar;
 	private JTabbedPane tabs;
 	private JToggleButton ICModeIncoming, ICModeOutgoing, ICModeReturn;
-	private JButton IMBackup, IMRestore, RMBackup, IMAdd, ICEnter, IMEnter, RMEnter;
+	private JButton IMBackup, IMRestore, RMBackup, IMNew, ICEnter, IMEnter, RMEnter;
 	private ButtonGroup ICModes;
 	
 	public InventoryGUI(InventoryManager i, OutputWindow out, String p, Keys keys){
@@ -145,13 +145,13 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		c.insets = new Insets(0,0,0,0);
 		IMSearchBar.add(IMEnter, c);
 		
-		IMAdd = new JButton("ADD");
-		IMAdd.addActionListener(this);
+		IMNew = new JButton("NEW");
+		IMNew.addActionListener(this);
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weightx = .5;
 		c.insets = new Insets(5,5,0,5);
-		IMContent.add(IMAdd, c);
+		IMContent.add(IMNew, c);
 		
 		IMBackup = new JButton("BACKUP");
 		IMBackup.addActionListener(this);
@@ -264,8 +264,8 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 			actionConfirmed("IMsearch");
 		}
 		
-		if(event.getSource().equals(IMAdd)){
-			actionConfirmed("add");
+		if(event.getSource().equals(IMNew)){
+			actionConfirmed("new");
 		}
 		
 		if(event.getSource().equals(IMBackup)){
@@ -299,8 +299,8 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 			updateInventory();
 		}
 		
-		if(action.equals("add")){
-			new ProductInfoGUI(inventory, this, new Item("", keys),keys, true, true);
+		if(action.equals("new")){
+			new ProductInfoGUI(inventory, this, new Item("", keys),keys, Item.NEW_PRODUCT);
 		}
 		
 		if (action.equals("backup")){
@@ -354,7 +354,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchItem s = new SearchItem(this, i.remove(0), keys, true);
+			SearchItem s = new SearchItem(this, i.remove(0), keys, Item.EDIT_PRODUCT);
 			s.setOpaque(true);
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));

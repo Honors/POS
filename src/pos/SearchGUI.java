@@ -90,7 +90,7 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		ArrayList<Item> i = inventory.searchInventory(searchBar.getText());
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchItem s = new SearchItem(this, i.remove(0), keys, false);
+			SearchItem s = new SearchItem(this, i.remove(0), keys, Item.VIEW_PRODUCT);
 			s.setOpaque(true);
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));

@@ -3,6 +3,11 @@ package pos;
 
 public class Item {
 	
+	public final static int NEW_PRODUCT = 0;
+	public final static int EDIT_PRODUCT = 1;
+	public final static int VIEW_PRODUCT = 2;
+	public final static int RETURN_PRODUCT = 3;
+	
 	public int SKU;
 	public String UPC;
 	public String name;
@@ -18,6 +23,7 @@ public class Item {
 	public String cost;
 	public int quantity;
 	
+	//TODO allow for return info
 	public Item(){
 		SKU = -1;
 		name = "NEW PRODUCT";
