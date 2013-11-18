@@ -101,8 +101,8 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		outputPane = new JScrollPane(output);
 		c.gridx = 0;
 		c.gridy = 3;
-		c.ipadx = 449;
-		c.ipady = 552;
+		c.ipadx = 450;
+		c.ipady = 400;
 		c.weighty = 1;
 		c.gridwidth = 3;
 		c.insets = new Insets(5,5,5,5);

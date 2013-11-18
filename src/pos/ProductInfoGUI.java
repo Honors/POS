@@ -1,6 +1,5 @@
 package pos;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Component;
@@ -9,8 +8,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 @SuppressWarnings("serial")
 public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirmable{
@@ -29,6 +26,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	private boolean update = false;
 	private boolean confirmed = false;
 	//TODO: Allow for return info
+	@SuppressWarnings("unchecked")
 	public ProductInfoGUI(InventoryManager im, OutputWindow g, Item i, Keys _key, int status){
 		super(im,g,_key);
 		if (i.SKU > -1){
@@ -41,25 +39,29 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 			isNew = true;
 			isEditable = true;
 			isReturn = false;
+			setTitle("New...");
 		} else if(status == Item.EDIT_PRODUCT){
 			isNew = false;
 			isEditable = true;
 			isReturn = false;
+			setTitle("Edit...");
 		} else if(status == Item.VIEW_PRODUCT){
 			isNew = false;
 			isEditable = false;
 			isReturn = false;
+			setTitle("View...");
 		} else if(status == Item.RETURN_PRODUCT){
 			isNew = false;
 			isEditable = false;
 			isReturn = true;
+			setTitle("Return...");
 		}
 		
 		GridBagConstraints lLabelCollumn = new GridBagConstraints();
 		lLabelCollumn.anchor = GridBagConstraints.LINE_END;
 		lLabelCollumn.fill = isEditable ? GridBagConstraints.HORIZONTAL : GridBagConstraints.BOTH;
 		lLabelCollumn.ipady = 5;
-		lLabelCollumn.insets = new Insets(5,5,0,5);
+		lLabelCollumn.insets = new Insets(5,20,0,5);
 		lLabelCollumn.gridx = 0;
 		lLabelCollumn.weightx = 0;
 		
@@ -263,22 +265,24 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		lInfoCollumn.gridy = 6;
 		content.add(quantity, lInfoCollumn);
 		
+		labelNotes = new JLabel("Notes:");
 		lLabelCollumn.gridy = 7;
-		content.add(new JLabel("Notes:"), lLabelCollumn);
+		content.add(labelNotes, lLabelCollumn);
 
 		notes = new JTextArea();
 		notes.setLineWrap(true);
 		notes.setText(item.notes);
-		notes.setEditable(isEditable);
+		notes.setEditable(isEditable || isReturn);
 		notes.setBorder(new JTextField().getBorder());
 		notes.setOpaque(true);
 		notes.setBackground(new JTextField().getBackground());
 		lLabelCollumn.gridy = 8;
 		lLabelCollumn.ipady = 100;
 		lLabelCollumn.gridwidth = 4;
+		lLabelCollumn.insets = new Insets(5,20,10,20);
 		content.add(notes, lLabelCollumn);
 
-		if(isEditable){
+		if(isEditable || isReturn){
 			Submit = new JButton("UPDATE");
 			Submit.addActionListener(this);
 			
@@ -288,15 +292,17 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 			
 			lLabelCollumn.gridy = 9;
 			lLabelCollumn.gridwidth = 1;
-			lLabelCollumn.ipady = 0;
+			lLabelCollumn.ipady = 5;
+			lLabelCollumn.insets = new Insets(0,20,10,5);
 
 			content.add(Submit, lLabelCollumn);
 	
-			if (!isNew){
+			if (!isNew && !isReturn){
 				Delete = new JButton("DELETE");
 				Delete.addActionListener(this);
 				rInfoCollumn.gridx = 3;
 				rInfoCollumn.gridy = 9;
+				rInfoCollumn.insets = new Insets(0,20,10,20);
 				content.add(Delete, rInfoCollumn);
 			}
 		}
@@ -305,7 +311,6 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 			n.setFont(n.getFont().deriveFont(14.0f));
 		}
 		
-		setTitle("Add...");
 		setContentPane(content);
 		pack();
 		setLocationRelativeTo(null);
@@ -313,11 +318,12 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		setVisible(true);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource().equals(Submit)){
-			Item i = new Item(0, ((JTextField)upc).getText(), ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JTextField)client).getText(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
-			if (update){ 
+			Item i = new Item(0, ((JTextField)upc).getText(), ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JTextField)client).getText(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
+			if (update){
 				writeToOutput("\n\n:::::" + inventory.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
 				i.SKU = inventory.searchInventory("UPC='" + i.UPC + "'").get(0).SKU;
 				if (((JTextField)upc).getText().length() * ((JTextField)name).getText().length() > 0){

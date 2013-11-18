@@ -108,8 +108,8 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		c.gridx = 0;
 		c.gridy = 2;
 		c.gridwidth = 3;
-		c.ipadx = 449;
-		c.ipady = 552;
+		c.ipadx = 450;
+		c.ipady = 550;
 		c.insets = new Insets(5,5,5,5);
 		ICContent.add(ICOutputPane, c);
 		
