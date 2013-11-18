@@ -25,9 +25,21 @@ public class SearchItem extends JTextArea implements MouseListener{
 		setEditable(false);
 		this.addMouseListener(this);
 	}
+	
+	public void updateItem(Item i){
+		item = i;
+		setText(i.toStringFormatted());
+	}
+	
+	public void delete(){
+		removeMouseListener(this);
+		setEnabled(false);
+		setVisible(false);
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		new ProductInfoGUI(parentWindow.inventory, parentWindow.parentWindow, item, key, itemStatus);
+		new ProductInfoGUI(parentWindow.inventory, parentWindow.parentWindow, this, item, key, itemStatus);
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {

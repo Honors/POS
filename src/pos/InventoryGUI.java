@@ -27,7 +27,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	private static final long serialVersionUID = -1245352016605793408L;
 
 	private String path;
-	
+		
 	private JTextArea ICOutput;
 	private JScrollPane IMOutput, RMOutput;
 	private JScrollPane ICOutputPane;
@@ -300,7 +300,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		
 		if(action.equals("new")){
-			new ProductInfoGUI(inventory, this, new Item("", keys),keys, Item.NEW_PRODUCT);
+			new ProductInfoGUI(inventory, this, null, new Item("", keys), keys, Item.NEW_PRODUCT);
 		}
 		
 		if (action.equals("backup")){
@@ -382,6 +382,12 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		if(event.getSource().equals(RMContent)){
 			RMTextEntry.requestFocus();
 		}
+		
+	}
+
+	@Override
+	public void update() {
+		updateInventory();
 		
 	}
 }

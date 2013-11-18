@@ -13,28 +13,34 @@ import javax.swing.*;
 public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirmable{
 	
 	private Item item;
+	private SearchItem source;
 	private JPanel content;
 	private JLabel labelUpc, labelName, labelClient, labelDate, labelPrice, labelCost;
 	private JLabel labelQuantity, labelBrand, labelColor, labelSize, labelType, labelGender;
-	private JLabel labelNotes;
+	private JLabel labelNotes, labelReturnStatus;
 	private JComponent upc, name, client, date, price, cost, quantity; 
 	private JComponent brand, color, size, type, gender;
+	private JComboBox<String> returnStatus;
 	private JTextArea notes;
 	private JButton Submit, Delete;
 	
 	private boolean isNew, isEditable, isReturn;
 	private boolean update = false;
 	private boolean confirmed = false;
+	private int status;
 	//TODO: Allow for return info
+	
 	@SuppressWarnings("unchecked")
-	public ProductInfoGUI(InventoryManager im, OutputWindow g, Item i, Keys _key, int status){
+	public ProductInfoGUI(InventoryManager im, OutputWindow g, SearchItem s, Item i, Keys _key, int status){
 		super(im,g,_key);
 		if (i.SKU > -1){
 			update = true;
 		}
 		item = i;
+		source = s;
 		writeToOutput("\n\n::" + item.toStringUpdate());
 		
+		this.status = status;
 		if(status == Item.NEW_PRODUCT){
 			isNew = true;
 			isEditable = true;
@@ -113,7 +119,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		lLabelCollumn.gridy = 1;
 		content.add(labelUpc, lLabelCollumn);
 		
-		upc = isEditable ? new JTextField(item.UPC, 10) : new JLabel(item.UPC);
+		upc = isNew ? new JTextField(item.UPC, 10) : new JLabel(item.UPC);
 		upc.setBorder(new JTextField().getBorder());
 		upc.setOpaque(true);
 		upc.setBackground(new JTextField().getBackground());
@@ -125,7 +131,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		rLabelCollumn.gridy = 1;
 		content.add(labelDate, rLabelCollumn);
 
-		date = isEditable ? new JTextField(item.date, 10) : new JLabel(item.date);
+		date = (isEditable || isReturn) ? new JTextField(item.date, 10) : new JLabel(item.date);
 		date.setBorder(new JTextField().getBorder());
 		date.setOpaque(true);
 		date.setBackground(new JTextField().getBackground());
@@ -258,7 +264,9 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		lLabelCollumn.gridy = 6;
 		content.add(labelQuantity, lLabelCollumn);
 		
-		quantity = isEditable ? new JTextField(item.quantity) : new JLabel("" + item.quantity);
+		quantity = (isEditable || isReturn) ? new JTextField(item.quantity) : new JLabel("" + item.quantity);
+		if(isEditable || isReturn)
+			((JTextField)quantity).setText("1");
 		quantity.setBorder(new JTextField().getBorder());
 		quantity.setOpaque(true);
 		quantity.setBackground(new JTextField().getBackground());
@@ -281,6 +289,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		lLabelCollumn.gridwidth = 4;
 		lLabelCollumn.insets = new Insets(5,20,10,20);
 		content.add(notes, lLabelCollumn);
+		
 
 		if(isEditable || isReturn){
 			Submit = new JButton("UPDATE");
@@ -297,10 +306,20 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 
 			content.add(Submit, lLabelCollumn);
 	
+			if(isReturn){
+				labelReturnStatus = new JLabel("Status:");
+				labelReturnStatus.setHorizontalAlignment(JLabel.RIGHT);
+				rLabelCollumn.gridy = 6;
+				content.add(labelReturnStatus, rLabelCollumn);
+				
+				String[] statuses = {"Pending", "Back to Inventory", "Back to Vender"};
+				returnStatus = new JComboBox<String>(statuses);
+				rInfoCollumn.gridy = 6;
+				content.add(returnStatus, rInfoCollumn);
+			}
 			if (!isNew && !isReturn){
 				Delete = new JButton("DELETE");
 				Delete.addActionListener(this);
-				rInfoCollumn.gridx = 3;
 				rInfoCollumn.gridy = 9;
 				rInfoCollumn.insets = new Insets(0,20,10,20);
 				content.add(Delete, rInfoCollumn);
@@ -322,19 +341,27 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource().equals(Submit)){
-			Item i = new Item(0, ((JTextField)upc).getText(), ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JTextField)client).getText(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
-			if (update){
-				writeToOutput("\n\n:::::" + inventory.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
-				i.SKU = inventory.searchInventory("UPC='" + i.UPC + "'").get(0).SKU;
-				if (((JTextField)upc).getText().length() * ((JTextField)name).getText().length() > 0){
-					String r = inventory.updateInventoryItem(i);
-					writeToOutput(r);
-					writeToOutput("\n\n" + i.toStringFormatted());
-					writeToOutput("\n" + i.toStringUpdate());
-					this.setVisible(false);
+
+			//TODO require an integer in Quantity before submission (error dialog)
+
+			if(status == Item.EDIT_PRODUCT){
+				if (update){
+					Item i = new Item(0, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JTextField)client).getText(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
+					writeToOutput("\n\n:::::" + inventory.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
+					i.SKU = inventory.searchInventory("UPC='" + i.UPC + "'").get(0).SKU;
+					if (item.UPC.length() * ((JTextField)name).getText().length() > 0){
+						String r = inventory.updateInventoryItem(i);
+						writeToOutput(r);
+						writeToOutput("\n\n" + i.toStringFormatted());
+						writeToOutput("\n" + i.toStringUpdate());
+						source.updateItem(i);
+						this.setVisible(false);
+					}
 				}
+				//TODO update list item to show changes + back - end update
 			}
-			else{
+			if(status == Item.NEW_PRODUCT){
+				Item i = new Item(0, ((JTextField)upc).getText(), ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JTextField)client).getText(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
 				i.SKU = inventory.getMaxInventorySKU() + 1;
 				if (((JTextField)upc).getText().length() * ((JTextField)name).getText().length() > 0){
 					if (inventory.searchInventory("UPC='" + i.UPC + "'").size() > 0 && !confirmed){
@@ -351,6 +378,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 						if (r.contains("SUCCESS")){
 							writeToOutput(i.toStringFormatted());
 							writeToOutput("\n" + i.toStringUpdate());
+							parentWindow.update();
 							this.setVisible(false);
 						}
 						else{
@@ -359,7 +387,9 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 					}
 				}
 			}
-			
+			if(status == Item.RETURN_PRODUCT){
+				//TODO update return info
+			}
 		}
 		if (event.getSource().equals(Delete)){
 			int n = JOptionPane.showConfirmDialog(new JFrame(), "Are you sure you wish to delete this product record?\nThis action is PERMANENT.", "Delete...", JOptionPane.YES_NO_OPTION);
@@ -374,6 +404,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	public void actionConfirmed(String action){
 		if (action.equals("delete")){
 			writeToOutput(inventory.removeInventoryItem(item));
+			source.delete();
 			this.setVisible(false);
 		}
 		if (action.equals("create_new")){

@@ -147,4 +147,10 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		output.setText("");
 	}
 
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
