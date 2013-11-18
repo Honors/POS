@@ -5,7 +5,7 @@ import java.io.IOException;
 public class POSLogger{
   private FileOutputStream fos;
  
-  public OutputPOS(String filename, boolean append){
+  public void OutputPOS(String filename, boolean append){
     try{
       fos = new FileOutputStream(filename, append);
     }catch(FileNotFoundException e){
@@ -15,7 +15,7 @@ public class POSLogger{
 
   public boolean write(char status, TimeStamp<Long, String> ts, String additional){
     try{
-      String output = new String("(" status + ") " + ts.toDateFormatted() + additional);
+      String output = new String("(" + status + ") " + ts.toDateFormatted() + additional);
       fos.write(output.getBytes());
       fos.write((new String("\r\n")).getBytes());
     }catch(IOException e){
@@ -24,3 +24,4 @@ public class POSLogger{
 
     return(true);
   }
+}
