@@ -12,9 +12,9 @@ import javax.swing.*;
 
 import pos.core.InventoryManager;
 import pos.model.Item;
-import pos.model.JFramePOS;
+import pos.core.JFramePOS;
 import pos.model.Keys;
-import pos.model.OutputWindow;
+import pos.core.OutputWindow;
 import pos.model.SearchItem;
 
 @SuppressWarnings("serial")

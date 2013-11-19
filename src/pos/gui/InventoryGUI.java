@@ -23,12 +23,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import pos.backup.BackupWriter;
-import pos.model.Confirmable;
+import pos.core.Confirmable;
 import pos.core.InventoryManager;
 import pos.model.Item;
-import pos.model.JFramePOS;
+import pos.core.JFramePOS;
 import pos.model.Keys;
-import pos.model.OutputWindow;
+import pos.core.OutputWindow;
 import pos.model.SearchItem;
 
 public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListener, Confirmable, ChangeListener {

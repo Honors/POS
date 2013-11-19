@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
+import pos.core.JFramePOS;
 import pos.gui.ProductInfoGUI;
 
 @SuppressWarnings("serial")

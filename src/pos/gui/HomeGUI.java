@@ -12,9 +12,9 @@ import java.awt.Insets;
 import javax.swing.*;
 
 import pos.core.InventoryManager;
-import pos.model.JFramePOS;
+import pos.core.JFramePOS;
 import pos.model.Keys;
-import pos.model.OutputWindow;
+import pos.core.OutputWindow;
 
 @SuppressWarnings("serial")
 public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{

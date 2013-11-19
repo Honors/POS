@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import pos.core.InventoryManager;
 import pos.model.Item;
-import pos.model.OutputWindow;
+import pos.core.OutputWindow;
 
 
 public class BackupWriter {
