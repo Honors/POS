@@ -1,7 +1,11 @@
-package pos;
+package pos.backup;
 
 import java.io.*;
 import java.util.ArrayList;
+
+import pos.core.InventoryManager;
+import pos.model.Item;
+import pos.model.OutputWindow;
 
 
 public class BackupWriter {

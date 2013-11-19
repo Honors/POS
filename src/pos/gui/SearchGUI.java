@@ -1,4 +1,4 @@
-package pos;
+package pos.gui;
 
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
@@ -9,6 +9,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.*;
+
+import pos.core.InventoryManager;
+import pos.model.Item;
+import pos.model.JFramePOS;
+import pos.model.Keys;
+import pos.model.OutputWindow;
+import pos.model.SearchItem;
 
 @SuppressWarnings("serial")
 public class SearchGUI extends JFramePOS implements ActionListener{

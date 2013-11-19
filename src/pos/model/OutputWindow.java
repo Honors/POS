@@ -1,4 +1,4 @@
-package pos;
+package pos.model;
 
 public interface OutputWindow {
 	public void writeToOutput(String s);

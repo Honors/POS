@@ -1,8 +1,10 @@
-package pos;
+package pos.backup;
 
 import java.io.*;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
+
+import pos.model.Item;
 
 public class BackupReader {
 	BufferedReader in;

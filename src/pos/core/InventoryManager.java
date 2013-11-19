@@ -1,7 +1,10 @@
-package pos;
+package pos.core;
 
 import java.sql.*;
 import java.util.ArrayList;
+
+import pos.backup.BackupReader;
+import pos.model.Item;
 
 public class InventoryManager {
 	

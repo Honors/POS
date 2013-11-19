@@ -1,4 +1,4 @@
-package pos;
+package pos.gui;
 //test
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -21,6 +21,15 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import pos.backup.BackupWriter;
+import pos.model.Confirmable;
+import pos.core.InventoryManager;
+import pos.model.Item;
+import pos.model.JFramePOS;
+import pos.model.Keys;
+import pos.model.OutputWindow;
+import pos.model.SearchItem;
 
 public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListener, Confirmable, ChangeListener {
 

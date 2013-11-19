@@ -2,6 +2,9 @@ package pos;
 
 import javax.swing.*;
 
+import pos.core.InventoryManager;
+import pos.gui.HomeGUI;
+
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

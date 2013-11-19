@@ -1,6 +1,8 @@
-package pos;
+package pos.model;
 
 import javax.swing.JFrame;
+
+import pos.core.InventoryManager;
 
 public class JFramePOS extends JFrame {
 

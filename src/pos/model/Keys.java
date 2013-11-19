@@ -1,10 +1,12 @@
-package pos;
+package pos.model;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import javax.swing.JFrame;
+
+import pos.dialog.DialogSingleTextInput;
 
 public class Keys {
 	

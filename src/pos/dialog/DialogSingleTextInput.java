@@ -1,4 +1,4 @@
-package pos;
+package pos.dialog;
 /*
  * DialogSingleTextInput.java
  * James Madden
