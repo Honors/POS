@@ -69,7 +69,7 @@ public class InventoryManager {
 			return "FAILED: SQL EXCEPTION:\n\n" + e;
 		}
 	}
-	
+	////////////////////////////////////////////////////////////////
 	public String insertInventoryItem(Item i){
 		if (getInventoryItem(i.SKU).SKU != -1){
 			return "FAILED: DUPLICATE SKU";
@@ -96,6 +96,7 @@ public class InventoryManager {
 	}
 	
 	public Item getInventoryItem(int SKU){
+		//java.sql.SQLException: Invalid cursor state - no current row.
 		Item i = new Item();
 		try{
 			ResultSet r = con.prepareStatement("SELECT * FROM Inventory WHERE SKU = " + SKU).executeQuery();
@@ -116,7 +117,7 @@ public class InventoryManager {
 			i.quantity = r.getInt("QUANTITY");
 			
 		}	catch (Exception e){
-			System.out.println(e);
+			System.out.println("[No Duplicate] " + e);
 			return new Item();
 		}
 		

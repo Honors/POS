@@ -13,7 +13,7 @@ public class POSLogger{
     }
   }
 
-  public boolean write(char status, TimeStamp<Long, String> ts, String additional){
+  public boolean writeScannedProduct(char status, TimeStamp<Long, String> ts, String additional){
     try{
       String output = new String("(" + status + ") " + ts.toDateFormatted() + additional);
       fos.write(output.getBytes());
@@ -23,5 +23,35 @@ public class POSLogger{
     }
 
     return(true);
+  }
+  
+  public boolean writeNewProduct(){
+	  try{
+	  
+	  }catch(Exception e){
+		  return false;
+	  }
+	  
+	  return true;
+  }
+  
+  public boolean writeRemoveProduct(){
+	  try{
+	  
+	  }catch(Exception e){
+		  return false;
+	  }
+	  
+	  return true;
+  }
+  
+  public boolean writeEditProduct(){
+	  try{
+	  
+	  }catch(Exception e){
+		  return false;
+	  }
+	  
+	  return true;
   }
 }

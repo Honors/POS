@@ -135,6 +135,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		
 		if (event.getSource().equals(reportButton)){
 			//TODO ReportGUI and systems
+			inventory.getInventoryItem(1000);
 		}
 	}
 	
