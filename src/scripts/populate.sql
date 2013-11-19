@@ -16,7 +16,7 @@ cost varchar(255),
 quantity int
 )
 
---i have yet to make this, more for construction logic
+--created
 CREATE TABLE RETURNS
 (
 SKU int,

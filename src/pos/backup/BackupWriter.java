@@ -3,7 +3,7 @@ package pos.backup;
 import java.io.*;
 import java.util.ArrayList;
 
-import pos.core.InventoryManager;
+import pos.core.ServerManager;
 import pos.model.Item;
 import pos.core.OutputWindow;
 
@@ -12,9 +12,9 @@ public class BackupWriter {
 	PrintWriter out;
 	BufferedReader in;
 	OutputWindow parent;
-	InventoryManager inventory;
+	ServerManager inventory;
 	
-	public BackupWriter(String filename, OutputWindow w, InventoryManager m){
+	public BackupWriter(String filename, OutputWindow w, ServerManager m){
 		parent = w;
 		inventory = m;
 		try{

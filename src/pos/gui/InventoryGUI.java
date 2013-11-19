@@ -24,7 +24,7 @@ import javax.swing.event.ChangeListener;
 
 import pos.backup.BackupWriter;
 import pos.core.Confirmable;
-import pos.core.InventoryManager;
+import pos.core.ServerManager;
 import pos.model.Item;
 import pos.core.JFramePOS;
 import pos.model.Keys;
@@ -47,7 +47,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	private JButton IMBackup, IMRestore, RMBackup, IMNew, ICEnter, IMEnter, RMEnter;
 	private ButtonGroup ICModes;
 	
-	public InventoryGUI(InventoryManager i, OutputWindow out, String p, Keys keys){
+	public InventoryGUI(ServerManager i, OutputWindow out, String p, Keys keys){
 		super(i,out,keys);
 		path = p;
 		
@@ -309,7 +309,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		
 		if(action.equals("new")){
-			new ProductInfoGUI(inventory, this, null, new Item("", keys), keys, Item.NEW_PRODUCT);
+			new ProductInfoGUI(server, this, null, new Item("", keys), keys, Item.NEW_PRODUCT);
 		}
 		
 		if (action.equals("backup")){
@@ -317,7 +317,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 			if (f.length() < 1 || f.charAt(1) != ':'){
 				f = path + "\\backups\\" + new Date().toString().replace(' ', '_').replace(':', '_') + ".csv";
 			}
-			BackupWriter backup = new BackupWriter(f, this, inventory);
+			BackupWriter backup = new BackupWriter(f, this, server);
 			try{
 				backup.dumpToCSV();
 			} catch (Exception r){
@@ -357,9 +357,9 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		String search = IMTextEntry.getText();
 		ArrayList<Item> i;
 		if (search.length() == 0){
-			i = inventory.searchInventory("SKU > -1");
+			i = server.searchInventory("SKU > -1");
 		} else {
-			i = inventory.searchInventory("UPC = '" + search + "'");
+			i = server.searchInventory("UPC = '" + search + "'");
 		}
 		boolean colorized = true;
 		while (!i.isEmpty()){

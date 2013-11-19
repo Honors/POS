@@ -10,7 +10,7 @@ import java.awt.Insets;
 
 import javax.swing.*;
 
-import pos.core.InventoryManager;
+import pos.core.ServerManager;
 import pos.model.Item;
 import pos.core.JFramePOS;
 import pos.model.Keys;
@@ -27,7 +27,7 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 	private JScrollPane outputPane;
 	private ArrayList<SearchItem> searchResults;
 	
-	public SearchGUI(InventoryManager m, OutputWindow g, String query, Keys _key){
+	public SearchGUI(ServerManager m, OutputWindow g, String query, Keys _key){
 		super(m, g, _key);
 		
 		searchResults = new ArrayList<SearchItem>();
@@ -94,7 +94,7 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		if (searchBar.getText().length() < 2){
 			searchBar.setText("SKU > -1");
 		}
-		ArrayList<Item> i = inventory.searchInventory(searchBar.getText());
+		ArrayList<Item> i = server.searchInventory(searchBar.getText());
 		boolean colorized = true;
 		while (!i.isEmpty()){
 			SearchItem s = new SearchItem(this, i.remove(0), keys, Item.VIEW_PRODUCT);

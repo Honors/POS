@@ -10,7 +10,7 @@ import java.awt.Insets;
 import javax.swing.*;
 
 import pos.core.Confirmable;
-import pos.core.InventoryManager;
+import pos.core.ServerManager;
 import pos.model.Item;
 import pos.core.JFramePOS;
 import pos.model.Keys;
@@ -39,7 +39,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	//TODO: Allow for return info
 	
 	@SuppressWarnings("unchecked")
-	public ProductInfoGUI(InventoryManager im, OutputWindow g, SearchItem s, Item i, Keys _key, int status){
+	public ProductInfoGUI(ServerManager im, OutputWindow g, SearchItem s, Item i, Keys _key, int status){
 		super(im,g,_key);
 		if (i.SKU > -1){
 			update = true;
@@ -71,8 +71,9 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 			setTitle("Return...");
 		}
 		
+		//TODO figure out how to pad the right hand collumn a bit
 		GridBagConstraints lLabelCollumn = new GridBagConstraints();
-		lLabelCollumn.anchor = GridBagConstraints.LINE_END;
+		lLabelCollumn.anchor = GridBagConstraints.LINE_START;
 		lLabelCollumn.fill = isEditable ? GridBagConstraints.HORIZONTAL : GridBagConstraints.BOTH;
 		lLabelCollumn.ipady = 5;
 		lLabelCollumn.insets = new Insets(5,20,0,5);
@@ -80,16 +81,16 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		lLabelCollumn.weightx = 0;
 		
 		GridBagConstraints lInfoCollumn = new GridBagConstraints();
-		lInfoCollumn.anchor = GridBagConstraints.LINE_END;
+		lInfoCollumn.anchor = GridBagConstraints.LINE_START;
 		lInfoCollumn.fill = isEditable ? GridBagConstraints.HORIZONTAL : GridBagConstraints.BOTH;
 		lInfoCollumn.ipady = 5;
 		lInfoCollumn.ipadx = 10;
 		lInfoCollumn.insets = new Insets(5,5,0,20);
 		lInfoCollumn.gridx = 1;
-		lInfoCollumn.weightx = 0;
+		lInfoCollumn.weightx = 1;
 		
 		GridBagConstraints rLabelCollumn = new GridBagConstraints();
-		rLabelCollumn.anchor = GridBagConstraints.LINE_END;
+		rLabelCollumn.anchor = GridBagConstraints.LINE_START;
 		rLabelCollumn.fill = isEditable ? GridBagConstraints.HORIZONTAL : GridBagConstraints.BOTH;
 		rLabelCollumn.ipady = 5;
 		rLabelCollumn.insets = new Insets(5,20,0,5);
@@ -97,13 +98,13 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		rLabelCollumn.weightx = 0;
 		
 		GridBagConstraints rInfoCollumn = new GridBagConstraints();
-		rInfoCollumn.anchor = GridBagConstraints.LINE_END;
+		rInfoCollumn.anchor = GridBagConstraints.LINE_START;
 		rInfoCollumn.fill = isEditable ? GridBagConstraints.HORIZONTAL : GridBagConstraints.BOTH;
 		rInfoCollumn.ipady = 5;
 		lInfoCollumn.ipadx = 10;
 		rInfoCollumn.insets = new Insets(5,5,0,20);
 		rInfoCollumn.gridx = 3;
-		rInfoCollumn.weightx = 0.5;
+		rInfoCollumn.weightx = 1;
 		
 		
 		content = new JPanel(new GridBagLayout());
@@ -355,10 +356,10 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 			if(status == Item.EDIT_PRODUCT){
 				if (update){
 					Item i = new Item(0, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JTextField)client).getText(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
-					writeToOutput("\n\n:::::" + inventory.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
-					i.SKU = inventory.searchInventory("UPC='" + i.UPC + "'").get(0).SKU;
+					writeToOutput("\n\n:::::" + server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
+					i.SKU = server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU;
 					if (item.UPC.length() * ((JTextField)name).getText().length() > 0){
-						String r = inventory.updateInventoryItem(i);
+						String r = server.updateInventoryItem(i);
 						writeToOutput(r);
 						writeToOutput("\n\n" + i.toStringFormatted());
 						writeToOutput("\n" + i.toStringUpdate());
@@ -366,13 +367,12 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 						this.setVisible(false);
 					}
 				}
-				//TODO update list item to show changes + back - end update
 			}
 			if(status == Item.NEW_PRODUCT){
 				Item i = new Item(0, ((JTextField)upc).getText(), ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JTextField)client).getText(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
-				i.SKU = inventory.getMaxInventorySKU() + 1;
+				i.SKU = server.getMaxInventorySKU() + 1;
 				if (((JTextField)upc).getText().length() * ((JTextField)name).getText().length() > 0){
-					if (inventory.searchInventory("UPC='" + i.UPC + "'").size() > 0 && !confirmed){
+					if (server.searchInventory("UPC='" + i.UPC + "'").size() > 0 && !confirmed){
 						Object[] options = {"CREATE NEW", "SEE CONFLICTS"};
 						int n = JOptionPane.showOptionDialog(new JFrame(), "Duplicate UPC/product.\nPress \"CREATE NEW\" to create new entry.\n Press \"SEE CONFLICTS\" to see a list of\nconflicting products", "Notice", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 						if(n == 0){
@@ -382,7 +382,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 						}
 					}
 					else{
-						String r = inventory.insertInventoryItem(i);
+						String r = server.insertInventoryItem(i);
 						if (r.contains("SUCCESS")){
 							writeToOutput(i.toStringFormatted());
 							writeToOutput("\n" + i.toStringUpdate());
@@ -411,7 +411,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	
 	public void actionConfirmed(String action){
 		if (action.equals("delete")){
-			writeToOutput(inventory.removeInventoryItem(item));
+			writeToOutput(server.removeInventoryItem(item));
 			source.delete();
 			this.setVisible(false);
 		}
@@ -421,7 +421,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		}
 		if (action.equals("see_conflicts")){
 			writeToOutput("conflict");
-			new SearchGUI(inventory, parentWindow, "UPC='" + ((JTextField)upc).getText() + "'", keys);
+			new SearchGUI(server, parentWindow, "UPC='" + ((JTextField)upc).getText() + "'", keys);
 
 		}
 	}

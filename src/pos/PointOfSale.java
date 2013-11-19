@@ -2,7 +2,7 @@ package pos;
 
 import javax.swing.*;
 
-import pos.core.InventoryManager;
+import pos.core.ServerManager;
 import pos.gui.HomeGUI;
 
 import java.awt.Dimension;
@@ -119,8 +119,8 @@ public class PointOfSale extends JFrame implements ActionListener{
 	
 	public void actionPerformed(ActionEvent e){
 		if(e.getActionCommand().equals("submit")){
-			InventoryManager inventory = new InventoryManager("jdbc:derby:" + fieldUrl.getText() + "\\databases\\inventory", fieldUser.getText(), fieldPass.getPassword().toString());
-			new HomeGUI(inventory, "c:\\POS");
+			ServerManager server = new ServerManager("jdbc:derby:" + fieldUrl.getText() + "\\databases\\inventory", fieldUser.getText(), fieldPass.getPassword().toString());
+			new HomeGUI(server, "c:\\POS");
 			this.setVisible(false);
 		}
 		if(e.getActionCommand().equals("cancel")){

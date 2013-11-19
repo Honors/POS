@@ -11,7 +11,7 @@ import java.awt.Insets;
 
 import javax.swing.*;
 
-import pos.core.InventoryManager;
+import pos.core.ServerManager;
 import pos.core.JFramePOS;
 import pos.model.Keys;
 import pos.core.OutputWindow;
@@ -31,7 +31,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 	private JScrollPane outputPane;
 	
 	
-	public HomeGUI(InventoryManager i, String p){
+	public HomeGUI(ServerManager i, String p){
 		super(i, null, new Keys(p));
 		path = p;
 		
@@ -125,22 +125,22 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if(event.getSource().equals(executeField) || event.getSource().equals(executeButton)){
-			writeToOutput(inventory.exec(executeField.getText()));
+			writeToOutput(server.exec(executeField.getText()));
 			executeField.setText("");
 		}
 		
 		if (event.getSource().equals(inventoryButton)){
-			new InventoryGUI(inventory, this, path, keys);
+			new InventoryGUI(server, this, path, keys);
 		}
 		
 		if (event.getSource().equals(searchButton)){
 			//TODO Redo SearchGUI to be a drop-down menu based query search
-			new SearchGUI(inventory, this, "", keys);
+			new SearchGUI(server, this, "", keys);
 		}
 		
 		if (event.getSource().equals(reportButton)){
 			//TODO ReportGUI and systems
-			inventory.getInventoryItem(1000);
+			server.getInventoryItem(1000);
 		}
 	}
 	

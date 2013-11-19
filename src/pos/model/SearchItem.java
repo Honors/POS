@@ -42,7 +42,7 @@ public class SearchItem extends JTextArea implements MouseListener{
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		new ProductInfoGUI(parentWindow.inventory, parentWindow.parentWindow, this, item, key, itemStatus);
+		new ProductInfoGUI(parentWindow.server, parentWindow.parentWindow, this, item, key, itemStatus);
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {
