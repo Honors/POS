@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 
-import pos.model.Item;
+import pos.model.InventoryItem;
 
 public class BackupReader {
 	BufferedReader in;
@@ -17,8 +17,8 @@ public class BackupReader {
 		 }
 	}
 	
-	public ArrayList<Item> readFromLog(){
-		ArrayList<Item> items = new ArrayList<Item>();
+	public ArrayList<InventoryItem> readFromLog(){
+		ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
 		try{
 			System.out.println("  test1");
 			String s = in.readLine();
@@ -31,7 +31,7 @@ public class BackupReader {
 			while (s != null){
 				StringTokenizer z = new StringTokenizer(s, ",");
 				String t = "";
-				Item i = new Item();
+				InventoryItem i = new InventoryItem();
 				System.out.println("  test4");
 				t = z.nextToken();
 				t = t.replace((char)34, ' ');

@@ -10,8 +10,9 @@ import java.awt.Insets;
 import javax.swing.*;
 
 import pos.core.Confirmable;
+import pos.core.Item;
 import pos.core.ServerManager;
-import pos.model.Item;
+import pos.model.InventoryItem;
 import pos.core.JFramePOS;
 import pos.model.Keys;
 import pos.core.OutputWindow;
@@ -49,22 +50,22 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		writeToOutput("\n\n::" + item.toStringUpdate());
 		
 		this.status = status;
-		if(status == Item.NEW_PRODUCT){
+		if(status == InventoryItem.NEW_PRODUCT){
 			isNew = true;
 			isEditable = true;
 			isReturn = false;
 			setTitle("New...");
-		} else if(status == Item.EDIT_PRODUCT){
+		} else if(status == InventoryItem.EDIT_PRODUCT){
 			isNew = false;
 			isEditable = true;
 			isReturn = false;
 			setTitle("Edit...");
-		} else if(status == Item.VIEW_PRODUCT){
+		} else if(status == InventoryItem.VIEW_PRODUCT){
 			isNew = false;
 			isEditable = false;
 			isReturn = false;
 			setTitle("View...");
-		} else if(status == Item.RETURN_PRODUCT){
+		} else if(status == InventoryItem.RETURN_PRODUCT){
 			isNew = false;
 			isEditable = false;
 			isReturn = true;
@@ -128,7 +129,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		lLabelCollumn.gridy = 1;
 		content.add(labelUpc, lLabelCollumn);
 		
-		upc = isNew ? new JTextField(item.UPC, 10) : new JLabel(item.UPC);
+		upc = isNew ? new JLabel(server.generateInventoryUPC()) : new JLabel(item.UPC);
 		upc.setBorder(new JTextField().getBorder());
 		upc.setOpaque(true);
 		upc.setBackground(new JTextField().getBackground());
@@ -353,9 +354,9 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 
 			//TODO require an integer in Quantity before submission (error dialog)
 
-			if(status == Item.EDIT_PRODUCT){
+			if(status == InventoryItem.EDIT_PRODUCT){
 				if (update){
-					Item i = new Item(0, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JTextField)client).getText(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
+					InventoryItem i = new InventoryItem(0, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JTextField)client).getText(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
 					writeToOutput("\n\n:::::" + server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
 					i.SKU = server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU;
 					if (item.UPC.length() * ((JTextField)name).getText().length() > 0){
@@ -368,10 +369,10 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 					}
 				}
 			}
-			if(status == Item.NEW_PRODUCT){
-				Item i = new Item(0, ((JTextField)upc).getText(), ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JTextField)client).getText(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
+			if(status == InventoryItem.NEW_PRODUCT){
+				InventoryItem i = new InventoryItem(0, ((JLabel)upc).getText(), ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JTextField)client).getText(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
 				i.SKU = server.getMaxInventorySKU() + 1;
-				if (((JTextField)upc).getText().length() * ((JTextField)name).getText().length() > 0){
+				if (((JLabel)upc).getText().length() * ((JTextField)name).getText().length() > 0){
 					if (server.searchInventory("UPC='" + i.UPC + "'").size() > 0 && !confirmed){
 						Object[] options = {"CREATE NEW", "SEE CONFLICTS"};
 						int n = JOptionPane.showOptionDialog(new JFrame(), "Duplicate UPC/product.\nPress \"CREATE NEW\" to create new entry.\n Press \"SEE CONFLICTS\" to see a list of\nconflicting products", "Notice", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
@@ -395,7 +396,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 					}
 				}
 			}
-			if(status == Item.RETURN_PRODUCT){
+			if(status == InventoryItem.RETURN_PRODUCT){
 				//TODO update return info
 			}
 		}
@@ -411,7 +412,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	
 	public void actionConfirmed(String action){
 		if (action.equals("delete")){
-			writeToOutput(server.removeInventoryItem(item));
+			writeToOutput(server.removeInventoryItem(new InventoryItem(item)));
 			source.delete();
 			this.setVisible(false);
 		}

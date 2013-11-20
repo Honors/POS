@@ -1,5 +1,5 @@
 package pos.gui;
-//test
+
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -25,7 +25,7 @@ import javax.swing.event.ChangeListener;
 import pos.backup.BackupWriter;
 import pos.core.Confirmable;
 import pos.core.ServerManager;
-import pos.model.Item;
+import pos.model.InventoryItem;
 import pos.core.JFramePOS;
 import pos.model.Keys;
 import pos.core.OutputWindow;
@@ -86,7 +86,6 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		ICModes = new ButtonGroup();
 		
 		ICModeIncoming = new JToggleButton("INCOMING");
-		ICModeIncoming.setSelected(true);
 		ICModeIncoming.addActionListener(this);
 		c.gridx = 0;
 		c.gridy = 1;
@@ -96,6 +95,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		ICContent.add(ICModeIncoming, c);
 		
 		ICModeOutgoing = new JToggleButton("OUTGOING");
+		ICModeOutgoing.setSelected(true);
 		ICModeOutgoing.addActionListener(this);
 		c.gridx = 1;
 		c.gridy = 1;
@@ -309,7 +309,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		
 		if(action.equals("new")){
-			new ProductInfoGUI(server, this, null, new Item("", keys), keys, Item.NEW_PRODUCT);
+			new ProductInfoGUI(server, this, null, new InventoryItem(), keys, InventoryItem.NEW_PRODUCT);
 		}
 		
 		if (action.equals("backup")){
@@ -355,7 +355,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		c.gridx = 0;
 		c.gridy = 0;
 		String search = IMTextEntry.getText();
-		ArrayList<Item> i;
+		ArrayList<InventoryItem> i;
 		if (search.length() == 0){
 			i = server.searchInventory("SKU > -1");
 		} else {
@@ -363,7 +363,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchItem s = new SearchItem(this, i.remove(0), keys, Item.EDIT_PRODUCT);
+			SearchItem s = new SearchItem(this, i.remove(0), keys, InventoryItem.EDIT_PRODUCT);
 			s.setOpaque(true);
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));

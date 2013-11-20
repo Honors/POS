@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
+import pos.core.Item;
 import pos.core.JFramePOS;
 import pos.gui.ProductInfoGUI;
 
@@ -29,7 +30,7 @@ public class SearchItem extends JTextArea implements MouseListener{
 		this.addMouseListener(this);
 	}
 	
-	public void updateItem(Item i){
+	public void updateItem(InventoryItem i){
 		item = i;
 		setText(i.toStringFormatted());
 	}

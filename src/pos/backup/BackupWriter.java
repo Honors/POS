@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 import pos.core.ServerManager;
-import pos.model.Item;
+import pos.model.InventoryItem;
 import pos.core.OutputWindow;
 
 
@@ -28,7 +28,7 @@ public class BackupWriter {
 		dumpToCSV(inventory.searchInventory("SKU > -1"));
 	}
 	
-	public void dumpToCSV(ArrayList<Item> i){
+	public void dumpToCSV(ArrayList<InventoryItem> i){
 		out.println("SKU,UPC,NAME,BRAND,COLOR,SIZE,TYPE,GENDER,CLIENT,DATE,NOTES,PRICE,COST,QUANTITY");
 		while (!i.isEmpty()){
 			out.println(i.remove(0).toSrtingCSV());
