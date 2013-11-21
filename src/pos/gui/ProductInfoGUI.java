@@ -16,13 +16,13 @@ import pos.model.InventoryItem;
 import pos.core.JFramePOS;
 import pos.model.Keys;
 import pos.core.OutputWindow;
-import pos.model.SearchItem;
+import pos.model.SearchResult;
 
 @SuppressWarnings("serial")
 public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirmable{
 	
 	private Item item;
-	private SearchItem source;
+	private SearchResult source;
 	private JPanel content;
 	private JLabel labelUpc, labelName, labelClient, labelDate, labelPrice, labelCost;
 	private JLabel labelQuantity, labelBrand, labelColor, labelSize, labelType, labelGender;
@@ -31,7 +31,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	private JComponent brand, color, size, type, gender;
 	private JComboBox<String> returnStatus;
 	private JTextArea notes;
-	private JButton Submit, Delete;
+	private JButton Submit, Delete, generateLabels;
 	
 	private boolean isNew, isEditable, isReturn;
 	private boolean update = false;
@@ -40,7 +40,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	//TODO: Allow for return info
 	
 	@SuppressWarnings("unchecked")
-	public ProductInfoGUI(ServerManager im, OutputWindow g, SearchItem s, Item i, Keys _key, int status){
+	public ProductInfoGUI(ServerManager im, OutputWindow g, SearchResult s, Item i, Keys _key, int status){
 		super(im,g,_key);
 		if (i.SKU > -1){
 			update = true;
@@ -304,16 +304,13 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		if(isEditable || isReturn){
 			Submit = new JButton("UPDATE");
 			Submit.addActionListener(this);
-			
 			if (isNew){
 				Submit.setText("CREATE");
 			}
-			
 			lLabelCollumn.gridy = 9;
 			lLabelCollumn.gridwidth = 1;
 			lLabelCollumn.ipady = 5;
-			lLabelCollumn.insets = new Insets(0,20,10,5);
-
+			lLabelCollumn.insets = new Insets(0,20,10,10);
 			content.add(Submit, lLabelCollumn);
 	
 			if(isReturn){
@@ -327,11 +324,22 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 				rInfoCollumn.gridy = 6;
 				content.add(returnStatus, rInfoCollumn);
 			}
+			
+			if(isEditable){
+				generateLabels = new JButton("GENERATE LABELS");
+				generateLabels.addActionListener(this);
+				lInfoCollumn.gridy = 9;
+				lInfoCollumn.gridwidth = 2;
+				lInfoCollumn.anchor = GridBagConstraints.CENTER;
+				lInfoCollumn.insets = new Insets(0,20,10,20);
+				content.add(generateLabels, lInfoCollumn);
+			}
+			
 			if (!isNew && !isReturn){
 				Delete = new JButton("DELETE");
 				Delete.addActionListener(this);
 				rInfoCollumn.gridy = 9;
-				rInfoCollumn.insets = new Insets(0,20,10,20);
+				rInfoCollumn.insets = new Insets(0,10,10,20);
 				content.add(Delete, rInfoCollumn);
 			}
 		}
@@ -404,8 +412,11 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 			int n = JOptionPane.showConfirmDialog(new JFrame(), "Are you sure you wish to delete this product record?\nThis action is PERMANENT.", "Delete...", JOptionPane.YES_NO_OPTION);
 			if(n == 0){
 				actionConfirmed("delete");
-			}
-			
+			}	
+		}
+		
+		if (event.getSource().equals(generateLabels)){
+			actionConfirmed("generateLabels");
 		}
 		
 	}
@@ -423,7 +434,9 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		if (action.equals("see_conflicts")){
 			writeToOutput("conflict");
 			new SearchGUI(server, parentWindow, "UPC='" + ((JTextField)upc).getText() + "'", keys);
-
+		}
+		if (action.equals("generateLabels")){
+			//TODO FileChooser, Generate Labels
 		}
 	}
 	

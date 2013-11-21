@@ -29,7 +29,7 @@ import pos.model.InventoryItem;
 import pos.core.JFramePOS;
 import pos.model.Keys;
 import pos.core.OutputWindow;
-import pos.model.SearchItem;
+import pos.model.SearchResult;
 
 public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListener, Confirmable, ChangeListener {
 
@@ -373,7 +373,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchItem s = new SearchItem(this, i.remove(0), keys, InventoryItem.EDIT_PRODUCT);
+			SearchResult s = new SearchResult(this, i.remove(0), keys, InventoryItem.EDIT_PRODUCT);
 			s.setOpaque(true);
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));

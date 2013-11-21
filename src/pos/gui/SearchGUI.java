@@ -15,7 +15,7 @@ import pos.model.InventoryItem;
 import pos.core.JFramePOS;
 import pos.model.Keys;
 import pos.core.OutputWindow;
-import pos.model.SearchItem;
+import pos.model.SearchResult;
 
 @SuppressWarnings("serial")
 public class SearchGUI extends JFramePOS implements ActionListener{
@@ -25,12 +25,12 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 	private JTextField searchBar;
 	private JButton searchButton;
 	private JScrollPane outputPane;
-	private ArrayList<SearchItem> searchResults;
+	private ArrayList<SearchResult> searchResults;
 	
 	public SearchGUI(ServerManager m, OutputWindow g, String query, Keys _key){
 		super(m, g, _key);
 		
-		searchResults = new ArrayList<SearchItem>();
+		searchResults = new ArrayList<SearchResult>();
 		
 		content = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -97,7 +97,7 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		ArrayList<InventoryItem> i = server.searchInventory(searchBar.getText());
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchItem s = new SearchItem(this, i.remove(0), keys, InventoryItem.VIEW_PRODUCT);
+			SearchResult s = new SearchResult(this, i.remove(0), keys, InventoryItem.VIEW_PRODUCT);
 			s.setOpaque(true);
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));
