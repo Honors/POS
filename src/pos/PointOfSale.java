@@ -11,6 +11,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.*;
 
+
 public class PointOfSale extends JFrame implements ActionListener{
 	
 	private static final long serialVersionUID = 4617631829653620264L;
@@ -21,6 +22,9 @@ public class PointOfSale extends JFrame implements ActionListener{
 	private JLabel labelUrl, labelUser, labelPass;
 	private JButton submit, cancel;
 	
+	/**
+	 * Builds the initial login GUI for the entire POS program
+	 */
 	public PointOfSale(){
 		content = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -107,6 +111,11 @@ public class PointOfSale extends JFrame implements ActionListener{
 		autoLogin();
 	}
 	
+	
+	/**
+	 * Auto enters text into the login text fields and presses the login button
+	 * (for quick login while debugging)
+	 */
 	public void autoLogin(){
 		fieldUser.setText("nicky");
 		fieldPass.setText("dicarloisthebest");
@@ -116,14 +125,14 @@ public class PointOfSale extends JFrame implements ActionListener{
 	public static void main(String[] args) {
 		new PointOfSale();
 	}
-	
-	public void actionPerformed(ActionEvent e){
-		if(e.getActionCommand().equals("submit")){
+
+	public void actionPerformed(ActionEvent event){
+		if(event.getActionCommand().equals("submit")){
 			ServerManager server = new ServerManager("jdbc:derby:" + fieldUrl.getText() + "\\databases\\inventory", fieldUser.getText(), fieldPass.getPassword().toString());
 			new HomeGUI(server, "c:\\POS");
 			this.setVisible(false);
 		}
-		if(e.getActionCommand().equals("cancel")){
+		if(event.getActionCommand().equals("cancel")){
 			this.setVisible(false);
 			System.exit(0);
 		}

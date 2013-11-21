@@ -43,11 +43,19 @@ public class DialogSingleTextInput extends JDialog implements ActionListener, Pr
 	private JTextField textField;
 	private JOptionPane optionPane;
 	
+	/**
+	 * Creates a dialog that asks for a single line text input
+	 * 
+	 * @param frame The frame which the dialog is displayed
+	 * @param title The title of the frame
+	 * @param message The message of the frame
+	 * @param initialTextArea The initial of the text input
+	 * @param conflicts Forbidden text values
+	 */
 	public DialogSingleTextInput(JFrame frame, String title, String message, String initialTextArea, ArrayList<String> conflicts){
 		super(frame, true);
 		setTitle(title);
 		setResizable(false);
-		
 		textField = new JTextField(10);
 		textField.setText(initialTextArea);
 		
@@ -83,6 +91,11 @@ public class DialogSingleTextInput extends JDialog implements ActionListener, Pr
         setVisible(true);
 	}
 	
+	/**
+	 * Gets the input from the text field of the dialog
+	 * 
+	 * @return a String of the text input
+	 */
 	public String getValidatedInput(){
 		return input;
 	}
@@ -132,19 +145,38 @@ public class DialogSingleTextInput extends JDialog implements ActionListener, Pr
 		
 	}
 	
+	/**
+	 * Disposes the dialog
+	 */
 	public void clearAndHide() {
         textField.setText(null);
         setVisible(false);
     }
 	
+	/**
+	 * Sets the validation of the text input
+	 * 
+	 * @param b {@code true} if the text input is validated
+	 */
 	public void setValidated(boolean b){
 		validated = b;
 	}
 
+	/**
+	 * Gets whether or not the text input has been validated
+	 * 
+	 * @return {@code true} if the dialog input has been validated, {@code false} if the dialog input is not
+	 */
 	public boolean getValidated(){
 		return validated;
 	}
 	
+	/**
+	 * Checks to see if a designated string is a conflict
+	 * 
+	 * @param check String to check
+	 * @return {@code true} if the string conflicts, {@code false} if the string does not conflict
+	 */
 	public boolean isConflict(String check){
 		for(int i = 0; i < conflicts.size(); i++){
 			if(conflicts.get(i).equals(check))

@@ -6,9 +6,17 @@ import java.util.ArrayList;
 
 import pos.model.InventoryItem;
 
+/**
+ * This class reads in data to the server from a backup CSV file
+ */
 public class BackupReader {
 	BufferedReader in;
 	
+	/**
+	 * Creates a BackupReader object linked to a server CSV file
+	 * 
+	 * @param filename path to the CSV file, including the CSV file and extension
+	 */
 	public BackupReader(String filename){
 		try{
 			 in = new BufferedReader(new FileReader(filename)); 
@@ -17,6 +25,11 @@ public class BackupReader {
 		 }
 	}
 	
+	/**
+	 * TODO Figure out what this does
+	 * 
+	 * @return
+	 */
 	public ArrayList<InventoryItem> readFromLog(){
 		ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
 		try{

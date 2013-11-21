@@ -280,7 +280,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		if(event.getSource().equals(IMBackup)){
 			int n = JOptionPane.showConfirmDialog(this, "Are you sure?\nThis will overwrite any existing exports with the same name.", "Backup", JOptionPane.YES_NO_OPTION);
 			if(n == 0)
-				actionConfirmed("backup");
+				actionConfirmed("inventory_backup");
 		}
 		
 		if (event.getSource().equals(IMRestore)){
@@ -312,14 +312,14 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 			new ProductInfoGUI(server, this, null, new InventoryItem(), keys, InventoryItem.NEW_PRODUCT);
 		}
 		
-		if (action.equals("backup")){
+		if (action.equals("inventory_backup")){
 			String f = IMTextEntry.getText();
 			if (f.length() < 1 || f.charAt(1) != ':'){
 				f = path + "\\backups\\" + new Date().toString().replace(' ', '_').replace(':', '_') + ".csv";
 			}
 			BackupWriter backup = new BackupWriter(f, this, server);
 			try{
-				backup.dumpToCSV();
+				backup.exportInventoryToCSV();
 			} catch (Exception r){
 				System.out.println(r);
 			}
