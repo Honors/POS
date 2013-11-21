@@ -44,7 +44,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	private JPanel ICContent, IMContent, RMContent, IMResults, RMResults, ICSearchBar, IMSearchBar, RMSearchBar;
 	private JTabbedPane tabs;
 	private JToggleButton ICModeIncoming, ICModeOutgoing, ICModeReturn;
-	private JButton IMBackup, IMRestore, RMBackup, IMNew, ICEnter, IMEnter, RMEnter;
+	private JButton IMBackup, IMRestore, RMBackup, IMNew, ICEnter, IMEnter, RMEnter, IMRegister;
 	private ButtonGroup ICModes;
 	
 	public InventoryGUI(ServerManager i, OutputWindow out, String p, Keys keys){
@@ -132,7 +132,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		IMSearchBar = new JPanel(new GridBagLayout());
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 3;
+		c.gridwidth = 4;
 		IMContent.add(IMSearchBar, c);
 		
 		IMTextEntry = new JTextField();
@@ -175,13 +175,19 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		c.gridy = 1;
 		IMContent.add(IMRestore, c);
 		
+		IMRegister = new JButton("REGISTER");
+		IMRegister.addActionListener(this);
+		c.gridx = 3;
+		c.gridy = 1;
+		IMContent.add(IMRegister, c);
+		
 		IMResults = new JPanel();
 		IMResults.setLayout(new GridBagLayout());
 		
 		IMOutput = new JScrollPane(IMResults);
 		c.gridx = 0;
 		c.gridy = 2;
-		c.gridwidth = 3;
+		c.gridwidth = 4;
 		c.weighty = 1;
 		c.insets = new Insets(5,5,5,5);
 		IMContent.add(IMOutput, c);
@@ -287,6 +293,10 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 			int n = JOptionPane.showConfirmDialog(this, "Are you sure?\nThis will overwrite the current database and cannot be un-done.\nIt is reccomended that you make a backup first", "Restore", JOptionPane.YES_NO_OPTION);
 			if(n == 0)
 				actionConfirmed("restore");
+		}
+		
+		if (event.getSource().equals(IMRegister)){
+			
 		}
 	}
 	
