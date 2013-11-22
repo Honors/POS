@@ -74,6 +74,7 @@ public class Keys {
 	}
 	
 	public boolean readBrands(){
+		brands = new ArrayList<String>();
 		BufferedReader in;
 		try{
 			 File file = new File(keyPath + "\\brands.csv");
@@ -96,6 +97,7 @@ public class Keys {
 	}
 	
 	public boolean readTypes(){
+		types = new ArrayList<String>();
 		BufferedReader in;
 		try{
 			 File file = new File(keyPath + "\\types.csv");
@@ -118,6 +120,7 @@ public class Keys {
 	}
 
 	public boolean readColors(){
+		colors = new ArrayList<String>();
 		BufferedReader in;
 		try{
 			 File file = new File(keyPath + "\\colors.csv");
@@ -140,6 +143,7 @@ public class Keys {
 	}
 
 	public boolean readSizes(){
+		sizes = new ArrayList<String>();
 		BufferedReader in;
 		try{
 			File file = new File(keyPath + "\\sizes.csv");
@@ -162,6 +166,7 @@ public class Keys {
 	}
 
 	public boolean readGenders(){
+		genders = new ArrayList<String>();
 		BufferedReader in;
 		try{
 			 File file = new File(keyPath + "\\genders.csv");
@@ -184,6 +189,7 @@ public class Keys {
 	}
 
 	public boolean readClients(){
+		clients = new ArrayList<String>();
 		BufferedReader in;
 		try{
 			 File file = new File(keyPath + "\\clients.csv");
@@ -203,6 +209,21 @@ public class Keys {
 			 System.out.println(e);
 			 return false;
 		 }
+	}
+	
+	public boolean writeAll(){
+		try{
+			writeAllBrands();
+			writeAllTypes();
+			writeAllColors();
+			writeAllSizes();
+			writeAllGenders();
+			writeAllClients();
+			return true;
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	public boolean write(String name, int identifier){
@@ -307,20 +328,20 @@ public class Keys {
 		}
 	}
 	
-	public boolean rewriteAll(int identifier){
+	public boolean write(int identifier){
 		try{
 			if(identifier == BRAND){
-				rewriteAllBrands();
+				writeAllBrands();
 			} else if(identifier == TYPE){
-				rewriteAllTypes();
+				writeAllTypes();
 			} else if(identifier == COLOR){
-				rewriteAllColors();
+				writeAllColors();
 			} else if(identifier == SIZE){
-				rewriteAllSizes();
+				writeAllSizes();
 			} else if(identifier == GENDER){
-				rewriteAllGenders();
+				writeAllGenders();
 			} else if(identifier == CLIENT){
-				rewriteAllClients();
+				writeAllClients();
 			} else {
 				return false;
 			}
@@ -331,7 +352,7 @@ public class Keys {
 		}
 	}
 	
-	public boolean rewriteAllBrands(){
+	public boolean writeAllBrands(){
 		try{
 			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\brands.csv", false)); 
 			 for(int i = 0; i < brands.size(); i++){
@@ -346,7 +367,7 @@ public class Keys {
 		 }
 	}
 	
-	public boolean rewriteAllTypes(){
+	public boolean writeAllTypes(){
 		try{
 			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\types.csv", false)); 
 			 for(int i = 0; i < types.size(); i++){
@@ -361,7 +382,7 @@ public class Keys {
 		 }
 	}
 	
-	public boolean rewriteAllColors(){
+	public boolean writeAllColors(){
 		try{
 			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\colors.csv", false)); 
 			 for(int i = 0; i < colors.size(); i++){
@@ -376,7 +397,7 @@ public class Keys {
 		 }
 	}
 	
-	public boolean rewriteAllSizes(){
+	public boolean writeAllSizes(){
 		try{
 			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\sizes.csv", false)); 
 			 for(int i = 0; i < sizes.size(); i++){
@@ -391,7 +412,7 @@ public class Keys {
 		 }
 	}
 	
-	public boolean rewriteAllGenders(){
+	public boolean writeAllGenders(){
 		try{
 			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\genders.csv", false)); 
 			 for(int i = 0; i < genders.size(); i++){
@@ -406,7 +427,7 @@ public class Keys {
 		 }
 	}
 	
-	public boolean rewriteAllClients(){
+	public boolean writeAllClients(){
 		try{
 			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\clients.csv", false)); 
 			 for(int i = 0; i < clients.size(); i++){

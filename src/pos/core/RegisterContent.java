@@ -5,9 +5,11 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import pos.dialog.DialogSingleTextInput;
@@ -140,16 +143,19 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		
 		add = new JButton("ADD");
 		add.addActionListener(this);
+		add.setMnemonic(KeyEvent.VK_A);
 		add.setEnabled(true);
 		add(add, c_add);
 		
 		edit = new JButton("EDIT");
 		edit.addActionListener(this);
+		edit.setMnemonic(KeyEvent.VK_E);
 		edit.setEnabled(tree.getSelectionCount() != 0);
 		add(edit, c_edit);
 		
 		delete = new JButton("DELETE");
 		delete.addActionListener(this);
+		delete.setMnemonic(KeyEvent.VK_D);
 		delete.setEnabled(tree.getSelectionCount() != 0);
 		add(delete, c_delete);
 		
@@ -206,14 +212,42 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		repaint();
 	}
 	
+	private TreePath find(DefaultMutableTreeNode root, String s) {
+	    @SuppressWarnings("unchecked")
+	    Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+	    while (e.hasMoreElements()) {
+	        DefaultMutableTreeNode node = e.nextElement();
+	        if (node.toString().equalsIgnoreCase(s)) {
+	            return new TreePath(node.getPath());
+	        }
+	    }
+	    return null;
+	}
+	
+	public void updateButtons(){
+		if(tree.getSelectionPath() != null){
+			edit.setEnabled(true);
+			delete.setEnabled(true);
+		} else {
+			edit.setEnabled(false);
+			delete.setEnabled(false);
+		}
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if(event.getSource().equals(add)){
 			DialogSingleTextInput addDialog = new DialogSingleTextInput(new JFrame(), "Add...", "", "", getAssociatedList());
 			if(addDialog.getValidated()){
 				getAssociatedList().add(addDialog.getValidatedInput());
-				keys.rewriteAll(identifier);
+				keys.write(identifier);
 				updateList();
+				
+				TreePath pathToNewElement = find((DefaultMutableTreeNode)tree.getModel().getRoot(), addDialog.getValidatedInput());
+				tree.setSelectionPath(pathToNewElement);
+				tree.scrollPathToVisible(pathToNewElement);
+				tree.requestFocus();
+				updateButtons();
 			}
 		}
 		
@@ -223,18 +257,27 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 			if(addDialog.getValidated()){
 				String newName = addDialog.getValidatedInput();
 				getAssociatedList().set(getAssociatedList().indexOf(oldName), newName);
-				keys.rewriteAll(identifier);
+				keys.write(identifier);
 				updateList();
+				
+				TreePath pathToNewElement = find((DefaultMutableTreeNode)tree.getModel().getRoot(), newName);
+				tree.setSelectionPath(pathToNewElement);
+				tree.scrollPathToVisible(pathToNewElement);
+				tree.requestFocus();
+				updateButtons();
 			}
 		}
 		
 		if(event.getSource().equals(delete)){
 			getAssociatedList().remove(tree.getSelectionPath().getLastPathComponent().toString());
-			keys.rewriteAll(identifier);
+			keys.write(identifier);
 			updateList();
+			
+			tree.requestFocus();
+			updateButtons();
 		}
 	}
-
+	
 	@Override
 	public void mouseClicked(MouseEvent arg0) {}
 
@@ -246,13 +289,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		if(tree.getSelectionPath() != null){
-			edit.setEnabled(true);
-			delete.setEnabled(true);
-		} else {
-			edit.setEnabled(false);
-			delete.setEnabled(false);
-		}
+		updateButtons();
 	}
 
 	@Override
