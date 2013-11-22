@@ -4,7 +4,6 @@ import javax.swing.*;
 
 import pos.core.ServerManager;
 import pos.gui.HomeGUI;
-import pos.gui.RegisterGUI;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
