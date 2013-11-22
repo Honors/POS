@@ -1,11 +1,7 @@
 package pos.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JTabbedPane;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 
 import pos.core.JFramePOS;
 import pos.core.OutputWindow;
