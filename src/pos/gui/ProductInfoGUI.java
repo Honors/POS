@@ -37,7 +37,6 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	private boolean update = false;
 	private boolean confirmed = false;
 	private int status;
-	//TODO: Allow for return info
 	
 	@SuppressWarnings("unchecked")
 	public ProductInfoGUI(ServerManager im, OutputWindow g, SearchResult s, Item i, Keys _key, int status){
@@ -211,10 +210,15 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		lLabelCollumn.gridy = 4;
 		content.add(labelClient, lLabelCollumn);
 		
-		client = isEditable ? new JTextField(item.client) : new JLabel(item.client);
-		client.setBorder(new JTextField().getBorder());
-		client.setOpaque(true);
-		client.setBackground(new JTextField().getBackground());
+		client = isEditable ? new JComboBox<Object>(keys.clients.toArray()) : new JLabel(item.client);
+		if(isEditable){
+			if(item.gender != null)
+				((JComboBox<Object>)client).setSelectedItem(item.client);
+		} else {
+			client.setBorder(new JTextField().getBorder());
+			client.setOpaque(true);
+			client.setBackground(new JTextField().getBackground());
+		}
 		lInfoCollumn.gridy = 4;
 		content.add(client, lInfoCollumn);
 		
@@ -364,7 +368,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 
 			if(status == InventoryItem.EDIT_PRODUCT){
 				if (update){
-					InventoryItem i = new InventoryItem(0, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JTextField)client).getText(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
+					InventoryItem i = new InventoryItem(0, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
 					writeToOutput("\n\n:::::" + server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
 					i.SKU = server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU;
 					if (item.UPC.length() * ((JTextField)name).getText().length() > 0){

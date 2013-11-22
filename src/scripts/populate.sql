@@ -17,7 +17,7 @@ quantity int
 )
 
 --created
-CREATE TABLE RETURNS
+CREATE TABLE RETURN
 (
 SKU int,
 UPC varchar(255),

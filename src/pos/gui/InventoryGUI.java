@@ -296,7 +296,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		
 		if (event.getSource().equals(IMRegister)){
-			
+			new RegisterGUI(server, parentWindow, keys);
 		}
 	}
 	

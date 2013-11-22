@@ -15,27 +15,6 @@ public class ReturnItem extends Item{
 		status = STATUS_PENDING;
 	}
 	
-	/**
-	 * 
-	 * @deprecated Characters of a UPC are no longer associated with their item's attributes
-	 */
-	public ReturnItem(String u, Keys key){
-		u = u.toUpperCase();
-		SKU = -1;
-		UPC = u;
-		name = "NEW PRODUCT";
-		quantity = 1;
-		if (u.length() == 10){
-			brand = key.getBrand(u.substring(0, 2));
-			color = key.getColor(u.substring(2, 5));
-			size = key.getSize(u.substring(5,7));
-			type = key.getType(u.substring(7, 9));
-			gender = key.getGender(u.substring(9));
-			name = brand + " " + color + " " + type;
-		}
-		status = STATUS_PENDING;
-	}
-	
 	public ReturnItem(int _SKU, String _UPC, String _name, String _brand, String _color, String _size, String _type, String _gender, String _client, String _date, String _notes, String _price, String _cost, int _quantity, String _status){
 		SKU = _SKU;
 		UPC = _UPC;

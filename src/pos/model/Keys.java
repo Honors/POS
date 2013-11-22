@@ -2,234 +2,237 @@ package pos.model;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
-
-import javax.swing.JFrame;
-
-import pos.dialog.DialogSingleTextInput;
 
 public class Keys {
 	
+	public static final int BRAND = 0;
+	public static final int COLOR = 1;
+	public static final int SIZE = 2;
+	public static final int TYPE = 3;
+	public static final int GENDER = 4;
+	public static final int CLIENT = 5;
+	
 	public String keyPath;
 	
-	public ArrayList<String> brands, brandCodes;
-	public ArrayList<String> colors, colorCodes;
-	public ArrayList<String> sizes, sizeCodes;
-	public ArrayList<String> types, typeCodes;
-	public ArrayList<String> genders, genderCodes;
+	public ArrayList<String> brands;
+	public ArrayList<String> colors;
+	public ArrayList<String> sizes;
+	public ArrayList<String> types;
+	public ArrayList<String> genders;
+	public ArrayList<String> clients;
 	
 	public Keys(String path){
 		brands = new ArrayList<String>();
-		brandCodes = new ArrayList<String>();
 		colors = new ArrayList<String>();
-		colorCodes = new ArrayList<String>();
 		sizes = new ArrayList<String>();
-		sizeCodes = new ArrayList<String>();
 		types = new ArrayList<String>();
-		typeCodes = new ArrayList<String>();
 		genders = new ArrayList<String>();
-		genderCodes = new ArrayList<String>();
+		clients = new ArrayList<String>();
 		
 		keyPath = path + "\\keys";
 		
+		readAll();
+	}
+	
+	public boolean readAll(){
+		try{
+			readBrands();
+			readTypes();
+			readColors();
+			readSizes();
+			readGenders();
+			readClients();
+		return true;
+		} catch (Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean read(int identifier){
+		try{
+			if(identifier == BRAND){
+				readBrands();
+			} else if(identifier == TYPE){
+				readTypes();
+			} else if(identifier == COLOR){
+				readColors();
+			} else if(identifier == SIZE){
+				readSizes();
+			} else if(identifier == GENDER){
+				readGenders();
+			} else if(identifier == CLIENT){
+				readClients();
+			} else {
+				return false;
+			}
+			return true;
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean readBrands(){
 		BufferedReader in;
 		try{
-			 in = new BufferedReader(new FileReader(keyPath + "\\brands.csv")); 
+			 File file = new File(keyPath + "\\brands.csv");
+			 file.createNewFile();
+			 in = new BufferedReader(new FileReader(file)); 
 			 String s = in.readLine();
 			 while (s != null){
-				StringTokenizer z = new StringTokenizer(s, ",");
-				String t = "";
-				t = z.nextToken();
+				String t = s;
 				t = t.replace((char)34, ' ');
 				t = t.trim();
 				brands.add(t);
-				t = z.nextToken();
-				t = t.replace((char)34, ' ');
-				t = t.trim();
-				brandCodes.add(t);
 				s = in.readLine();
 			 }
 			 in.close();
+			 return true;
 		 } catch (Exception e){
 			 System.out.println(e);
+			 return false;
 		 }
+	}
+	
+	public boolean readTypes(){
+		BufferedReader in;
 		try{
-			 in = new BufferedReader(new FileReader(keyPath + "\\colors.csv")); 
+			 File file = new File(keyPath + "\\types.csv");
+			 file.createNewFile();
+			 in = new BufferedReader(new FileReader(file)); 
 			 String s = in.readLine();
 			 while (s != null){
-				StringTokenizer z = new StringTokenizer(s, ",");
-				String t = "";
-				t = z.nextToken();
-				t = t.replace((char)34, ' ');
-				t = t.trim();
-				colors.add(t);
-				t = z.nextToken();
-				t = t.replace((char)34, ' ');
-				t = t.trim();
-				colorCodes.add(t);
-				s = in.readLine();
-			 }
-			 in.close();
-		 } catch (Exception e){
-			 System.out.println(e);
-		 }
-		try{
-			 in = new BufferedReader(new FileReader(keyPath + "\\sizes.csv")); 
-			 String s = in.readLine();
-			 while (s != null){
-				StringTokenizer z = new StringTokenizer(s, ",");
-				String t = "";
-				t = z.nextToken();
-				t = t.replace((char)34, ' ');
-				t = t.trim();
-				sizes.add(t);
-				t = z.nextToken();
-				t = t.replace((char)34, ' ');
-				t = t.trim();
-				sizeCodes.add(t);
-				s = in.readLine();
-			 }
-			 in.close();
-		 } catch (Exception e){
-			 System.out.println(e);
-		 }
-		try{
-			 in = new BufferedReader(new FileReader(keyPath + "\\types.csv")); 
-			 String s = in.readLine();
-			 while (s != null){
-				StringTokenizer z = new StringTokenizer(s, ",");
-				String t = "";
-				t = z.nextToken();
+				String t = s;
 				t = t.replace((char)34, ' ');
 				t = t.trim();
 				types.add(t);
-				t = z.nextToken();
-				t = t.replace((char)34, ' ');
-				t = t.trim();
-				typeCodes.add(t);
 				s = in.readLine();
 			 }
 			 in.close();
+			 return true;
 		 } catch (Exception e){
 			 System.out.println(e);
+			 return false;
 		 }
+	}
+
+	public boolean readColors(){
+		BufferedReader in;
 		try{
-			 in = new BufferedReader(new FileReader(keyPath + "\\genders.csv")); 
+			 File file = new File(keyPath + "\\colors.csv");
+			 file.createNewFile();
+			 in = new BufferedReader(new FileReader(file)); 
 			 String s = in.readLine();
 			 while (s != null){
-				StringTokenizer z = new StringTokenizer(s, ",");
-				String t = "";
-				t = z.nextToken();
+				String t = s;
+				t = t.replace((char)34, ' ');
+				t = t.trim();
+				colors.add(t);
+				s = in.readLine();
+			 }
+			 in.close();
+			 return true;
+		 } catch (Exception e){
+			 System.out.println(e);
+			 return false;
+		 }
+	}
+
+	public boolean readSizes(){
+		BufferedReader in;
+		try{
+			File file = new File(keyPath + "\\sizes.csv");
+			 file.createNewFile();
+			 in = new BufferedReader(new FileReader(file)); 
+			 String s = in.readLine();
+			 while (s != null){
+				String t = s;
+				t = t.replace((char)34, ' ');
+				t = t.trim();
+				sizes.add(t);
+				s = in.readLine();
+			 }
+			 in.close();
+			 return true;
+		 } catch (Exception e){
+			 System.out.println(e);
+			 return false;
+		 }
+	}
+
+	public boolean readGenders(){
+		BufferedReader in;
+		try{
+			 File file = new File(keyPath + "\\genders.csv");
+			 file.createNewFile();
+			 in = new BufferedReader(new FileReader(file)); 
+			 String s = in.readLine();
+			 while (s != null){
+				String t = s;
 				t = t.replace((char)34, ' ');
 				t = t.trim();
 				genders.add(t);
-				t = z.nextToken();
-				t = t.replace((char)34, ' ');
-				t = t.trim();
-				genderCodes.add(t);
 				s = in.readLine();
 			 }
 			 in.close();
+			 return false;
 		 } catch (Exception e){
 			 System.out.println(e);
+			 return true;
 		 }
-		
+	}
+
+	public boolean readClients(){
+		BufferedReader in;
+		try{
+			 File file = new File(keyPath + "\\clients.csv");
+			 file.createNewFile();
+			 in = new BufferedReader(new FileReader(file)); 
+			 String s = in.readLine();
+			 while (s != null){
+				String t = s;
+				t = t.replace((char)34, ' ');
+				t = t.trim();
+				clients.add(t);
+				s = in.readLine();
+			 }
+			 in.close();
+			 return true;
+		 } catch (Exception e){
+			 System.out.println(e);
+			 return false;
+		 }
 	}
 	
-	public String getBrand(String code){
-		System.out.println(code);
-		int i = brandCodes.indexOf(code);
-		if (i < 0){
-			DialogSingleTextInput in = new DialogSingleTextInput(new JFrame(), "Define Brand...", "UPC segment \"" + code + "\" is not a defined Brand\nThe Brand \"" + code + "\" is", "", brands);
-			String newBrand = in.getValidatedInput();
-			if(newBrand != null){
-				writeBrand(newBrand, code);
-				brands.add(newBrand);
-				brandCodes.add(code);
-				i = brandCodes.indexOf(code);
-			}else{
-				return "";
+	public boolean write(String name, int identifier){
+		try{
+			if(identifier == BRAND){
+				writeBrand(name);
+			} else if(identifier == TYPE){
+				writeType(name);
+			} else if(identifier == COLOR){
+				writeColor(name);
+			} else if(identifier == SIZE){
+				writeSize(name);
+			} else if(identifier == GENDER){
+				writeGender(name);
+			} else if(identifier == CLIENT){
+				writeClient(name);
+			} else {
+				return false;
 			}
+			return true;
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
 		}
-		return brands.get(i);
 	}
 	
-	public String getColor(String code){
-		System.out.println(code);
-		int i = colorCodes.indexOf(code);
-		if (i < 0){
-			DialogSingleTextInput in = new DialogSingleTextInput(new JFrame(), "Define Color...", "UPC segment \"" + code + "\" is not a defined Color\nThe Color \"" + code + "\" is", "", colors);
-			String newColor = in.getValidatedInput();
-			if(newColor != null){
-				writeColor(newColor, code);
-				colors.add(newColor);
-				colorCodes.add(code);
-				i = colorCodes.indexOf(code);
-			}else{
-				return "";
-			}
-		}
-		return colors.get(i);
-	}
-	
-	public String getSize(String code){
-		System.out.println(code);
-		int i = sizeCodes.indexOf(code);
-		if (i < 0){
-			DialogSingleTextInput in = new DialogSingleTextInput(new JFrame(), "Define Size...", "UPC segment \"" + code + "\" is not a defined Size\nThe Size \"" + code + "\" is", "", sizes);
-			String newSize = in.getValidatedInput();
-			if(newSize != null){
-				writeSize(newSize, code);
-				sizes.add(newSize);
-				sizeCodes.add(code);
-				i = sizeCodes.indexOf(code);
-			}else{
-				return "";
-			}
-		}
-		return sizes.get(i);
-	}
-	
-	public String getType(String code){
-		System.out.println(code);
-		int i = typeCodes.indexOf(code);
-		if (i < 0){
-			DialogSingleTextInput in = new DialogSingleTextInput(new JFrame(), "Define Type...", "UPC segment \"" + code + "\" is not a defined Type\nThe Type \"" + code + "\" is", "", types);
-			String newType = in.getValidatedInput();
-			if(newType != null){
-				writeType(newType, code);
-				types.add(newType);
-				typeCodes.add(code);
-				i = typeCodes.indexOf(code);
-			}else{
-				return "";
-			}
-		}
-		return types.get(i);
-	}
-	
-	public String getGender(String code){
-		System.out.println(code);
-		int i = genderCodes.indexOf(code);
-		if (i < 0){
-			DialogSingleTextInput in = new DialogSingleTextInput(new JFrame(), "Define Gender...", "UPC segment \"" + code + "\" is not a defined Gender\nThe Gender \"" + code + "\" is", "", genders);
-			String newGender = in.getValidatedInput();
-			if(newGender != null){
-				writeGender(newGender, code);
-				genders.add(newGender);
-				genderCodes.add(code);
-				i = genderCodes.indexOf(code);
-			}else{
-				return "";
-			}
-		}
-		return genders.get(i);
-	}
-	
-	public boolean writeBrand(String name, String code){
+	public boolean writeBrand(String name){
 		try{
 			BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\brands.csv", true));
-			out.append("\"" + name + "\",\"" + code + "\"");
+			out.append("\"" + name + "\"");
 			out.newLine();
 			out.close();
 			return true;
@@ -239,10 +242,10 @@ public class Keys {
 		}
 	}
 	
-	public boolean writeColor(String name, String code){
+	public boolean writeColor(String name){
 		try{
 			BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\colors.csv", true));
-			out.append("\"" + name + "\",\"" + code + "\"");
+			out.append("\"" + name +"\"");
 			out.newLine();
 			out.close();
 			return true;
@@ -252,10 +255,10 @@ public class Keys {
 		}
 	}
 	
-	public boolean writeSize(String name, String code){
+	public boolean writeSize(String name){
 		try{
 			BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\sizes.csv", true));
-			out.append("\"" + name + "\",\"" + code + "\"");
+			out.append("\"" + name + "\"");
 			out.newLine();
 			out.close();
 			return true;
@@ -265,10 +268,10 @@ public class Keys {
 		}
 	}
 	
-	public boolean writeType(String name, String code){
+	public boolean writeType(String name){
 		try{
 			BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\types.csv", true));
-			out.append("\"" + name + "\",\"" + code + "\"");
+			out.append("\"" + name + "\"");
 			out.newLine();
 			out.close();
 			return true;
@@ -278,10 +281,10 @@ public class Keys {
 		}
 	}
 	
-	public boolean writeGender(String name, String code){
+	public boolean writeGender(String name){
 		try{
 			BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\genders.csv", true));
-			out.append("\"" + name + "\",\"" + code + "\"");
+			out.append("\"" + name +"\"");
 			out.newLine();
 			out.close();
 			return true;
@@ -289,5 +292,132 @@ public class Keys {
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	public boolean writeClient(String name){
+		try{
+			BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\clients.csv", true));
+			out.append("\"" + name +"\"");
+			out.newLine();
+			out.close();
+			return true;
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean rewriteAll(int identifier){
+		try{
+			if(identifier == BRAND){
+				rewriteAllBrands();
+			} else if(identifier == TYPE){
+				rewriteAllTypes();
+			} else if(identifier == COLOR){
+				rewriteAllColors();
+			} else if(identifier == SIZE){
+				rewriteAllSizes();
+			} else if(identifier == GENDER){
+				rewriteAllGenders();
+			} else if(identifier == CLIENT){
+				rewriteAllClients();
+			} else {
+				return false;
+			}
+			return true;
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean rewriteAllBrands(){
+		try{
+			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\brands.csv", false)); 
+			 for(int i = 0; i < brands.size(); i++){
+				 out.append("\"" + brands.get(i) + "\"");
+				 out.newLine();
+			 }
+			 out.close();
+			 return true;
+		 } catch (Exception e){
+			 System.out.println(e);
+			 return false;
+		 }
+	}
+	
+	public boolean rewriteAllTypes(){
+		try{
+			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\types.csv", false)); 
+			 for(int i = 0; i < types.size(); i++){
+				 out.append("\"" + types.get(i) + "\"");
+				 out.newLine();
+			 }
+			 out.close();
+			 return true;
+		 } catch (Exception e){
+			 System.out.println(e);
+			 return false;
+		 }
+	}
+	
+	public boolean rewriteAllColors(){
+		try{
+			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\colors.csv", false)); 
+			 for(int i = 0; i < colors.size(); i++){
+				 out.append("\"" + colors.get(i) + "\"");
+				 out.newLine();
+			 }
+			 out.close();
+			 return true;
+		 } catch (Exception e){
+			 System.out.println(e);
+			 return false;
+		 }
+	}
+	
+	public boolean rewriteAllSizes(){
+		try{
+			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\sizes.csv", false)); 
+			 for(int i = 0; i < sizes.size(); i++){
+				 out.append("\"" + sizes.get(i) + "\"");
+				 out.newLine();
+			 }
+			 out.close();
+			 return true;
+		 } catch (Exception e){
+			 System.out.println(e);
+			 return false;
+		 }
+	}
+	
+	public boolean rewriteAllGenders(){
+		try{
+			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\genders.csv", false)); 
+			 for(int i = 0; i < genders.size(); i++){
+				 out.append("\"" + genders.get(i) + "\"");
+				 out.newLine();
+			 }
+			 out.close();
+			 return true;
+		 } catch (Exception e){
+			 System.out.println(e);
+			 return false;
+		 }
+	}
+	
+	public boolean rewriteAllClients(){
+		try{
+			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\clients.csv", false)); 
+			 for(int i = 0; i < clients.size(); i++){
+				 out.append("\"" + clients.get(i) + "\"");
+				 out.newLine();
+			 }
+			 out.close();
+			 return true;
+		 } catch (Exception e){
+			 System.out.println(e);
+			 return false;
+		 }
 	}
 }
