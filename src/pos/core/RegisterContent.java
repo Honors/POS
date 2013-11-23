@@ -208,7 +208,6 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 			
 		filler = new JPanel();
 		add(filler, c_filler);
-		
 		updateList();
 	}
 	
@@ -298,17 +297,10 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 	 * Updates the logic for all the buttons
 	 */
 	public void updateButtons(){
-		if(tree.getSelectionPath() != null){
-			edit.setEnabled(true);
-			delete.setEnabled(true);
-			shiftUp.setEnabled(tree.getSelectionRows()[0] != 0);
-			shiftDown.setEnabled(tree.getSelectionRows()[0] != getAssociatedList().size()-1);
-		} else {
-			edit.setEnabled(false);
-			delete.setEnabled(false);
-			shiftUp.setEnabled(false);
-			shiftDown.setEnabled(false);
-		}
+		edit.setEnabled(tree.getSelectionPath() != null);
+		delete.setEnabled(tree.getSelectionPath() != null);
+		shiftUp.setEnabled(tree.getSelectionPath() != null ? tree.getSelectionRows()[0] != 0 : false);
+		shiftDown.setEnabled(tree.getSelectionPath() != null ? tree.getSelectionRows()[0] != getAssociatedList().size()-1 : false);
 	}
 	
 	@Override
@@ -319,7 +311,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 				getAssociatedList().add(addDialog.getValidatedInput().trim());
 				keys.write(identifier);
 				updateList();
-				
+		
 				TreePath pathToNewElement = find((DefaultMutableTreeNode)tree.getModel().getRoot(), addDialog.getValidatedInput());
 				tree.setSelectionPath(pathToNewElement);
 				tree.scrollPathToVisible(pathToNewElement);
