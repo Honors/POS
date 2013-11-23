@@ -1,5 +1,6 @@
 package pos.core;
 
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -9,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 
 import javax.swing.JButton;
@@ -33,13 +35,20 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 	
 	private int identifier;
 	
+	private JPanel filler;
 	private JLabel label;
 	private JTree tree;
 	private JScrollPane scrollTree;
-	private JButton add, edit, delete;
+	private JButton add, edit, delete, shiftUp, shiftDown;
 	
 	private Keys keys;
 	
+	/**
+	 * Creates a JPanel formatted for a tab of RegisterGUI
+	 *  
+	 * @param keys Lists of identification elements
+	 * @param identifier A Keys constant value indicating which list this content will display and edit
+	 */
 	public RegisterContent(Keys keys, int identifier){
 		super(new GridBagLayout());
 		this.keys = keys;
@@ -65,7 +74,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		c_tree.ipady = 0;
 		c_tree.weightx = 1;
 		c_tree.weighty = 1;
-		c_tree.gridheight = 4;
+		c_tree.gridheight = 6;
 		c_tree.gridwidth = 1;
 		c_tree.anchor = GridBagConstraints.FIRST_LINE_START;
 		c_tree.fill = GridBagConstraints.BOTH;
@@ -80,7 +89,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		c_add.weighty = 0;
 		c_add.gridheight = 1;
 		c_add.gridwidth = 1;
-		c_add.anchor = GridBagConstraints.FIRST_LINE_START;
+		c_add.anchor = GridBagConstraints.FIRST_LINE_END;
 		c_add.fill = GridBagConstraints.BOTH;
 		c_add.insets = new Insets(5,20,10,20);
 		
@@ -93,7 +102,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		c_edit.weighty = 0;
 		c_edit.gridheight = 1;
 		c_edit.gridwidth = 1;
-		c_edit.anchor = GridBagConstraints.FIRST_LINE_START;
+		c_edit.anchor = GridBagConstraints.FIRST_LINE_END;
 		c_edit.fill = GridBagConstraints.BOTH;
 		c_edit.insets = new Insets(10,20,10,20);
 		
@@ -106,20 +115,46 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		c_delete.weighty = 0;
 		c_delete.gridheight = 1;
 		c_delete.gridwidth = 1;
-		c_delete.anchor = GridBagConstraints.FIRST_LINE_START;
+		c_delete.anchor = GridBagConstraints.FIRST_LINE_END;
 		c_delete.fill = GridBagConstraints.BOTH;
 		c_delete.insets = new Insets(10,20,10,20);
 		
+		GridBagConstraints c_shiftUp = new GridBagConstraints();
+		c_shiftUp.gridx = 1;
+		c_shiftUp.gridy = 4;
+		c_shiftUp.ipadx = 100;
+		c_shiftUp.ipady = 5;
+		c_shiftUp.weightx = 0;
+		c_shiftUp.weighty = 0;
+		c_shiftUp.gridheight = 1;
+		c_shiftUp.gridwidth = 1;
+		c_shiftUp.anchor = GridBagConstraints.FIRST_LINE_END;
+		c_shiftUp.fill = GridBagConstraints.BOTH;
+		c_shiftUp.insets = new Insets(20,20,10,20);
+		
+		GridBagConstraints c_shiftDown = new GridBagConstraints();
+		c_shiftDown.gridx = 1;
+		c_shiftDown.gridy = 5;
+		c_shiftDown.ipadx = 100;
+		c_shiftDown.ipady = 5;
+		c_shiftDown.weightx = 0;
+		c_shiftDown.weighty = 0;
+		c_shiftDown.gridheight = 1;
+		c_shiftDown.gridwidth = 1;
+		c_shiftDown.anchor = GridBagConstraints.FIRST_LINE_END;
+		c_shiftDown.fill = GridBagConstraints.BOTH;
+		c_shiftDown.insets = new Insets(10,20,10,20);
+		
 		GridBagConstraints c_filler = new GridBagConstraints();
 		c_filler.gridx = 1;
-		c_filler.gridy = 4;
+		c_filler.gridy = 6;
 		c_filler.ipadx = 0;
 		c_filler.ipady = 0;
-		c_filler.weightx = 1;
+		c_filler.weightx = 0;
 		c_filler.weighty = 1;
 		c_filler.gridheight = 1;
 		c_filler.gridwidth = 1;
-		c_filler.anchor = GridBagConstraints.FIRST_LINE_START;
+		c_filler.anchor = GridBagConstraints.FIRST_LINE_END;
 		c_filler.fill = GridBagConstraints.BOTH;
 		c_filler.insets = new Insets(0,0,0,0);
 		
@@ -159,9 +194,29 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		delete.setEnabled(tree.getSelectionCount() != 0);
 		add(delete, c_delete);
 		
+		shiftUp = new JButton("SHIFT UP");
+		shiftUp.addActionListener(this);
+		shiftUp.setMnemonic(KeyEvent.VK_UP);
+		shiftUp.setEnabled(tree.getSelectionCount() != 0);
+		add(shiftUp, c_shiftUp);
+		
+		shiftDown = new JButton("SHIFT DOWN");
+		shiftDown.addActionListener(this);
+		shiftDown.setMnemonic(KeyEvent.VK_DOWN);
+		shiftDown.setEnabled(tree.getSelectionCount() != 0);
+		add(shiftDown, c_shiftDown);
+			
+		filler = new JPanel();
+		add(filler, c_filler);
+		
 		updateList();
 	}
 	
+	/**
+	 * Creates a string for the label of the content 
+	 * 
+	 * @return a string correctly named for the content displayed
+	 */
 	public String getLabel(){
 		String label;
 		if(identifier == Keys.BRAND){
@@ -182,6 +237,11 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		return label;
 	}
 	
+	/**
+	 * Gets the Keys list that this content is displaying and editing
+	 * 
+	 * @return the Keys list associated with this content
+	 */
 	public ArrayList<String> getAssociatedList(){
 		if(identifier == Keys.BRAND){
 			return keys.brands;
@@ -200,6 +260,9 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		}
 	}
 	
+	/**
+	 * Resets all the data in the list from the associated Keys list
+	 */
 	public void updateList(){
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 		if(getAssociatedList() != null){
@@ -212,6 +275,13 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		repaint();
 	}
 	
+	/**
+	 * Finds the TreePath containing a specific string
+	 * 
+	 * @param root the root of the tree
+	 * @param s the string to find the TreePath of
+	 * @return a TreePath containing the searched string, 's'
+	 */
 	private TreePath find(DefaultMutableTreeNode root, String s) {
 	    @SuppressWarnings("unchecked")
 	    Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
@@ -224,13 +294,20 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 	    return null;
 	}
 	
+	/**
+	 * Updates the logic for all the buttons
+	 */
 	public void updateButtons(){
 		if(tree.getSelectionPath() != null){
 			edit.setEnabled(true);
 			delete.setEnabled(true);
+			shiftUp.setEnabled(tree.getSelectionRows()[0] != 0);
+			shiftDown.setEnabled(tree.getSelectionRows()[0] != getAssociatedList().size()-1);
 		} else {
 			edit.setEnabled(false);
 			delete.setEnabled(false);
+			shiftUp.setEnabled(false);
+			shiftDown.setEnabled(false);
 		}
 	}
 	
@@ -239,7 +316,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		if(event.getSource().equals(add)){
 			DialogSingleTextInput addDialog = new DialogSingleTextInput(new JFrame(), "Add...", "", "", getAssociatedList());
 			if(addDialog.getValidated()){
-				getAssociatedList().add(addDialog.getValidatedInput());
+				getAssociatedList().add(addDialog.getValidatedInput().trim());
 				keys.write(identifier);
 				updateList();
 				
@@ -255,7 +332,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 			String oldName = tree.getSelectionPath().getLastPathComponent().toString();
 			DialogSingleTextInput addDialog = new DialogSingleTextInput(new JFrame(), "Edit...", "", oldName, getAssociatedList());
 			if(addDialog.getValidated()){
-				String newName = addDialog.getValidatedInput();
+				String newName = addDialog.getValidatedInput().trim();
 				getAssociatedList().set(getAssociatedList().indexOf(oldName), newName);
 				keys.write(identifier);
 				updateList();
@@ -273,6 +350,36 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 			keys.write(identifier);
 			updateList();
 			
+			tree.requestFocus();
+			updateButtons();
+		}
+		
+		if(event.getSource().equals(shiftUp)){
+			String selectedElement = tree.getSelectionPath().getLastPathComponent().toString();
+			int index1 = getAssociatedList().indexOf(selectedElement);
+			int index2 = index1 - 1;
+			Collections.swap(getAssociatedList(), index1, index2);
+			keys.write(identifier);
+			updateList();
+			
+			TreePath pathToSelectedElement = find((DefaultMutableTreeNode)tree.getModel().getRoot(), selectedElement);
+			tree.setSelectionPath(pathToSelectedElement);
+			tree.scrollPathToVisible(pathToSelectedElement);
+			tree.requestFocus();
+			updateButtons();
+		}
+		
+		if(event.getSource().equals(shiftDown)){
+			String selectedElement = tree.getSelectionPath().getLastPathComponent().toString();
+			int index1 = getAssociatedList().indexOf(selectedElement);
+			int index2 = index1 + 1;
+			Collections.swap(getAssociatedList(), index1, index2);
+			keys.write(identifier);
+			updateList();
+			
+			TreePath pathToSelectedElement = find((DefaultMutableTreeNode)tree.getModel().getRoot(), selectedElement);
+			tree.setSelectionPath(pathToSelectedElement);
+			tree.scrollPathToVisible(pathToSelectedElement);
 			tree.requestFocus();
 			updateButtons();
 		}
