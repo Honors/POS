@@ -119,16 +119,15 @@ public class ServerManager {
 		}
 	}
 
-	public void updateInventoryElement(int identifier, String oldElement, String newElement){
+	public String updateInventoryElement(int identifier, String oldElement, String newElement){
 		try{
 			String statement = "UPDATE Inventory SET " + getElement(identifier) + " = case when " + getElement(identifier) + " = "+ wrap(identifier, oldElement) +" then " + wrap(identifier, newElement) + " else " + getElement(identifier) + " end";
-			System.out.println(statement);
 			con.prepareStatement(statement).execute();
 			con.commit();
-			System.out.println("success");
+			return "SUCCESS";
 		} catch (Exception e){
 			
-			System.out.println("FAILED. SQL EXCEPTION:\n" + e);
+			return "FAILED. SQL EXCEPTION:\n" + e;
 		}
 	}
 	

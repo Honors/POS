@@ -407,7 +407,7 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		
 		if(nameField.isEnabled() && !nameField.getText().isEmpty()){
 			String nameCommand = "'%" + nameField.getText() + "%'";
-			nameCommand = nameCommand.replace(' ', '%').toUpperCase();
+			nameCommand = nameCommand.replace(" ", "%' AND UPPER(NAME) LIKE '%").toUpperCase();
 			command += "UPPER(NAME) LIKE " + nameCommand;
 		}
 		
