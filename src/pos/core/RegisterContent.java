@@ -347,8 +347,6 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		}
 		
 		if(event.getSource().equals(delete)){
-			//TODO ask to migrate all deleted identifier to new identifier
-			//TODO fix
 			String toDelete = tree.getSelectionPath().getLastPathComponent().toString();
 			ArrayList<String> listWithoutToDelete = new ArrayList<String>(getAssociatedList().subList(0, getAssociatedList().indexOf(toDelete)));
 			listWithoutToDelete.addAll(getAssociatedList().subList(getAssociatedList().indexOf(toDelete) + 1, getAssociatedList().size()));

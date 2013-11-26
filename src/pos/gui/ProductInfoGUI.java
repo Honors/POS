@@ -72,7 +72,6 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 			setTitle("Return...");
 		}
 		
-		//TODO figure out how to pad the right hand collumn a bit
 		GridBagConstraints lLabelCollumn = new GridBagConstraints();
 		lLabelCollumn.anchor = GridBagConstraints.LINE_START;
 		lLabelCollumn.fill = isEditable ? GridBagConstraints.HORIZONTAL : GridBagConstraints.BOTH;
@@ -85,10 +84,10 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		lInfoCollumn.anchor = GridBagConstraints.LINE_START;
 		lInfoCollumn.fill = isEditable ? GridBagConstraints.HORIZONTAL : GridBagConstraints.BOTH;
 		lInfoCollumn.ipady = 5;
-		lInfoCollumn.ipadx = 10;
+		lInfoCollumn.ipadx = 5;
 		lInfoCollumn.insets = new Insets(5,5,0,20);
 		lInfoCollumn.gridx = 1;
-		lInfoCollumn.weightx = 1;
+		lInfoCollumn.weightx = .5;
 		
 		GridBagConstraints rLabelCollumn = new GridBagConstraints();
 		rLabelCollumn.anchor = GridBagConstraints.LINE_START;
@@ -102,10 +101,10 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		rInfoCollumn.anchor = GridBagConstraints.LINE_START;
 		rInfoCollumn.fill = isEditable ? GridBagConstraints.HORIZONTAL : GridBagConstraints.BOTH;
 		rInfoCollumn.ipady = 5;
-		lInfoCollumn.ipadx = 10;
+		rInfoCollumn.ipadx = 5;
 		rInfoCollumn.insets = new Insets(5,5,0,20);
 		rInfoCollumn.gridx = 3;
-		rInfoCollumn.weightx = 1;
+		rInfoCollumn.weightx = .5;
 		
 		
 		content = new JPanel(new GridBagLayout());
