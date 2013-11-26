@@ -26,6 +26,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import pos.dialog.DialogSingleComboBox;
 import pos.dialog.DialogSingleTextInput;
 import pos.model.Keys;
 
@@ -347,14 +348,22 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		
 		if(event.getSource().equals(delete)){
 			//TODO ask to migrate all deleted identifier to new identifier
-			getAssociatedList().remove(tree.getSelectionPath().getLastPathComponent().toString());
-			keys.write(identifier);
-			updateList();
-			
-			tree.requestFocus();
-			updateButtons();
-			
-			parentWindow.update();
+			//TODO fix
+			String toDelete = tree.getSelectionPath().getLastPathComponent().toString();
+			ArrayList<String> listWithoutToDelete = new ArrayList<String>(getAssociatedList().subList(0, getAssociatedList().indexOf(toDelete)));
+			listWithoutToDelete.addAll(getAssociatedList().subList(getAssociatedList().indexOf(toDelete) + 1, getAssociatedList().size()));
+			DialogSingleComboBox dialog = new DialogSingleComboBox(new JFrame(), "Migrate...", "Please indicate what element the items containing\nthe deleting element should migrate to", listWithoutToDelete);
+			if(dialog.getValidated()){
+				getAssociatedList().remove(toDelete);
+				keys.write(identifier);
+				server.updateInventoryElement(identifier, toDelete, dialog.getValidatedInput());
+				updateList();
+				
+				tree.requestFocus();
+				updateButtons();
+				
+				parentWindow.update();
+			}
 		}
 		
 		if(event.getSource().equals(shiftUp)){
