@@ -41,16 +41,20 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 	private JScrollPane scrollTree;
 	private JButton add, edit, delete, shiftUp, shiftDown;
 	
+	private ServerManager server;
+	private OutputWindow parentWindow;
 	private Keys keys;
-	
+		
 	/**
 	 * Creates a JPanel formatted for a tab of RegisterGUI
 	 *  
 	 * @param keys Lists of identification elements
-	 * @param identifier A Keys constant value indicating which list this content will display and edit
+	 * @param identifier A Reference constant value indicating which list this content will display and edit
 	 */
-	public RegisterContent(Keys keys, int identifier){
+	public RegisterContent(ServerManager server, OutputWindow parentWindow, Keys keys, int identifier){
 		super(new GridBagLayout());
+		this.server = server;
+		this.parentWindow = parentWindow;
 		this.keys = keys;
 		this.identifier = identifier;
 		
@@ -218,17 +222,17 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 	 */
 	public String getLabel(){
 		String label;
-		if(identifier == Keys.BRAND){
+		if(identifier == Reference.BRAND){
 			label = "Registered Brands:";
-		} else if(identifier == Keys.TYPE){
+		} else if(identifier == Reference.TYPE){
 			label = "Registered Types:";
-		} else if(identifier == Keys.COLOR){
+		} else if(identifier == Reference.COLOR){
 			label = "Registered Colors:";
-		} else if(identifier == Keys.SIZE){
+		} else if(identifier == Reference.SIZE){
 			label = "Registered Sizes:";
-		} else if(identifier == Keys.GENDER){
+		} else if(identifier == Reference.GENDER){
 			label = "Registered Genders:";
-		} else if(identifier == Keys.CLIENT){
+		} else if(identifier == Reference.CLIENT){
 			label = "Registered Clients:";
 		} else {
 			label = "Registered:";
@@ -242,17 +246,17 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 	 * @return the Keys list associated with this content
 	 */
 	public ArrayList<String> getAssociatedList(){
-		if(identifier == Keys.BRAND){
+		if(identifier == Reference.BRAND){
 			return keys.brands;
-		} else if(identifier == Keys.TYPE){
+		} else if(identifier == Reference.TYPE){
 			return keys.types;
-		} else if(identifier == Keys.COLOR){
+		} else if(identifier == Reference.COLOR){
 			return keys.colors;
-		} else if(identifier == Keys.SIZE){
+		} else if(identifier == Reference.SIZE){
 			return keys.sizes;
-		} else if(identifier == Keys.GENDER){
+		} else if(identifier == Reference.GENDER){
 			return keys.genders;
-		} else if(identifier == Keys.CLIENT){
+		} else if(identifier == Reference.CLIENT){
 			return keys.clients;
 		} else {
 			return null;
@@ -327,6 +331,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 				String newName = addDialog.getValidatedInput().trim();
 				getAssociatedList().set(getAssociatedList().indexOf(oldName), newName);
 				keys.write(identifier);
+				server.updateInventoryElement(identifier, oldName, newName);
 				updateList();
 				
 				TreePath pathToNewElement = find((DefaultMutableTreeNode)tree.getModel().getRoot(), newName);
@@ -334,16 +339,22 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 				tree.scrollPathToVisible(pathToNewElement);
 				tree.requestFocus();
 				updateButtons();
+				
+				parentWindow.update();
+				System.out.println("Sent update request");
 			}
 		}
 		
 		if(event.getSource().equals(delete)){
+			//TODO ask to migrate all deleted identifier to new identifier
 			getAssociatedList().remove(tree.getSelectionPath().getLastPathComponent().toString());
 			keys.write(identifier);
 			updateList();
 			
 			tree.requestFocus();
 			updateButtons();
+			
+			parentWindow.update();
 		}
 		
 		if(event.getSource().equals(shiftUp)){

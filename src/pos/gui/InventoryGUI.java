@@ -24,6 +24,7 @@ import javax.swing.event.ChangeListener;
 
 import pos.backup.BackupWriter;
 import pos.core.Confirmable;
+import pos.core.Reference;
 import pos.core.ServerManager;
 import pos.model.InventoryItem;
 import pos.core.JFramePOS;
@@ -296,7 +297,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		
 		if (event.getSource().equals(IMRegister)){
-			new RegisterGUI(server, parentWindow, keys);
+			new RegisterGUI(server, this, keys);
 		}
 	}
 	
@@ -319,7 +320,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		
 		if(action.equals("new")){
-			new ProductInfoGUI(server, this, null, new InventoryItem(), keys, InventoryItem.NEW_PRODUCT);
+			new ProductInfoGUI(server, this, null, new InventoryItem(), keys, Reference.NEW_PRODUCT);
 		}
 		
 		if (action.equals("inventory_backup")){
@@ -373,7 +374,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchResult s = new SearchResult(this, i.remove(0), keys, InventoryItem.EDIT_PRODUCT);
+			SearchResult s = new SearchResult(this, i.remove(0), keys, Reference.EDIT_PRODUCT);
 			s.setOpaque(true);
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));

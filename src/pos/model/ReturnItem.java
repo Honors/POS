@@ -1,6 +1,7 @@
 package pos.model;
 
 import pos.core.Item;
+import pos.core.Reference;
 
 
 public class ReturnItem extends Item{
@@ -12,7 +13,7 @@ public class ReturnItem extends Item{
 		SKU = -1;
 		name = "NEW PRODUCT";
 		quantity = 1;
-		status = STATUS_PENDING;
+		status = Reference.STATUS_PENDING;
 	}
 	
 	public ReturnItem(int _SKU, String _UPC, String _name, String _brand, String _color, String _size, String _type, String _gender, String _client, String _date, String _notes, String _price, String _cost, int _quantity, String _status){
@@ -48,7 +49,7 @@ public class ReturnItem extends Item{
 		price = item.price;
 		cost = item.cost;
 		quantity = item.quantity;
-		status = STATUS_PENDING;
+		status = Reference.STATUS_PENDING;
 	}
 	
 	public ReturnItem(Item item){
@@ -66,7 +67,7 @@ public class ReturnItem extends Item{
 		price = item.price;
 		cost = item.cost;
 		quantity = item.quantity;
-		status = STATUS_PENDING;
+		status = Reference.STATUS_PENDING;
 	}
 	
 	public ReturnItem(InventoryItem item, String _status){

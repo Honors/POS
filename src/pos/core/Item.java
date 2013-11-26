@@ -1,15 +1,6 @@
 package pos.core;
 
 public class Item {
-
-	public final static int NEW_PRODUCT = 0;
-	public final static int EDIT_PRODUCT = 1;
-	public final static int VIEW_PRODUCT = 2;
-	public final static int RETURN_PRODUCT = 3;
-	
-	public final static String STATUS_PENDING = "Pending";
-	public final static String STATUS_TO_VENDER = "Return to Vender";
-	public final static String STATUS_TO_INVENTORY = "Return to Inventory";
 	
 	public int SKU;
 	public String UPC;

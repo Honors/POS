@@ -5,6 +5,7 @@ import javax.swing.JTabbedPane;
 
 import pos.core.JFramePOS;
 import pos.core.OutputWindow;
+import pos.core.Reference;
 import pos.core.RegisterContent;
 import pos.core.ServerManager;
 import pos.model.Keys;
@@ -19,12 +20,12 @@ public class RegisterGUI extends JFramePOS{
 		super(server, parentWindow, keys);
 
 		tabs = new JTabbedPane();
-		tabs.addTab("Brand", new RegisterContent(keys, Keys.BRAND));
-		tabs.addTab("Type", new RegisterContent(keys, Keys.TYPE));
-		tabs.addTab("Color", new RegisterContent(keys, Keys.COLOR));
-		tabs.addTab("Size", new RegisterContent(keys, Keys.SIZE));
-		tabs.addTab("Gender", new RegisterContent(keys, Keys.GENDER));
-		tabs.addTab("Client", new RegisterContent(keys, Keys.CLIENT));
+		tabs.addTab("Brand", new RegisterContent(server, parentWindow, keys, Reference.BRAND));
+		tabs.addTab("Type", new RegisterContent(server, parentWindow, keys, Reference.TYPE));
+		tabs.addTab("Color", new RegisterContent(server, parentWindow, keys, Reference.COLOR));
+		tabs.addTab("Size", new RegisterContent(server, parentWindow, keys, Reference.SIZE));
+		tabs.addTab("Gender", new RegisterContent(server, parentWindow, keys, Reference.GENDER));
+		tabs.addTab("Client", new RegisterContent(server, parentWindow, keys, Reference.CLIENT));
 		
 		setTitle("Register");
 		setContentPane(tabs);

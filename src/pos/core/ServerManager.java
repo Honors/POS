@@ -8,6 +8,8 @@ import pos.model.InventoryItem;
 
 public class ServerManager {
 	
+	public static final int BRAND = 0;
+	
 	private Connection con;
 	
 	public ServerManager(String host, String username, String password){
@@ -31,6 +33,49 @@ public class ServerManager {
 			s += e.toString();
 		}
 		return s;
+	}
+	
+	public String getElement(int identifier){
+		String element;
+		switch(identifier){
+		case Reference.SKU:      element = "SKU";
+							     break;
+		case Reference.UPC:      element = "UPC";
+							     break;
+		case Reference.NAME:     element = "NAME";
+							     break;
+		case Reference.BRAND:    element = "BRAND";
+							     break;
+		case Reference.COLOR:    element = "COLOR";
+							     break;
+		case Reference.SIZE:     element = "SIZE";
+							     break;
+		case Reference.TYPE:     element = "TYPE";
+							     break;
+		case Reference.GENDER:   element = "GENDER";
+							     break;
+		case Reference.CLIENT:   element = "CLIENT";
+							     break;
+		case Reference.DATE:     element = "DATE";
+							     break;
+		case Reference.NOTES:    element = "NOTES";
+							     break;
+		case Reference.PRICE:    element = "PRICE";
+								 break;
+		case Reference.COST:     element = "COST";
+								 break;
+		case Reference.QUANTITY: element = "QUANTITY";
+								 break;
+		case Reference.STATUS:   element = "STATUS";
+								 break;
+		default:				 element = null;
+								 break;
+		}
+		return element;
+	}
+	
+	public String wrap(int identifier, String element){
+		return (identifier == Reference.SKU || identifier == Reference.QUANTITY) ? element : "'" + element + "'";
 	}
 	
 	//INVENTORY MANAGEMENT METHODS
@@ -74,6 +119,19 @@ public class ServerManager {
 		}
 	}
 
+	public void updateInventoryElement(int identifier, String oldElement, String newElement){
+		try{
+			String statement = "UPDATE Inventory SET " + getElement(identifier) + " = case when " + getElement(identifier) + " = "+ wrap(identifier, oldElement) +" then " + wrap(identifier, newElement) + " else " + getElement(identifier) + " end";
+			System.out.println(statement);
+			con.prepareStatement(statement).execute();
+			con.commit();
+			System.out.println("success");
+		} catch (Exception e){
+			
+			System.out.println("FAILED. SQL EXCEPTION:\n" + e);
+		}
+	}
+	
 	public String insertInventoryItem(InventoryItem i){
 		if (getInventoryItem(i.SKU).SKU != -1){
 			return "FAILED: DUPLICATE SKU";

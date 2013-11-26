@@ -1,17 +1,17 @@
 package pos.gui;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 import pos.core.JToggleEnableButton;
+import pos.core.Reference;
 import pos.core.ServerManager;
 import pos.model.InventoryItem;
 import pos.core.JFramePOS;
@@ -385,7 +385,7 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		ArrayList<InventoryItem> i = server.searchInventory(getSearchCommand());
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchResult s = new SearchResult(this, i.remove(0), keys, InventoryItem.VIEW_PRODUCT);
+			SearchResult s = new SearchResult(this, i.remove(0), keys, Reference.VIEW_PRODUCT);
 			s.setOpaque(true);
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));
@@ -406,7 +406,9 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		String command = new String();
 		
 		if(nameField.isEnabled() && !nameField.getText().isEmpty()){
-			command += "NAME LIKE '%" + nameField.getText() + "%'";
+			String nameCommand = "'%" + nameField.getText() + "%'";
+			nameCommand = nameCommand.replace(' ', '%').toUpperCase();
+			command += "UPPER(NAME) LIKE " + nameCommand;
 		}
 		
 		if(upcField.isEnabled() && !upcField.getText().isEmpty()){
@@ -454,6 +456,8 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		if(command.isEmpty()){
 			command = "SKU>-1";
 		}
+		
+		System.out.println(command);
 		
 		return command;
 	}

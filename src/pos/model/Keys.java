@@ -3,14 +3,9 @@ package pos.model;
 import java.io.*;
 import java.util.ArrayList;
 
+import pos.core.Reference;
+
 public class Keys {
-	
-	public static final int BRAND = 0;
-	public static final int COLOR = 1;
-	public static final int SIZE = 2;
-	public static final int TYPE = 3;
-	public static final int GENDER = 4;
-	public static final int CLIENT = 5;
 	
 	public String keyPath;
 	
@@ -51,17 +46,17 @@ public class Keys {
 	
 	public boolean read(int identifier){
 		try{
-			if(identifier == BRAND){
+			if(identifier == Reference.BRAND){
 				readBrands();
-			} else if(identifier == TYPE){
+			} else if(identifier == Reference.TYPE){
 				readTypes();
-			} else if(identifier == COLOR){
+			} else if(identifier == Reference.COLOR){
 				readColors();
-			} else if(identifier == SIZE){
+			} else if(identifier == Reference.SIZE){
 				readSizes();
-			} else if(identifier == GENDER){
+			} else if(identifier == Reference.GENDER){
 				readGenders();
-			} else if(identifier == CLIENT){
+			} else if(identifier == Reference.CLIENT){
 				readClients();
 			} else {
 				return false;
@@ -228,17 +223,17 @@ public class Keys {
 	
 	public boolean write(String name, int identifier){
 		try{
-			if(identifier == BRAND){
+			if(identifier == Reference.BRAND){
 				writeBrand(name);
-			} else if(identifier == TYPE){
+			} else if(identifier == Reference.TYPE){
 				writeType(name);
-			} else if(identifier == COLOR){
+			} else if(identifier == Reference.COLOR){
 				writeColor(name);
-			} else if(identifier == SIZE){
+			} else if(identifier == Reference.SIZE){
 				writeSize(name);
-			} else if(identifier == GENDER){
+			} else if(identifier == Reference.GENDER){
 				writeGender(name);
-			} else if(identifier == CLIENT){
+			} else if(identifier == Reference.CLIENT){
 				writeClient(name);
 			} else {
 				return false;
@@ -330,17 +325,17 @@ public class Keys {
 	
 	public boolean write(int identifier){
 		try{
-			if(identifier == BRAND){
+			if(identifier == Reference.BRAND){
 				writeAllBrands();
-			} else if(identifier == TYPE){
+			} else if(identifier == Reference.TYPE){
 				writeAllTypes();
-			} else if(identifier == COLOR){
+			} else if(identifier == Reference.COLOR){
 				writeAllColors();
-			} else if(identifier == SIZE){
+			} else if(identifier == Reference.SIZE){
 				writeAllSizes();
-			} else if(identifier == GENDER){
+			} else if(identifier == Reference.GENDER){
 				writeAllGenders();
-			} else if(identifier == CLIENT){
+			} else if(identifier == Reference.CLIENT){
 				writeAllClients();
 			} else {
 				return false;

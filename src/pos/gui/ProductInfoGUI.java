@@ -11,6 +11,7 @@ import javax.swing.*;
 
 import pos.core.Confirmable;
 import pos.core.Item;
+import pos.core.Reference;
 import pos.core.ServerManager;
 import pos.model.InventoryItem;
 import pos.core.JFramePOS;
@@ -49,22 +50,22 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		writeToOutput("\n\n::" + item.toStringUpdate());
 		
 		this.status = status;
-		if(status == InventoryItem.NEW_PRODUCT){
+		if(status == Reference.NEW_PRODUCT){
 			isNew = true;
 			isEditable = true;
 			isReturn = false;
 			setTitle("New...");
-		} else if(status == InventoryItem.EDIT_PRODUCT){
+		} else if(status == Reference.EDIT_PRODUCT){
 			isNew = false;
 			isEditable = true;
 			isReturn = false;
 			setTitle("Edit...");
-		} else if(status == InventoryItem.VIEW_PRODUCT){
+		} else if(status == Reference.VIEW_PRODUCT){
 			isNew = false;
 			isEditable = false;
 			isReturn = false;
 			setTitle("View...");
-		} else if(status == InventoryItem.RETURN_PRODUCT){
+		} else if(status == Reference.RETURN_PRODUCT){
 			isNew = false;
 			isEditable = false;
 			isReturn = true;
@@ -212,7 +213,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		
 		client = isEditable ? new JComboBox<Object>(keys.clients.toArray()) : new JLabel(item.client);
 		if(isEditable){
-			if(item.gender != null)
+			if(item.client != null)
 				((JComboBox<Object>)client).setSelectedItem(item.client);
 		} else {
 			client.setBorder(new JTextField().getBorder());
@@ -366,7 +367,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 
 			//TODO require an integer in Quantity before submission (error dialog)
 
-			if(status == InventoryItem.EDIT_PRODUCT){
+			if(status == Reference.EDIT_PRODUCT){
 				if (update){
 					InventoryItem i = new InventoryItem(0, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
 					writeToOutput("\n\n:::::" + server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
@@ -381,8 +382,8 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 					}
 				}
 			}
-			if(status == InventoryItem.NEW_PRODUCT){
-				InventoryItem i = new InventoryItem(0, ((JLabel)upc).getText(), ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JTextField)client).getText(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
+			if(status == Reference.NEW_PRODUCT){
+				InventoryItem i = new InventoryItem(0, ((JLabel)upc).getText(), ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
 				i.SKU = server.getMaxInventorySKU() + 1;
 				if (((JLabel)upc).getText().length() * ((JTextField)name).getText().length() > 0){
 					if (server.searchInventory("UPC='" + i.UPC + "'").size() > 0 && !confirmed){
@@ -408,7 +409,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 					}
 				}
 			}
-			if(status == InventoryItem.RETURN_PRODUCT){
+			if(status == Reference.RETURN_PRODUCT){
 				//TODO update return info
 			}
 		}
