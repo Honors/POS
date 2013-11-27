@@ -1,4 +1,4 @@
-package pos.gui;
+package pos.swing.gui;
 	 
 
 import java.awt.event.ActionEvent;
@@ -12,8 +12,8 @@ import java.awt.Insets;
 import javax.swing.*;
 
 import pos.core.ServerManager;
-import pos.core.JFramePOS;
-import pos.model.Keys;
+import pos.swing.JFramePOS;
+import pos.core.Keys;
 import pos.core.OutputWindow;
 
 @SuppressWarnings("serial")

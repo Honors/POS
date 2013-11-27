@@ -4,8 +4,8 @@ import java.io.*;
 import java.util.ArrayList;
 
 import pos.core.ServerManager;
-import pos.model.InventoryItem;
-import pos.model.ReturnItem;
+import pos.item.InventoryItem;
+import pos.item.ReturnItem;
 import pos.core.OutputWindow;
 
 /**

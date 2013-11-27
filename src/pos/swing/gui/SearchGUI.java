@@ -1,4 +1,4 @@
-package pos.gui;
+package pos.swing.gui;
 
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
@@ -10,14 +10,14 @@ import java.awt.Insets;
 
 import javax.swing.*;
 
-import pos.core.JToggleEnableButton;
-import pos.core.Reference;
+import pos.swing.JToggleEnableButton;
+import pos.lib.Reference;
 import pos.core.ServerManager;
-import pos.model.InventoryItem;
-import pos.core.JFramePOS;
-import pos.model.Keys;
+import pos.item.InventoryItem;
+import pos.swing.JFramePOS;
+import pos.core.Keys;
 import pos.core.OutputWindow;
-import pos.model.SearchResult;
+import pos.swing.SearchResult;
 
 @SuppressWarnings("serial")
 public class SearchGUI extends JFramePOS implements ActionListener{

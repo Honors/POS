@@ -3,7 +3,7 @@ package pos;
 import javax.swing.*;
 
 import pos.core.ServerManager;
-import pos.gui.HomeGUI;
+import pos.swing.gui.HomeGUI;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;

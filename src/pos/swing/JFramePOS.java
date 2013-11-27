@@ -1,9 +1,10 @@
-package pos.core;
+package pos.swing;
 
 import javax.swing.JFrame;
 
+import pos.core.OutputWindow;
 import pos.core.ServerManager;
-import pos.model.Keys;
+import pos.core.Keys;
 
 public class JFramePOS extends JFrame {
 

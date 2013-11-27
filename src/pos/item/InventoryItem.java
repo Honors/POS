@@ -1,6 +1,4 @@
-package pos.model;
-
-import pos.core.Item;
+package pos.item;
 
 
 public class InventoryItem extends Item {

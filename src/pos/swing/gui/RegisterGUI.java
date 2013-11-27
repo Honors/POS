@@ -1,14 +1,14 @@
-package pos.gui;
+package pos.swing.gui;
 
 
 import javax.swing.JTabbedPane;
 
-import pos.core.JFramePOS;
+import pos.swing.JFramePOS;
 import pos.core.OutputWindow;
-import pos.core.Reference;
-import pos.core.RegisterContent;
+import pos.lib.Reference;
+import pos.swing.RegisterContent;
 import pos.core.ServerManager;
-import pos.model.Keys;
+import pos.core.Keys;
 
 public class RegisterGUI extends JFramePOS{
 

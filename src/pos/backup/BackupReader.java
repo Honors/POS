@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 
-import pos.model.InventoryItem;
+import pos.item.InventoryItem;
 
 /**
  * This class reads in data to the server from a backup CSV file

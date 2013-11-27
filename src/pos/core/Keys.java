@@ -1,9 +1,9 @@
-package pos.model;
+package pos.core;
 
 import java.io.*;
 import java.util.ArrayList;
 
-import pos.core.Reference;
+import pos.lib.Reference;
 
 public class Keys {
 	

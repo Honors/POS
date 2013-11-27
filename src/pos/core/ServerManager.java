@@ -4,7 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import pos.backup.BackupReader;
-import pos.model.InventoryItem;
+import pos.lib.Reference;
+import pos.item.InventoryItem;
 
 public class ServerManager {
 	

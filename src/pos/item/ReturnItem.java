@@ -1,7 +1,6 @@
-package pos.model;
+package pos.item;
 
-import pos.core.Item;
-import pos.core.Reference;
+import pos.lib.Reference;
 
 
 public class ReturnItem extends Item{

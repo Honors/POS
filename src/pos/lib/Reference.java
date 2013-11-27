@@ -1,4 +1,4 @@
-package pos.core;
+package pos.lib;
 
 public class Reference {
 	

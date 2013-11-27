@@ -1,4 +1,4 @@
-package pos.gui;
+package pos.swing.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 import pos.core.Confirmable;
-import pos.core.Item;
-import pos.core.Reference;
+import pos.item.Item;
+import pos.lib.Reference;
 import pos.core.ServerManager;
-import pos.model.InventoryItem;
-import pos.core.JFramePOS;
-import pos.model.Keys;
+import pos.item.InventoryItem;
+import pos.swing.JFramePOS;
+import pos.core.Keys;
 import pos.core.OutputWindow;
-import pos.model.SearchResult;
+import pos.swing.SearchResult;
 
 @SuppressWarnings("serial")
 public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirmable{

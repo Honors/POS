@@ -1,4 +1,4 @@
-package pos.core;
+package pos.swing;
 
 import java.awt.Color;
 import java.awt.Component;

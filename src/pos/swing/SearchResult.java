@@ -1,4 +1,4 @@
-package pos.model;
+package pos.swing;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -6,9 +6,11 @@ import java.awt.event.MouseListener;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
-import pos.core.Item;
-import pos.core.JFramePOS;
-import pos.gui.ProductInfoGUI;
+import pos.item.Item;
+import pos.item.InventoryItem;
+import pos.core.Keys;
+import pos.swing.JFramePOS;
+import pos.swing.gui.ProductInfoGUI;
 
 @SuppressWarnings("serial")
 public class SearchResult extends JTextArea implements MouseListener{

@@ -1,4 +1,4 @@
-package pos.core;
+package pos.item;
 
 public class Item {
 	

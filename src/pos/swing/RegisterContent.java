@@ -1,4 +1,4 @@
-package pos.core;
+package pos.swing;
 
 
 import java.awt.GridBagConstraints;
@@ -26,9 +26,12 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import pos.core.OutputWindow;
+import pos.core.ServerManager;
 import pos.dialog.DialogSingleComboBox;
 import pos.dialog.DialogSingleTextInput;
-import pos.model.Keys;
+import pos.lib.Reference;
+import pos.core.Keys;
 
 public class RegisterContent extends JPanel implements ActionListener, MouseListener {
 
