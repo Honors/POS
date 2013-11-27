@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -180,6 +181,8 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		if(isEditable){
 			if(item.brand != null)
 				((JComboBox<Object>)brand).setSelectedItem(item.brand);
+			((JComboBox<Object>)brand).addActionListener(this);
+			((JComboBox<Object>)brand).setActionCommand("updateName");
 		} else {
 			brand.setBorder(new JTextField().getBorder());
 			brand.setOpaque(true);
@@ -197,6 +200,8 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		if(isEditable){
 			if(item.color != null)
 				((JComboBox<Object>)color).setSelectedItem(item.color);
+			((JComboBox<Object>)color).addActionListener(this);
+			((JComboBox<Object>)color).setActionCommand("updateName");
 		} else {
 			color.setBorder(new JTextField().getBorder());
 			color.setOpaque(true);
@@ -231,6 +236,8 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		if(isEditable){
 			if(item.gender != null)
 				((JComboBox<Object>)gender).setSelectedItem(item.gender);
+			((JComboBox<Object>)gender).addActionListener(this);
+			((JComboBox<Object>)gender).setActionCommand("updateName");
 		} else {
 			gender.setBorder(new JTextField().getBorder());
 			gender.setOpaque(true);
@@ -248,6 +255,8 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		if(isEditable){
 			if(item.type != null)
 				((JComboBox<Object>)type).setSelectedItem(item.type);
+			((JComboBox<Object>)type).addActionListener(this);
+			((JComboBox<Object>)type).setActionCommand("updateName");
 		} else {
 			type.setBorder(new JTextField().getBorder());
 			type.setOpaque(true);
@@ -265,6 +274,8 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		if(isEditable){
 			if(item.size != null)
 				((JComboBox<Object>)size).setSelectedItem(item.size);
+			((JComboBox<Object>)size).addActionListener(this);
+			((JComboBox<Object>)size).setActionCommand("updateName");
 		} else {
 			size.setBorder(new JTextField().getBorder());
 			size.setOpaque(true);
@@ -359,6 +370,20 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		setVisible(true);
 	}
 	
+	public String arrayToSentence(ArrayList<String> array){
+		String sentence = new String();
+		boolean isFirst = true;
+		for(int i = 0; i < array.size(); i++){
+			if(isFirst){
+				sentence += array.get(i);
+				isFirst = false;
+			} else {
+				sentence += " " + array.get(i);
+			}
+		}
+		return sentence;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ActionEvent event) {
@@ -423,6 +448,25 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 			actionConfirmed("generateLabels");
 		}
 		
+		if (event.getActionCommand().equals("updateName")){
+			ArrayList<String> generatedName = new ArrayList<String>();
+			if(!((JComboBox<Object>)color).getSelectedItem().toString().equalsIgnoreCase("No Color")){
+				generatedName.add(((JComboBox<Object>)color).getSelectedItem().toString());
+			}
+			if(!((JComboBox<Object>)brand).getSelectedItem().toString().equalsIgnoreCase("No Brand")){
+				generatedName.add(((JComboBox<Object>)brand).getSelectedItem().toString());
+			}
+			if(!((JComboBox<Object>)type).getSelectedItem().toString().equalsIgnoreCase("No Type")){
+				generatedName.add(((JComboBox<Object>)type).getSelectedItem().toString());
+			}
+			if(!((JComboBox<Object>)size).getSelectedItem().toString().equalsIgnoreCase("No Size")){
+				generatedName.add("(" + ((JComboBox<Object>)size).getSelectedItem().toString() + ")");
+			}
+			if(!((JComboBox<Object>)gender).getSelectedItem().toString().equalsIgnoreCase("No Gender")){
+				generatedName.add(((JComboBox<Object>)gender).getSelectedItem().toString());
+			}
+			((JTextField)name).setText(arrayToSentence(generatedName));
+		}
 	}
 	
 	public void actionConfirmed(String action){

@@ -246,7 +246,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		tabs.addChangeListener(this);
 		tabs.addTab("Inventory Control", ICContent);
 		tabs.addTab("Inventory Maintenance", IMContent);
-		tabs.addTab("Returns Maintenance", RMContent);
+		tabs.addTab("Return Maintenance", RMContent);
 		
 		setTitle("Inventory");
 		setContentPane(tabs);
