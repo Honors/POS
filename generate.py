@@ -14,14 +14,20 @@ class Report:
       return []
     else:
       return [[lst[0], lst[1]]] + self.group(lst[2:], n)
-  def renderAll(self, items):
-    return "<table>" + "".join(map(self.renderRow, self.group(items, 2))) + "</table>"
+  def renderAll(self):
+    return "<table>" + "".join(map(self.renderRow, self.group(self.items, 2))) + "</table>"
+  def write(self, outfile):
+    return pisa.CreatePDF(self.renderAll(), outfile)
+  def __init__(self, items):
+    self.items = items
 
 out = open("test.pdf", "w+b")
 item = DetailItem("Header", "barcode.png")
 items = map(lambda x: item, range(10))
 
-pdf = pisa.CreatePDF(Report().renderAll(items), out)
+report = Report(items)
+pdf = report.write(out)
+
 if not pdf.err:
   print "Successfully rendered pdf."
 else:
