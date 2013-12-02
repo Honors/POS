@@ -345,7 +345,6 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 				updateButtons();
 				
 				parentWindow.update();
-				System.out.println("Sent update request");
 			}
 		}
 		

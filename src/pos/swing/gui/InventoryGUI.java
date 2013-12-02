@@ -19,6 +19,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -45,7 +46,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	private JPanel ICContent, IMContent, RMContent, IMResults, RMResults, ICSearchBar, IMSearchBar, RMSearchBar;
 	private JTabbedPane tabs;
 	private JToggleButton ICModeIncoming, ICModeOutgoing, ICModeReturn;
-	private JButton IMBackup, IMRestore, RMBackup, IMNew, ICEnter, IMEnter, RMEnter, IMRegister;
+	private JButton IMBackup, IMRestore, IMNew, ICEnter, IMEnter, RMEnter, IMRegister;
 	private ButtonGroup ICModes;
 	
 	public InventoryGUI(ServerManager i, OutputWindow out, String p, Keys keys){
@@ -112,11 +113,14 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		ICContent.add(ICModeReturn, c);
 		
 		ICOutput = new JTextArea();
+		ICOutput.setFont(ICOutput.getFont().deriveFont(14f));
 		ICOutput.setLineWrap(true);
 		ICOutput.setWrapStyleWord(true);
+		ICOutput.setBorder(new EmptyBorder(5,5,5,5));
 		ICOutputPane = new JScrollPane(ICOutput);
 		c.gridx = 0;
 		c.gridy = 2;
+		c.weighty = 1;
 		c.gridwidth = 3;
 		c.ipadx = 450;
 		c.ipady = 550;
@@ -127,6 +131,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		IMContent = new JPanel(new GridBagLayout());
 		c.ipady = 5;
 		c.ipadx = 0;
+		c.weighty = 0;
 		c.gridwidth = 1;
 		c.insets = new Insets(6,5,0,5);
 		
@@ -224,6 +229,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		c.weightx = 0;
 		RMSearchBar.add(RMEnter, c);
 		
+		/*
 		RMBackup = new JButton("BACKUP");
 		RMBackup.addActionListener(this);
 		c.gridx = 0;
@@ -231,13 +237,14 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		c.weightx = .5;
 		c.insets = new Insets(5,5,0,5);
 		RMContent.add(RMBackup, c);
+		*/
 		
 		RMResults = new JPanel();
 		RMResults.setLayout(new BoxLayout(RMResults, 1));
 		
 		RMOutput = new JScrollPane(RMResults);
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 1;
 		c.weighty = 1;
 		c.insets = new Insets(5,5,5,5);
 		RMContent.add(RMOutput, c);
@@ -304,11 +311,41 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	@Override
 	public void actionConfirmed(String action) {
 		if(action.equals("incoming")){
-			
+			ArrayList<InventoryItem> toChange = server.searchInventory("UPC='" + ICTextEntry.getText().trim() + "'");
+			if(toChange.size() < 1){
+				//TODO some error
+			} else if(toChange.size() == 1){
+				toChange.get(0).quantity++;
+				server.updateInventoryItem(toChange.get(0));
+				
+				String statement = "[+]   UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\"   ->   " + toChange.get(0).quantity;
+				writeToOutput(statement + "\n\n");
+				//TODO log the change
+			} else if(toChange.size() > 1){
+				//TODO some error
+			}
+			ICTextEntry.setText("");
 		}
 		
 		if(action.equals("outgoing")){
-			
+			ArrayList<InventoryItem> toChange = server.searchInventory("UPC='" + ICTextEntry.getText().trim() + "'");
+			if(toChange.size() < 1){
+				//TODO some error
+			} else if(toChange.size() == 1){
+					if(toChange.get(0).quantity > 0){
+					toChange.get(0).quantity--;
+					server.updateInventoryItem(toChange.get(0));
+					
+					String statement = "[-]   UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\"   ->   " + toChange.get(0).quantity;
+					writeToOutput(statement + "\n\n");
+					//TODO log the change
+				} else {
+					//TODO some error
+				}
+			} else if(toChange.size() > 1){
+				//TODO some error
+			}
+			ICTextEntry.setText("");
 		}
 		
 		if(action.equals("return")){
