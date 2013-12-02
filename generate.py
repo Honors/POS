@@ -8,8 +8,7 @@ def group(lst, n):
   if len(lst) == 0:
     return []
   else:
-    grouped = [[lst[0], lst[1]]] + group(lst[2:], n)
-    return grouped
+    return [[lst[0], lst[1]]] + group(lst[2:], n)
 def renderAll(items):
   return "<table>" + "".join(map(renderRow, group(items, 2))) + "</table>"
 
