@@ -10,8 +10,11 @@ class Page:
       return [[lst[0], lst[1]]] + self.group(lst[2:], n)
   def renderAll(self):
     return "<table>" + "".join(map(self.renderRow, self.group(self.items, 2))) + "</table>"
-  def write(self, outfile):
-    return pisa.CreatePDF(self.renderAll(), outfile)
+  def write(self, outfile, verbose=False):
+    error = pisa.CreatePDF(self.renderAll(), outfile).err
+    if verbose:
+      print "An error occurred." if error else "Successfully rendered pdf."
+    return error
   def __init__(self, items):
     self.items = items
 
