@@ -21,5 +21,9 @@ out = open("test.pdf", "w+b")
 item = DetailItem("Header", "barcode.png")
 items = map(lambda x: item, range(10))
 
-err = pisa.CreatePDF(Report().renderAll(items), out)
+pdf = pisa.CreatePDF(Report().renderAll(items), out)
+if not pdf.err:
+  print "Successfully rendered pdf."
+else:
+  print "An error occurred: " + ctx.err
 
