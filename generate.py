@@ -1,18 +1,25 @@
 from xhtml2pdf import pisa
 
-def render(header, image):
-  return "<td width='200px'><h2>" + header + "</h2><img width='200px' src='" + image + "'></td>"
-def renderRow(items):
-  return "<tr>" + "".join(map(lambda x: render(x["header"], x["image"]), items)) + "</tr>"
-def group(lst, n):
-  if len(lst) == 0:
-    return []
-  else:
-    return [[lst[0], lst[1]]] + group(lst[2:], n)
-def renderAll(items):
-  return "<table>" + "".join(map(renderRow, group(items, 2))) + "</table>"
+class DetailItem:
+  def render(self):
+    return "<td width='200px'><h2>" + self.header + "</h2><img width='200px' src='" + self.image + "'></td>" 
+  def __init__(self, header, image):
+    self.header = header
+    self.image = image
+class Report:
+  def renderRow(self, items):
+    return "<tr>" + "".join(map(lambda x: x.render(), items)) + "</tr>"
+  def group(self, lst, n):
+    if len(lst) == 0:
+      return []
+    else:
+      return [[lst[0], lst[1]]] + self.group(lst[2:], n)
+  def renderAll(self, items):
+    return "<table>" + "".join(map(self.renderRow, self.group(items, 2))) + "</table>"
 
 out = open("test.pdf", "w+b")
-item = {"header": "Item", "image": "barcode.png"}
+item = DetailItem("Header", "barcode.png")
 items = map(lambda x: item, range(10))
-err = pisa.CreatePDF(renderAll(items), out)
+
+err = pisa.CreatePDF(Report().renderAll(items), out)
+
