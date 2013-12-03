@@ -5,9 +5,11 @@ class Page:
     return "<tr>" + "".join(map(lambda x: x.render(), items)) + "</tr>"
   def group(self, lst, n):
     if len(lst) == 0:
-      return []
+      return []	
+    elif len(lst) < n:
+      return [lst]
     else:
-      return [[lst[0], lst[1]]] + self.group(lst[2:], n)
+      return [lst[0:n]] + self.group(lst[n:], n)
   def renderAll(self):
     return "<table>" + "".join(map(self.renderRow, self.group(self.items, 2))) + "</table>"
   def write(self, outfile, verbose=False):
