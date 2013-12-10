@@ -46,7 +46,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	private JPanel ICContent, IMContent, RMContent, IMResults, RMResults, ICSearchBar, IMSearchBar, RMSearchBar;
 	private JTabbedPane tabs;
 	private JToggleButton ICModeIncoming, ICModeOutgoing, ICModeReturn;
-	private JButton IMBackup, IMRestore, IMNew, ICEnter, IMEnter, RMEnter, IMRegister;
+	private JButton ICMultiple, IMBackup, IMRestore, IMNew, ICEnter, IMEnter, RMEnter, IMRegister;
 	private ButtonGroup ICModes;
 	
 	public InventoryGUI(ServerManager i, OutputWindow out, String p, Keys keys){
@@ -63,7 +63,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		ICSearchBar = new JPanel(new GridBagLayout());
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 3;
+		c.gridwidth = 4;
 		ICContent.add(ICSearchBar, c);	
 		
 		ICTextEntry = new JTextField();
@@ -89,28 +89,41 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		
 		ICModeIncoming = new JToggleButton("INCOMING");
 		ICModeIncoming.addActionListener(this);
+		ICModeIncoming.setOpaque(true);
+		ICModeIncoming.setBackground(new Color(0xc5c1b8));
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weightx = .5;
-		c.insets = new Insets(5,5,0,5);
+		c.insets = new Insets(5,5,0,0);
 		ICModes.add(ICModeIncoming);
 		ICContent.add(ICModeIncoming, c);
 		
 		ICModeOutgoing = new JToggleButton("OUTGOING");
 		ICModeOutgoing.setSelected(true);
 		ICModeOutgoing.addActionListener(this);
+		ICModeOutgoing.setOpaque(true);
+		ICModeOutgoing.setBackground(new Color(0xc5c1b8));
 		c.gridx = 1;
 		c.gridy = 1;
-		c.insets = new Insets(5,0,0,5);
+		c.insets = new Insets(5,0,0,0);
 		ICModes.add(ICModeOutgoing);
 		ICContent.add(ICModeOutgoing, c);
 		
 		ICModeReturn = new JToggleButton("RETURN");
 		ICModeReturn.addActionListener(this);
+		ICModeReturn.setOpaque(true);
+		ICModeReturn.setBackground(new Color(0xc5c1b8));
 		c.gridx = 2;
 		c.gridy = 1;
 		ICModes.add(ICModeReturn);
 		ICContent.add(ICModeReturn, c);
+		
+		ICMultiple = new JButton("MULTIPLE");
+		ICMultiple.addActionListener(this);
+		c.gridx = 3;
+		c.gridy = 1;
+		c.insets = new Insets(5,5,0,5);
+		ICContent.add(ICMultiple, c);
 		
 		ICOutput = new JTextArea();
 		ICOutput.setFont(ICOutput.getFont().deriveFont(14f));
@@ -121,7 +134,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weighty = 1;
-		c.gridwidth = 3;
+		c.gridwidth = 4;
 		c.ipadx = 450;
 		c.ipady = 550;
 		c.insets = new Insets(5,5,5,5);

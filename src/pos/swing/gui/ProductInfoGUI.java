@@ -289,8 +289,8 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		lLabelCollumn.gridy = 6;
 		content.add(labelQuantity, lLabelCollumn);
 		
-		quantity = (isEditable || isReturn) ? new JTextField(item.quantity) : new JLabel("" + item.quantity);
-		if(isEditable || isReturn)
+		quantity = (isNew) ? new JTextField(item.quantity) : new JLabel("" + item.quantity);
+		if(isNew)
 			((JTextField)quantity).setText("1");
 		quantity.setBorder(new JTextField().getBorder());
 		quantity.setOpaque(true);
@@ -393,7 +393,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 
 			if(status == Reference.EDIT_PRODUCT){
 				if (update){
-					InventoryItem i = new InventoryItem(0, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
+					InventoryItem i = new InventoryItem(0, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), item.quantity);
 					writeToOutput("\n\n:::::" + server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
 					i.SKU = server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU;
 					if (item.UPC.length() * ((JTextField)name).getText().length() > 0){
