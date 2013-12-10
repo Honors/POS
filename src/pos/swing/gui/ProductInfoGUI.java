@@ -388,9 +388,6 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource().equals(Submit)){
-
-			//TODO require an integer in Quantity before submission (error dialog)
-
 			if(status == Reference.EDIT_PRODUCT){
 				if (update){
 					InventoryItem i = new InventoryItem(0, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), item.quantity);
@@ -407,6 +404,21 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 				}
 			}
 			if(status == Reference.NEW_PRODUCT){
+				//Errors
+				if(((JTextField)quantity).getText().isEmpty()){
+					JOptionPane.showMessageDialog(new JFrame(),"Quantity must have a input", "ERROR", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				try{
+					if(Integer.parseInt(((JTextField)quantity).getText()) < 0){
+	                	JOptionPane.showMessageDialog(new JFrame(),"Quantity must be greater than or equal to zero", "ERROR", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				} catch (Exception e){
+					JOptionPane.showMessageDialog(new JFrame(),"Quantity must be a numeric input", "ERROR", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
 				InventoryItem i = new InventoryItem(0, ((JLabel)upc).getText(), ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), Integer.parseInt(((JTextField)quantity).getText()));
 				i.SKU = server.getMaxInventorySKU() + 1;
 				if (((JLabel)upc).getText().length() * ((JTextField)name).getText().length() > 0){
