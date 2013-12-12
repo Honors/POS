@@ -13,6 +13,7 @@ import java.util.Date;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -344,7 +345,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 			int oldVal;
 			int change;
 			if(toChange.size() < 1){
-				//TODO some error
+				JOptionPane.showMessageDialog(new JFrame(),"Scanned item does not exist in the inventory", "ERROR", JOptionPane.ERROR_MESSAGE);
 			} else if(toChange.size() == 1){
 				oldVal = toChange.get(0).quantity;
 				if(ICMultiple.isSelected()){
@@ -354,15 +355,18 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 					ICMultiple.setSelected(false);
 				} else {
 					change = 1;
-					toChange.get(0).quantity++;
+					toChange.get(0).quantity += change;
 				}
 				server.updateInventoryItem(toChange.get(0));
+				updateInventory();
+				
+				change = toChange.get(0).quantity - oldVal;
 				
 				String statement = "[+] (" + TimeStamp.simpleDate() + ") UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\":  " + oldVal + "  ->  " + toChange.get(0).quantity;
 				writeToOutput(statement + "\n\n");
 				//TODO log the change
 			} else if(toChange.size() > 1){
-				//TODO some error
+				JOptionPane.showMessageDialog(new JFrame(),"Scanned item has duplicates", "ERROR", JOptionPane.ERROR_MESSAGE);
 			}
 			ICTextEntry.setText("");
 		}
@@ -370,30 +374,38 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		if(action.equals("outgoing")){
 			ArrayList<InventoryItem> toChange = server.searchInventory("UPC='" + ICTextEntry.getText().trim() + "'");
 			int oldVal;
+			int change;
 			if(toChange.size() < 1){
-				//TODO some error
+				JOptionPane.showMessageDialog(new JFrame(),"Scanned item does not exist in the inventory", "ERROR", JOptionPane.ERROR_MESSAGE);
 			} else if(toChange.size() == 1){
 				if(toChange.get(0).quantity > 0){
 					oldVal = toChange.get(0).quantity;
 					if(ICMultiple.isSelected()){
-						toChange.get(0).quantity -= Integer.parseInt(ICMultipleText.getValue().toString());
-						if(toChange.get(0).quantity < 0)
+						change = Integer.parseInt(ICMultipleText.getValue().toString());
+						toChange.get(0).quantity -= change;
+						if(toChange.get(0).quantity < 0){
 							toChange.get(0).quantity = 0;
+							JOptionPane.showMessageDialog(new JFrame(),"Scanned item's quantity cannot decrease below 0\nThe quantity for the scanned item is 0", "ERROR", JOptionPane.ERROR_MESSAGE);
+						}
 						ICMultipleText.setValue(1);
 						ICMultiple.setSelected(false);
 					} else {
-						toChange.get(0).quantity--;
+						change = 1;
+						toChange.get(0).quantity -= 1;
 					}
 					server.updateInventoryItem(toChange.get(0));
+					updateInventory();
+					
+					change = toChange.get(0).quantity - oldVal;
 					
 					String statement = "[-] (" + TimeStamp.simpleDate() + ") UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\":  " + oldVal + "  ->  " + toChange.get(0).quantity;
 					writeToOutput(statement + "\n\n");
 					//TODO log the change
 				} else {
-					//TODO some error
+					JOptionPane.showMessageDialog(new JFrame(),"Scanned item's quantity cannot decrease below 0\nThe quantity for the scanned item is 0", "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
 			} else if(toChange.size() > 1){
-				//TODO some error
+				JOptionPane.showMessageDialog(new JFrame(),"Scanned item has duplicates", "ERROR", JOptionPane.ERROR_MESSAGE);
 			}
 			ICTextEntry.setText("");
 		}
