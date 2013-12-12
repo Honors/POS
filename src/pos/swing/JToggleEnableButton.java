@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JToggleButton;
-import javax.swing.border.EmptyBorder;
 
 public class JToggleEnableButton extends JToggleButton implements ActionListener{
 
@@ -19,18 +18,10 @@ public class JToggleEnableButton extends JToggleButton implements ActionListener
 		super(text);
 		super.setSelected(isSelected);
 		addActionListener(this);
-		setBorder(new EmptyBorder(5,5,5,5));
 		setOpaque(true);
+		setBackground(new Color(0xc5c1b8));
 		children = new ArrayList<Component>();
 		updateChildren();
-		colorize();
-	}
-	
-	public void colorize(){
-		if(isSelected())
-			setBackground(new Color(0x1b2f50));
-		else
-			setBackground(new Color(0xc5c1b8));
 	}
 	
 	@Override
@@ -57,6 +48,5 @@ public class JToggleEnableButton extends JToggleButton implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		updateChildren();
-		colorize();
 	}
 }

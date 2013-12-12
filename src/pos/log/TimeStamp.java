@@ -1,5 +1,6 @@
 package pos.log;
 
+import java.text.SimpleDateFormat;
 /* TimeStamp.java
  * object that holds current system time and UPC
  *
@@ -16,4 +17,9 @@ public String toDateFormatted(){
     return(new String("[" + (new Date((this.car()).toString())).toString() + "] [" + (this.cdr()).toString()) + "]");
   }
 
+  public static String simpleDate(){
+	  SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	  Date date = new Date();
+	  return f.format(date);
+  }
 }

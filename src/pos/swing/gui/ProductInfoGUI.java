@@ -141,7 +141,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		rLabelCollumn.gridy = 1;
 		content.add(labelDate, rLabelCollumn);
 
-		date = (isEditable || isReturn) ? new JTextField(item.date, 10) : new JLabel(item.date);
+		date = (isNew) ? new JTextField(item.date, 10) : new JLabel(item.date);
 		date.setBorder(new JTextField().getBorder());
 		date.setOpaque(true);
 		date.setBackground(new JTextField().getBackground());
@@ -390,7 +390,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		if (event.getSource().equals(Submit)){
 			if(status == Reference.EDIT_PRODUCT){
 				if (update){
-					InventoryItem i = new InventoryItem(0, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), ((JTextField)date).getText(), notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), item.quantity);
+					InventoryItem i = new InventoryItem(0, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), item.date, notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), item.quantity);
 					writeToOutput("\n\n:::::" + server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
 					i.SKU = server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU;
 					if (item.UPC.length() * ((JTextField)name).getText().length() > 0){

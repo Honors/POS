@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -15,10 +16,12 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -26,9 +29,11 @@ import javax.swing.event.ChangeListener;
 import pos.backup.BackupWriter;
 import pos.core.Confirmable;
 import pos.lib.Reference;
+import pos.log.TimeStamp;
 import pos.core.ServerManager;
 import pos.item.InventoryItem;
 import pos.swing.JFramePOS;
+import pos.swing.JToggleEnableButton;
 import pos.core.Keys;
 import pos.core.OutputWindow;
 import pos.swing.SearchResult;
@@ -42,11 +47,13 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	private JTextArea ICOutput;
 	private JScrollPane IMOutput, RMOutput;
 	private JScrollPane ICOutputPane;
+	private JSpinner ICMultipleText;
 	private JTextField ICTextEntry, IMTextEntry, RMTextEntry;
 	private JPanel ICContent, IMContent, RMContent, IMResults, RMResults, ICSearchBar, IMSearchBar, RMSearchBar;
 	private JTabbedPane tabs;
 	private JToggleButton ICModeIncoming, ICModeOutgoing, ICModeReturn;
-	private JButton ICMultiple, IMBackup, IMRestore, IMNew, ICEnter, IMEnter, RMEnter, IMRegister;
+	private JButton IMBackup, IMRestore, IMNew, ICEnter, IMEnter, RMEnter, IMRegister;
+	private JToggleEnableButton ICMultiple;
 	private ButtonGroup ICModes;
 	
 	public InventoryGUI(ServerManager i, OutputWindow out, String p, Keys keys){
@@ -63,7 +70,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		ICSearchBar = new JPanel(new GridBagLayout());
 		c.gridx = 0;
 		c.gridy = 0;
-		c.gridwidth = 4;
+		c.gridwidth = 5;
 		ICContent.add(ICSearchBar, c);	
 		
 		ICTextEntry = new JTextField();
@@ -118,12 +125,21 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		ICModes.add(ICModeReturn);
 		ICContent.add(ICModeReturn, c);
 		
-		ICMultiple = new JButton("MULTIPLE");
-		ICMultiple.addActionListener(this);
+		ICMultiple = new JToggleEnableButton("MULTIPLE", false);
 		c.gridx = 3;
 		c.gridy = 1;
-		c.insets = new Insets(5,5,0,5);
+		c.weightx = 0;
+		c.insets = new Insets(5,10,0,0);
 		ICContent.add(ICMultiple, c);
+		
+		SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 1000, 1);
+		ICMultipleText = new JSpinner(model);
+		c.gridx = 4;
+		c.gridy = 1;
+		c.weightx = .2;
+		c.insets = new Insets(5,5,0,5);
+		ICMultiple.add(ICMultipleText);
+		ICContent.add(ICMultipleText, c);
 		
 		ICOutput = new JTextArea();
 		ICOutput.setFont(ICOutput.getFont().deriveFont(14f));
@@ -134,8 +150,8 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weighty = 1;
-		c.gridwidth = 4;
-		c.ipadx = 450;
+		c.gridwidth = 5;
+		c.ipadx = 500;
 		c.ipady = 550;
 		c.insets = new Insets(5,5,5,5);
 		ICContent.add(ICOutputPane, c);
@@ -325,13 +341,24 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	public void actionConfirmed(String action) {
 		if(action.equals("incoming")){
 			ArrayList<InventoryItem> toChange = server.searchInventory("UPC='" + ICTextEntry.getText().trim() + "'");
+			int oldVal;
+			int change;
 			if(toChange.size() < 1){
 				//TODO some error
 			} else if(toChange.size() == 1){
-				toChange.get(0).quantity++;
+				oldVal = toChange.get(0).quantity;
+				if(ICMultiple.isSelected()){
+					change = Integer.parseInt(ICMultipleText.getValue().toString());
+					toChange.get(0).quantity += change;
+					ICMultipleText.setValue(1);
+					ICMultiple.setSelected(false);
+				} else {
+					change = 1;
+					toChange.get(0).quantity++;
+				}
 				server.updateInventoryItem(toChange.get(0));
 				
-				String statement = "[+]   UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\"   ->   " + toChange.get(0).quantity;
+				String statement = "[+] (" + TimeStamp.simpleDate() + ") UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\":  " + oldVal + "  ->  " + toChange.get(0).quantity;
 				writeToOutput(statement + "\n\n");
 				//TODO log the change
 			} else if(toChange.size() > 1){
@@ -342,14 +369,24 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		
 		if(action.equals("outgoing")){
 			ArrayList<InventoryItem> toChange = server.searchInventory("UPC='" + ICTextEntry.getText().trim() + "'");
+			int oldVal;
 			if(toChange.size() < 1){
 				//TODO some error
 			} else if(toChange.size() == 1){
-					if(toChange.get(0).quantity > 0){
-					toChange.get(0).quantity--;
+				if(toChange.get(0).quantity > 0){
+					oldVal = toChange.get(0).quantity;
+					if(ICMultiple.isSelected()){
+						toChange.get(0).quantity -= Integer.parseInt(ICMultipleText.getValue().toString());
+						if(toChange.get(0).quantity < 0)
+							toChange.get(0).quantity = 0;
+						ICMultipleText.setValue(1);
+						ICMultiple.setSelected(false);
+					} else {
+						toChange.get(0).quantity--;
+					}
 					server.updateInventoryItem(toChange.get(0));
 					
-					String statement = "[-]   UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\"   ->   " + toChange.get(0).quantity;
+					String statement = "[-] (" + TimeStamp.simpleDate() + ") UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\":  " + oldVal + "  ->  " + toChange.get(0).quantity;
 					writeToOutput(statement + "\n\n");
 					//TODO log the change
 				} else {

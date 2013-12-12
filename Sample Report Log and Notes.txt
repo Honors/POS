@@ -1,0 +1,20 @@
+table,sku,change
+
+****************
+I,date,182,1
+I,date,182,-1
+I,date,182,1
+R,date,11,pending,1
+R,date,11,inventory,1
+*********************
+
+writer
+
+public writeInventory(int sku, int change)
+
+
+public writeReturn(int sku, string status, int quantity)
+
+
+
+
