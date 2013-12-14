@@ -45,7 +45,7 @@ public class BackupWriter {
 	 * Exports all the Return to a CSV file
 	 */
 	public void exportReturnToCSV(){
-		exportInventoryToCSV(server.searchReturn("SKU > -1"));
+		exportReturnToCSV(server.searchReturn("SKU > -1"));
 	}
 	
 	/**

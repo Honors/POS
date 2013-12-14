@@ -42,6 +42,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	
 	@SuppressWarnings("unchecked")
 	public ProductInfoGUI(ServerManager im, OutputWindow g, SearchResult s, Item i, Keys _key, int status){
+		//TODO allow certain changes for different types of returns (Pending, allow status change.  To Vender/To Inventory, NO CHANGES)
 		super(im,g,_key);
 		if (i.SKU > -1){
 			update = true;

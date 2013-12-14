@@ -17,8 +17,14 @@ public String toDateFormatted(){
     return(new String("[" + (new Date((this.car()).toString())).toString() + "] [" + (this.cdr()).toString()) + "]");
   }
 
-  public static String simpleDate(){
+  public static String simpleDateAndTime(){
 	  SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	  Date date = new Date();
+	  return f.format(date);
+  }
+  
+  public static String simpleDate(){
+	  SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy");
 	  Date date = new Date();
 	  return f.format(date);
   }

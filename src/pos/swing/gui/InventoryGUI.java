@@ -33,10 +33,12 @@ import pos.lib.Reference;
 import pos.log.TimeStamp;
 import pos.core.ServerManager;
 import pos.item.InventoryItem;
+import pos.item.ReturnItem;
 import pos.swing.JFramePOS;
 import pos.swing.JToggleEnableButton;
 import pos.core.Keys;
 import pos.core.OutputWindow;
+import pos.dialog.DialogSingleComboBox;
 import pos.swing.SearchResult;
 
 public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListener, Confirmable, ChangeListener {
@@ -270,7 +272,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		*/
 		
 		RMResults = new JPanel();
-		RMResults.setLayout(new BoxLayout(RMResults, 1));
+		RMResults.setLayout(new GridBagLayout());
 		
 		RMOutput = new JScrollPane(RMResults);
 		c.gridx = 0;
@@ -292,6 +294,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		setVisible(true);
 
 		updateInventory();
+		updateReturn();
 		ICTextEntry.requestFocus();
 	}
 	
@@ -362,7 +365,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 				
 				change = toChange.get(0).quantity - oldVal;
 				
-				String statement = "[+] (" + TimeStamp.simpleDate() + ") UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\":  " + oldVal + "  ->  " + toChange.get(0).quantity;
+				String statement = "[+] (" + TimeStamp.simpleDateAndTime() + ") UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\":  " + oldVal + "  ->  " + toChange.get(0).quantity;
 				writeToOutput(statement + "\n\n");
 				//TODO log the change
 			} else if(toChange.size() > 1){
@@ -398,7 +401,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 					
 					change = toChange.get(0).quantity - oldVal;
 					
-					String statement = "[-] (" + TimeStamp.simpleDate() + ") UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\":  " + oldVal + "  ->  " + toChange.get(0).quantity;
+					String statement = "[-] (" + TimeStamp.simpleDateAndTime() + ") UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\":  " + oldVal + "  ->  " + toChange.get(0).quantity;
 					writeToOutput(statement + "\n\n");
 					//TODO log the change
 				} else {
@@ -411,7 +414,31 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		
 		if(action.equals("return")){
-			
+			ArrayList<InventoryItem> toReturn = server.searchInventory("UPC='" + ICTextEntry.getText().trim() + "'");
+			if(toReturn.size() < 1){
+				JOptionPane.showMessageDialog(new JFrame(),"Scanned item does not exist in the inventory", "ERROR", JOptionPane.ERROR_MESSAGE);
+			} else if (toReturn.size() == 1){
+				DialogSingleComboBox statusDialog = new DialogSingleComboBox(new JFrame(), "Status...", "Please select the return status:", Reference.STATUSES);
+				if(statusDialog.getValidated()){
+					String status = statusDialog.getValidatedInput();
+					ReturnItem item = new ReturnItem(toReturn.get(0), status);
+					item.SKU = server.getMaxReturnSKU() + 1;
+					item.date = TimeStamp.simpleDate();
+					if(ICMultiple.isEnabled()){
+						item.quantity = Integer.parseInt(ICMultipleText.getValue().toString());
+					}
+					
+					server.insertReturnItem(item);
+					updateReturn();
+					//TODO handle inventory changes for different types of returns
+					
+					String statement = "[*] (" + TimeStamp.simpleDateAndTime() + ") UPC:\"" + item.UPC + "\", Name:\"" + item.name + "\":  " + item.status;
+					writeToOutput(statement + "\n\n");
+					//TODO log change
+				}
+			} else if (toReturn.size() > 1){
+				JOptionPane.showMessageDialog(new JFrame(),"Scanned item has duplicates", "ERROR", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		
 		if(action.equals("IMsearch")){
@@ -488,6 +515,39 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		this.paintAll(getGraphics());
 	}
 	
+	public void updateReturn(){
+		//Make Search for UPC, not SKU
+		RMResults.removeAll();
+		GridBagConstraints c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.FIRST_LINE_START;
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 1;
+		c.gridx = 0;
+		c.gridy = 0;
+		
+		String search = RMTextEntry.getText();
+		ArrayList<ReturnItem> i;
+		if (search.length() == 0){
+			i = server.searchReturn("SKU > -1");
+		} else {
+			i = server.searchReturn("UPC = '" + search + "'");
+		}
+		boolean colorized = true;
+		while (!i.isEmpty()){
+			SearchResult s = new SearchResult(this, i.remove(0), keys, Reference.RETURN_PRODUCT);
+			s.setOpaque(true);
+			if(colorized)
+				s.setBackground(new Color(0xD4EBF2));
+			else
+				s.setBackground(Color.WHITE);
+			colorized = !colorized;
+			RMResults.add(s, c);
+			c.gridy++;
+		}
+		c.weighty = 1;
+		RMResults.add(new JPanel(), c);
+		this.paintAll(getGraphics());
+	}
 	
 	@Override
 	public void stateChanged(ChangeEvent event) {

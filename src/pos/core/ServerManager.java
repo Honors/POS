@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import pos.backup.BackupReader;
 import pos.lib.Reference;
 import pos.item.InventoryItem;
+import pos.item.ReturnItem;
 
 public class ServerManager {
 	
@@ -158,7 +159,6 @@ public class ServerManager {
 	}
 	
 	public InventoryItem getInventoryItem(int SKU){
-		//java.sql.SQLException: Invalid cursor state - no current row.
 		InventoryItem i = new InventoryItem();
 		try{
 			ResultSet r = con.prepareStatement("SELECT * FROM Inventory WHERE SKU = " + SKU).executeQuery();
@@ -270,29 +270,87 @@ public class ServerManager {
 	}
 	
 	//RETURN MANAGEMENT METHODS
-	public ArrayList<InventoryItem> searchReturn(String s){
+	public ArrayList<ReturnItem> searchReturn(String s){
+		ArrayList<ReturnItem> results = new ArrayList<ReturnItem>();
+		try{
+			ResultSet r = con.prepareStatement("SELECT * FROM Return WHERE " + s).executeQuery();
+			con.commit();
+			while (r.next()){
+				ReturnItem i = new ReturnItem();
+				i.SKU = r.getInt("SKU");
+				i.UPC = r.getString("UPC");
+				i.name = r.getString("NAME");
+				i.brand = r.getString("BRAND");
+				i.color = r.getString("COLOR");
+				i.size = r.getString("SIZE");
+				i.type = r.getString("TYPE");
+				i.gender = r.getString("GENDER");
+				i.client = r.getString("CLIENT");
+				i.date = r.getString("DATE");
+				i.notes = r.getString("NOTES");
+				i.price = r.getString("PRICE");
+				i.cost = r.getString("COST");
+				i.quantity = r.getInt("QUANTITY");
+				i.status = r.getString("STATUS");
+				results.add(i);
+			}
+		} catch (Exception e){
+			System.out.println(e);
+		}
+		return results;
+	}
+	
+	public String updateReturnItem(ReturnItem i){
 		
 		return null;
 	}
 	
-	public String updateReturnItem(InventoryItem i){
+	public String insertReturnItem(ReturnItem i){
+		if (getReturnItem(i.SKU).SKU != -1){
+			return "FAILED: DUPLICATE SKU";
+		}
+		try{
+			con.prepareStatement("INSERT INTO Return VALUES (" + i.toStringInsert() + ")").execute(); 
+			con.commit();
+		} catch (Exception e){
+			System.out.println(e);
+			return "FAILED. SQL EXCEPTION:\n" + e;
+		}
+		return "SUCCESS: ITEM INSERTED";
+	}
+	
+	public String removeReturnItem(ReturnItem i){
 		
 		return null;
 	}
 	
-	public String insertReturnItem(InventoryItem i){
+	public ReturnItem getReturnItem(int SKU){
+		ReturnItem i = new ReturnItem();
+		try{
+			ResultSet r = con.prepareStatement("SELECT * FROM Inventory WHERE SKU = " + SKU).executeQuery();
+			con.commit();
+			r.next();
+			i.SKU = r.getInt("SKU");
+			i.UPC = r.getString("UPC");
+			i.name = r.getString("NAME");
+			i.brand = r.getString("BRAND");
+			i.color = r.getString("COLOR");
+			i.size = r.getString("SIZE");
+			i.type = r.getString("TYPE");
+			i.gender = r.getString("GENDER");
+			i.client = r.getString("CLIENT");
+			i.date = r.getString("DATE");
+			i.notes = r.getString("NOTES");
+			i.price = r.getString("PRICE");
+			i.quantity = r.getInt("QUANTITY");
+			i.status = r.getString("STATUS");
+			
+		}	catch (Exception e){
+			System.out.println("[No Duplicate] " + e);
+			return new ReturnItem();
+		}
 		
-		return null;
-	}
-	
-	public String removeReturnItem(InventoryItem i){
-		
-		return null;
-	}
-	
-	public InventoryItem getReturnItem(int SKU){
-		
-		return null;
+		return i;
 	}
 
 	public int getNumberOfReturnItems(){
@@ -301,8 +359,17 @@ public class ServerManager {
 	}
 
 	public int getMaxReturnSKU(){
-		
-		return -1;
+		int i = -1;
+		try{
+			ResultSet r = con.prepareStatement("SELECT * From Return").executeQuery();
+			con.commit();
+			while (r.next()){
+				i = r.getInt("SKU");
+			}
+		} catch(Exception e){
+			System.out.println(e);
+		}
+		return i;
 	}
 	
 	public String dumpAllReturnFormatted(){

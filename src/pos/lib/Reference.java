@@ -1,5 +1,8 @@
 package pos.lib;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Reference {
 	
 	public static final int SKU = 0;
@@ -26,4 +29,6 @@ public class Reference {
 	public final static String STATUS_PENDING = "Pending";
 	public final static String STATUS_TO_VENDER = "Return to Vender";
 	public final static String STATUS_TO_INVENTORY = "Return to Inventory";
+	
+	public final static ArrayList<String> STATUSES = new ArrayList<String>(Arrays.asList(STATUS_PENDING, STATUS_TO_VENDER, STATUS_TO_INVENTORY));
 }

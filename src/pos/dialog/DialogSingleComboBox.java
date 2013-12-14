@@ -47,14 +47,13 @@ public class DialogSingleComboBox extends JDialog implements ActionListener, Pro
 	 * @param frame The frame which the dialog is displayed
 	 * @param title The title of the frame
 	 * @param message The message of the frame
-	 * @param initialTextArea The initial of the text input
-	 * @param conflicts Forbidden text values
+	 * @param list The contents of the drop box
 	 */
-	public DialogSingleComboBox(JFrame frame, String title, String message, ArrayList<String> listWithoutToDelete){
+	public DialogSingleComboBox(JFrame frame, String title, String message, ArrayList<String> list){
 		super(frame, true);
 		setTitle(title);
 		setResizable(false);
-		dropBox = new JComboBox<Object>(listWithoutToDelete.toArray());
+		dropBox = new JComboBox<Object>(list.toArray());
 		
 		validated = false;
 		
