@@ -430,13 +430,16 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 					
 					server.insertReturnItem(item);
 					updateReturn();
+
+					String timeStamp = TimeStamp.simpleDateAndTime();
+					String statement = "[*] (" + timeStamp + ") UPC:\"" + item.UPC + "\", Name:\"" + item.name + "\":  " + item.quantity + " " + item.status;
 					if(item.status == Reference.STATUS_TO_INVENTORY){
+						int oldVal = toReturn.get(0).quantity;
 						toReturn.get(0).quantity += item.quantity;
 						server.updateInventoryItem(toReturn.get(0));
 						updateInventory();
+						statement += "\n[+] (" + timeStamp + ") UPC:\"" + item.UPC + "\", Name:\"" + item.name + "\":  " + oldVal + "  ->  " + toReturn.get(0).quantity;
 					}
-					
-					String statement = "[*] (" + TimeStamp.simpleDateAndTime() + ") UPC:\"" + item.UPC + "\", Name:\"" + item.name + "\":  " + item.status;
 					writeToOutput(statement + "\n\n");
 					//TODO log change
 				}
