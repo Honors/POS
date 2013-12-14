@@ -114,7 +114,7 @@ public class ReturnItem extends Item{
 		s += "\nPrice: " + price;
 		s += "\nCost: " + cost;
 		s += "\nQuantity: " + quantity;
-		s += "\nStatus:" + status;
+		s += "\nStatus: " + status;
 		return s;
 	}
 	

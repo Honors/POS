@@ -301,8 +301,14 @@ public class ServerManager {
 	}
 	
 	public String updateReturnItem(ReturnItem i){
-		
-		return null;
+		try{
+			con.prepareStatement("UPDATE Return SET " + i.toStringUpdate() + " WHERE SKU=" + i.SKU).execute();
+			con.commit();
+			return "SUCCESS";
+		} catch (Exception e){
+			System.out.println(e);
+			return "FAILED: SQL EXCEPTION:\n\n" + e;
+		}
 	}
 	
 	public String insertReturnItem(ReturnItem i){
@@ -327,7 +333,7 @@ public class ServerManager {
 	public ReturnItem getReturnItem(int SKU){
 		ReturnItem i = new ReturnItem();
 		try{
-			ResultSet r = con.prepareStatement("SELECT * FROM Inventory WHERE SKU = " + SKU).executeQuery();
+			ResultSet r = con.prepareStatement("SELECT * FROM Return WHERE SKU = " + SKU).executeQuery();
 			con.commit();
 			r.next();
 			i.SKU = r.getInt("SKU");

@@ -12,6 +12,7 @@ import javax.swing.*;
 
 import pos.core.Confirmable;
 import pos.item.Item;
+import pos.item.ReturnItem;
 import pos.lib.Reference;
 import pos.core.ServerManager;
 import pos.item.InventoryItem;
@@ -31,7 +32,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	private JLabel labelNotes, labelReturnStatus;
 	private JComponent upc, name, client, date, price, cost, quantity; 
 	private JComponent brand, color, size, type, gender;
-	private JComboBox<String> returnStatus;
+	private JComponent returnStatus;
 	private JTextArea notes;
 	private JButton Submit, Delete, generateLabels;
 	
@@ -335,10 +336,20 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 				rLabelCollumn.gridy = 6;
 				content.add(labelReturnStatus, rLabelCollumn);
 				
-				String[] statuses = {"Pending", "Back to Inventory", "Back to Vender"};
-				returnStatus = new JComboBox<String>(statuses);
-				rInfoCollumn.gridy = 6;
-				content.add(returnStatus, rInfoCollumn);
+
+				if(((ReturnItem)item).status.equals(Reference.STATUS_PENDING)){
+					returnStatus = new JComboBox<Object>(Reference.STATUSES.toArray());
+					((JComboBox<Object>)returnStatus).setSelectedItem(((ReturnItem)item).status);
+					rInfoCollumn.gridy = 6;
+					content.add(returnStatus, rInfoCollumn);
+				} else {
+					returnStatus = new JLabel(((ReturnItem)item).status);
+					returnStatus.setBorder(new JTextField().getBorder());
+					returnStatus.setOpaque(true);
+					returnStatus.setBackground(new JTextField().getBackground());
+					rInfoCollumn.gridy = 6;
+					content.add(returnStatus, rInfoCollumn);
+				}
 			}
 			
 			if(isEditable){
@@ -391,9 +402,8 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		if (event.getSource().equals(Submit)){
 			if(status == Reference.EDIT_PRODUCT){
 				if (update){
-					InventoryItem i = new InventoryItem(0, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), item.date, notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), item.quantity);
+					InventoryItem i = new InventoryItem(item.SKU, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), item.date, notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), item.quantity);
 					writeToOutput("\n\n:::::" + server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
-					i.SKU = server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU;
 					if (item.UPC.length() * ((JTextField)name).getText().length() > 0){
 						String r = server.updateInventoryItem(i);
 						writeToOutput(r);
@@ -447,7 +457,32 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 				}
 			}
 			if(status == Reference.RETURN_PRODUCT){
-				//TODO update return info
+				if(((ReturnItem)item).status.equals(Reference.STATUS_PENDING)){
+					ReturnItem i = new ReturnItem(item.SKU, item.UPC, item.name, item.brand, item.color, item.size, item.type, item.gender, item.client, item.date, notes.getText(), item.price, item.cost, item.quantity, ((JComboBox<Object>)returnStatus).getSelectedItem().toString());
+
+					if(i.status.equals(Reference.STATUS_TO_INVENTORY)){
+						ArrayList<InventoryItem> returnedTo = server.searchInventory("UPC='" + i.UPC + "'");
+						returnedTo.get(0).quantity += item.quantity;
+						server.updateInventoryItem(returnedTo.get(0));
+						parentWindow.update();
+					}
+					
+					String r = server.updateReturnItem(i);					
+					writeToOutput(r);
+					writeToOutput("\n\n" + i.toStringFormatted());
+					writeToOutput("\n" + i.toStringUpdate());
+					source.updateItem(i);
+					this.setVisible(false);
+				} else {
+					ReturnItem i = new ReturnItem(item.SKU, item.UPC, item.name, item.brand, item.color, item.size, item.type, item.gender, item.client, item.date, notes.getText(), item.price, item.cost, item.quantity, ((ReturnItem)item).status);
+				
+					String r = server.updateReturnItem(i);
+					writeToOutput(r);
+					writeToOutput("\n\n" + i.toStringFormatted());
+					writeToOutput("\n" + i.toStringUpdate());
+					source.updateItem(i);
+					this.setVisible(false);
+				}
 			}
 		}
 		if (event.getSource().equals(Delete)){

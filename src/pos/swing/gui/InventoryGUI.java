@@ -316,7 +316,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 			}
 		}
 		
-		if(event.getSource().equals(IMTextEntry)){
+		if(event.getSource().equals(IMTextEntry) || event.getSource().equals((IMEnter))){
 			actionConfirmed("IMsearch");
 		}
 		
@@ -430,7 +430,11 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 					
 					server.insertReturnItem(item);
 					updateReturn();
-					//TODO handle inventory changes for different types of returns
+					if(item.status == Reference.STATUS_TO_INVENTORY){
+						toReturn.get(0).quantity += item.quantity;
+						server.updateInventoryItem(toReturn.get(0));
+						updateInventory();
+					}
 					
 					String statement = "[*] (" + TimeStamp.simpleDateAndTime() + ") UPC:\"" + item.UPC + "\", Name:\"" + item.name + "\":  " + item.status;
 					writeToOutput(statement + "\n\n");
@@ -439,6 +443,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 			} else if (toReturn.size() > 1){
 				JOptionPane.showMessageDialog(new JFrame(),"Scanned item has duplicates", "ERROR", JOptionPane.ERROR_MESSAGE);
 			}
+			ICTextEntry.setText("");
 		}
 		
 		if(action.equals("IMsearch")){
@@ -500,7 +505,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchResult s = new SearchResult(this, i.remove(0), keys, Reference.EDIT_PRODUCT);
+			SearchResult s = new SearchResult(this, this, i.remove(0), keys, Reference.EDIT_PRODUCT);
 			s.setOpaque(true);
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));
@@ -534,10 +539,10 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		}
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchResult s = new SearchResult(this, i.remove(0), keys, Reference.RETURN_PRODUCT);
+			SearchResult s = new SearchResult(this, this, i.remove(0), keys, Reference.RETURN_PRODUCT);
 			s.setOpaque(true);
 			if(colorized)
-				s.setBackground(new Color(0xD4EBF2));
+				s.setBackground(new Color(0xf2dbd4));
 			else
 				s.setBackground(Color.WHITE);
 			colorized = !colorized;
@@ -566,7 +571,8 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 
 	@Override
 	public void update() {
+		System.out.println("InventoryGUI updated");
 		updateInventory();
-		
+		updateReturn();
 	}
 }
