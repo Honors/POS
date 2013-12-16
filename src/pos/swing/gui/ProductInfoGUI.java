@@ -447,7 +447,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 						if (r.contains("SUCCESS")){
 							writeToOutput(i.toStringFormatted());
 							writeToOutput("\n" + i.toStringUpdate());
-							parentWindow.update();
+							parentWindow.update("inventory");
 							this.setVisible(false);
 						}
 						else{
@@ -464,7 +464,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 						ArrayList<InventoryItem> returnedTo = server.searchInventory("UPC='" + i.UPC + "'");
 						returnedTo.get(0).quantity += item.quantity;
 						server.updateInventoryItem(returnedTo.get(0));
-						parentWindow.update();
+						parentWindow.update("inventory");
 					}
 					
 					String r = server.updateReturnItem(i);					
@@ -472,6 +472,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 					writeToOutput("\n\n" + i.toStringFormatted());
 					writeToOutput("\n" + i.toStringUpdate());
 					source.updateItem(i);
+					//parentWindow.update();  //too much updating
 					this.setVisible(false);
 				} else {
 					ReturnItem i = new ReturnItem(item.SKU, item.UPC, item.name, item.brand, item.color, item.size, item.type, item.gender, item.client, item.date, notes.getText(), item.price, item.cost, item.quantity, ((ReturnItem)item).status);

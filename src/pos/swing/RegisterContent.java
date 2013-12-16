@@ -344,7 +344,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 				tree.requestFocus();
 				updateButtons();
 				
-				parentWindow.update();
+				parentWindow.update("");
 			}
 		}
 		
@@ -362,7 +362,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 				tree.requestFocus();
 				updateButtons();
 				
-				parentWindow.update();
+				parentWindow.update("");
 			}
 		}
 		

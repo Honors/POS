@@ -30,6 +30,7 @@ import javax.swing.event.ChangeListener;
 import pos.backup.BackupWriter;
 import pos.core.Confirmable;
 import pos.lib.Reference;
+import pos.log.LogInfoGenerator;
 import pos.log.TimeStamp;
 import pos.core.ServerManager;
 import pos.item.InventoryItem;
@@ -365,7 +366,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 				
 				change = toChange.get(0).quantity - oldVal;
 				
-				String statement = "[+] (" + TimeStamp.simpleDateAndTime() + ") UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\":  " + oldVal + "  ->  " + toChange.get(0).quantity;
+				String statement = LogInfoGenerator.generateIncomingStatement(toChange.get(0).UPC, toChange.get(0).name, oldVal, toChange.get(0).quantity);
 				writeToOutput(statement + "\n\n");
 				//TODO log the change
 			} else if(toChange.size() > 1){
@@ -401,7 +402,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 					
 					change = toChange.get(0).quantity - oldVal;
 					
-					String statement = "[-] (" + TimeStamp.simpleDateAndTime() + ") UPC:\"" + toChange.get(0).UPC + "\", Name:\"" + toChange.get(0).name + "\":  " + oldVal + "  ->  " + toChange.get(0).quantity;
+					String statement = LogInfoGenerator.generateOutgoingStatement(toChange.get(0).UPC, toChange.get(0).name, oldVal, toChange.get(0).quantity);
 					writeToOutput(statement + "\n\n");
 					//TODO log the change
 				} else {
@@ -424,21 +425,23 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 					ReturnItem item = new ReturnItem(toReturn.get(0), status);
 					item.SKU = server.getMaxReturnSKU() + 1;
 					item.date = TimeStamp.simpleDate();
-					if(ICMultiple.isEnabled()){
+					item.quantity = 1;
+					if(ICMultiple.isSelected()){
 						item.quantity = Integer.parseInt(ICMultipleText.getValue().toString());
+						ICMultipleText.setValue(1);
+						ICMultiple.setSelected(false);
 					}
 					
 					server.insertReturnItem(item);
 					updateReturn();
 
-					String timeStamp = TimeStamp.simpleDateAndTime();
-					String statement = "[*] (" + timeStamp + ") UPC:\"" + item.UPC + "\", Name:\"" + item.name + "\":  " + item.quantity + " " + item.status;
+					String statement = LogInfoGenerator.generateReturnStatement(item.UPC, item.name, item.quantity, item.status);
 					if(item.status == Reference.STATUS_TO_INVENTORY){
 						int oldVal = toReturn.get(0).quantity;
 						toReturn.get(0).quantity += item.quantity;
 						server.updateInventoryItem(toReturn.get(0));
 						updateInventory();
-						statement += "\n[+] (" + timeStamp + ") UPC:\"" + item.UPC + "\", Name:\"" + item.name + "\":  " + oldVal + "  ->  " + toReturn.get(0).quantity;
+						statement += "\n" + LogInfoGenerator.generateIncomingStatement(item.UPC, item.name, oldVal, toReturn.get(0).quantity);
 					}
 					writeToOutput(statement + "\n\n");
 					//TODO log change
@@ -573,9 +576,10 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 	}
 
 	@Override
-	public void update() {
-		System.out.println("InventoryGUI updated");
-		updateInventory();
-		updateReturn();
+	public void update(String command) {
+		if(command.equals("inventory") || command.equals(""))
+			updateInventory();
+		if(command.equals("return") || command.equals(""))
+			updateReturn();
 	}
 }
