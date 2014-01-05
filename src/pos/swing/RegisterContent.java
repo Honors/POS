@@ -339,7 +339,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 			if(addDialog.getValidated()){
 				getAssociatedList().add(addDialog.getValidatedInput().trim());
 				keys.write(identifier);
-				parentWindow.writeToOutput(LogInfoGenerator.generateElementNewStatement(getType(), addDialog.getValidatedInput()));
+				parentWindow.writeToOutput(LogInfoGenerator.generateElementNewStatement(getType(), addDialog.getValidatedInput()) + "\n\n");
 				updateList();
 		
 				TreePath pathToNewElement = find((DefaultMutableTreeNode)tree.getModel().getRoot(), addDialog.getValidatedInput());
