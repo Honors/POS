@@ -13,7 +13,6 @@ import java.awt.Insets;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import pos.PointOfSale;
 import pos.core.ServerManager;
 import pos.swing.JFramePOS;
 import pos.core.Keys;

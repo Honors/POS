@@ -63,4 +63,11 @@ public class LogInfoGenerator {
 	    return statement;
 	}
 	
+	public static String generateServerBackupStatement(String filePath){
+		return "[Backup] (" + TimeStamp.simpleDateAndTime() + ") Path: " + filePath;
+	}
+	
+	public static String generateServerRestoreStatement(String filePath){
+		return "[Restore] (" + TimeStamp.simpleDateAndTime() + ") Path: " + filePath;
+	}
 }

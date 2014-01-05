@@ -59,7 +59,6 @@ public class BackupWriter {
 			out.println(i.remove(0).toSrtingCSV());
 		}
 		out.println("");
-		parent.writeToOutput("\nSUCCESS\n");
 	}
 	
 	/**
@@ -73,7 +72,6 @@ public class BackupWriter {
 			out.println(i.remove(0).toSrtingCSV());
 		}
 		out.println("");
-		parent.writeToOutput("\nSUCCESS\n");
 	}
 	
 	/**

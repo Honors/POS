@@ -472,6 +472,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 				try{
 					backup.exportInventoryToCSV();
 					backup.exportReturnToCSV();
+					writeToOutput(LogInfoGenerator.generateServerBackupStatement(file.getAbsolutePath()) + "\n\n");
 				} catch (Exception r){
 					System.out.println(r);
 				}
@@ -498,8 +499,9 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 				while(!returnItems.isEmpty()){
 					server.insertReturnItem(returnItems.remove(0));
 				}
+				
+				writeToOutput(LogInfoGenerator.generateServerRestoreStatement(fileChooser.getSelectedFile().getAbsolutePath()) + "\n\n");
 			}
-			//inventory.restoreFromBackup(textEntry.getText());
 		}
 	}
 

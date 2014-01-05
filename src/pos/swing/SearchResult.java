@@ -7,7 +7,6 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import pos.item.Item;
-import pos.item.InventoryItem;
 import pos.core.Keys;
 import pos.core.OutputWindow;
 import pos.swing.JFramePOS;

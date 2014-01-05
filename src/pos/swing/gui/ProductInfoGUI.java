@@ -52,7 +52,6 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		}
 		item = i;
 		source = s;
-		//writeToOutput("\n\n::" + item.toStringUpdate());
 		
 		this.status = status;
 		if(status == Reference.NEW_PRODUCT){
@@ -408,12 +407,8 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 			if(status == Reference.EDIT_PRODUCT){
 				if (update){
 					InventoryItem i = new InventoryItem(item.SKU, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), item.date, notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), item.quantity);
-					//writeToOutput("\n\n:::::" + server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
 					if (item.UPC.length() * ((JTextField)name).getText().length() > 0){
-						String r = server.updateInventoryItem(i);
-						//writeToOutput(r);
-						//writeToOutput("\n\n" + i.toStringFormatted());
-						//writeToOutput("\n" + i.toStringUpdate());
+						server.updateInventoryItem(i);
 						writeToOutput(LogInfoGenerator.generateInventoryEditItemStatement((InventoryItem)item, i) + "\n\n");
 						source.updateItem(i);
 						this.setVisible(false);
@@ -451,14 +446,9 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 					else{
 						String r = server.insertInventoryItem(i);
 						if (r.contains("SUCCESS")){
-							//writeToOutput(i.toStringFormatted());
-							//writeToOutput("\n" + i.toStringUpdate());
 							writeToOutput(LogInfoGenerator.generateInventoryNewItemStatement(i) + "\n\n");
 							parentWindow.update("inventory");
 							this.setVisible(false);
-						}
-						else{
-							//writeToOutput(r);
 						}
 					}
 				}
@@ -480,20 +470,13 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 
 					writeToOutput("\n");
 					
-					String r = server.updateReturnItem(i);					
-					//writeToOutput(r);
-					//writeToOutput("\n\n" + i.toStringFormatted());
-					//writeToOutput("\n" + i.toStringUpdate());
+					server.updateReturnItem(i);					
 					source.updateItem(i);
-					//parentWindow.update();  //too much updating
 					this.setVisible(false);
 				} else {
 					ReturnItem i = new ReturnItem(item.SKU, item.UPC, item.name, item.brand, item.color, item.size, item.type, item.gender, item.client, item.date, notes.getText(), item.price, item.cost, item.quantity, ((ReturnItem)item).status);
 				
-					String r = server.updateReturnItem(i);
-					//writeToOutput(r);
-					//writeToOutput("\n\n" + i.toStringFormatted());
-					//writeToOutput("\n" + i.toStringUpdate());
+					server.updateReturnItem(i);
 					source.updateItem(i);
 					this.setVisible(false);
 				}
@@ -533,7 +516,6 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	
 	public void actionConfirmed(String action){
 		if (action.equals("delete")){
-			//writeToOutput(server.removeInventoryItem(new InventoryItem(item)));
 			source.delete();
 			this.setVisible(false);
 		}
@@ -542,7 +524,6 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 			actionPerformed(new ActionEvent(Submit, 1, "submit"));
 		}
 		if (action.equals("see_conflicts")){
-			//writeToOutput("conflict");
 			new SearchGUI(server, parentWindow, "UPC='" + ((JTextField)upc).getText() + "'", keys);
 		}
 		if (action.equals("generateLabels")){
