@@ -325,11 +325,6 @@ public class ServerManager {
 		return "SUCCESS: ITEM INSERTED";
 	}
 	
-	public String removeReturnItem(ReturnItem i){
-		
-		return null;
-	}
-	
 	public ReturnItem getReturnItem(int SKU){
 		ReturnItem i = new ReturnItem();
 		try{

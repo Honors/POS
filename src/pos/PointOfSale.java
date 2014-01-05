@@ -118,7 +118,7 @@ public class PointOfSale extends JFrame implements ActionListener{
 	 */
 	public void autoLogin(){
 		fieldUser.setText("nicky");
-		fieldPass.setText("dicarloisthebest");
+		fieldPass.setText("dicarloisthebestest");
 		submit.doClick();
 	}
 	

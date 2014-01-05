@@ -31,6 +31,7 @@ import pos.core.ServerManager;
 import pos.dialog.DialogSingleComboBox;
 import pos.dialog.DialogSingleTextInput;
 import pos.lib.Reference;
+import pos.log.LogInfoGenerator;
 import pos.core.Keys;
 
 public class RegisterContent extends JPanel implements ActionListener, MouseListener {
@@ -267,6 +268,26 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 		}
 	}
 	
+	public String getType(){
+		String label;
+		if(identifier == Reference.BRAND){
+			label = "Brand";
+		} else if(identifier == Reference.TYPE){
+			label = "Type";
+		} else if(identifier == Reference.COLOR){
+			label = "Color";
+		} else if(identifier == Reference.SIZE){
+			label = "Size";
+		} else if(identifier == Reference.GENDER){
+			label = "Gender";
+		} else if(identifier == Reference.CLIENT){
+			label = "Client";
+		} else {
+			label = "";
+		}
+		return label;
+	}
+	
 	/**
 	 * Resets all the data in the list from the associated Keys list
 	 */
@@ -318,6 +339,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 			if(addDialog.getValidated()){
 				getAssociatedList().add(addDialog.getValidatedInput().trim());
 				keys.write(identifier);
+				parentWindow.writeToOutput(LogInfoGenerator.generateElementNewStatement(getType(), addDialog.getValidatedInput()));
 				updateList();
 		
 				TreePath pathToNewElement = find((DefaultMutableTreeNode)tree.getModel().getRoot(), addDialog.getValidatedInput());
@@ -336,6 +358,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 				getAssociatedList().set(getAssociatedList().indexOf(oldName), newName);
 				keys.write(identifier);
 				server.updateInventoryElement(identifier, oldName, newName);
+				parentWindow.writeToOutput(LogInfoGenerator.generateElementEditStatement(getType(), oldName, addDialog.getValidatedInput()) + "\n\n");
 				updateList();
 				
 				TreePath pathToNewElement = find((DefaultMutableTreeNode)tree.getModel().getRoot(), newName);
@@ -357,6 +380,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 				getAssociatedList().remove(toDelete);
 				keys.write(identifier);
 				server.updateInventoryElement(identifier, toDelete, dialog.getValidatedInput());
+				parentWindow.writeToOutput(LogInfoGenerator.generateElementDeleteStatement(getType(), toDelete, dialog.getValidatedInput()) + "\n\n");
 				updateList();
 				
 				tree.requestFocus();

@@ -14,6 +14,8 @@ import pos.core.Confirmable;
 import pos.item.Item;
 import pos.item.ReturnItem;
 import pos.lib.Reference;
+import pos.log.LogInfoGenerator;
+import pos.log.TimeStamp;
 import pos.core.ServerManager;
 import pos.item.InventoryItem;
 import pos.swing.JFramePOS;
@@ -50,7 +52,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		}
 		item = i;
 		source = s;
-		writeToOutput("\n\n::" + item.toStringUpdate());
+		//writeToOutput("\n\n::" + item.toStringUpdate());
 		
 		this.status = status;
 		if(status == Reference.NEW_PRODUCT){
@@ -144,6 +146,9 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		content.add(labelDate, rLabelCollumn);
 
 		date = (isNew) ? new JTextField(item.date, 10) : new JLabel(item.date);
+		if(isNew){
+			((JTextField)date).setText(TimeStamp.simpleDate());
+		}
 		date.setBorder(new JTextField().getBorder());
 		date.setOpaque(true);
 		date.setBackground(new JTextField().getBackground());
@@ -403,12 +408,13 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 			if(status == Reference.EDIT_PRODUCT){
 				if (update){
 					InventoryItem i = new InventoryItem(item.SKU, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), item.date, notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), item.quantity);
-					writeToOutput("\n\n:::::" + server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
+					//writeToOutput("\n\n:::::" + server.searchInventory("UPC='" + i.UPC + "'").get(0).SKU);
 					if (item.UPC.length() * ((JTextField)name).getText().length() > 0){
 						String r = server.updateInventoryItem(i);
-						writeToOutput(r);
-						writeToOutput("\n\n" + i.toStringFormatted());
-						writeToOutput("\n" + i.toStringUpdate());
+						//writeToOutput(r);
+						//writeToOutput("\n\n" + i.toStringFormatted());
+						//writeToOutput("\n" + i.toStringUpdate());
+						writeToOutput(LogInfoGenerator.generateInventoryEditItemStatement((InventoryItem)item, i));
 						source.updateItem(i);
 						this.setVisible(false);
 					}
@@ -445,13 +451,14 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 					else{
 						String r = server.insertInventoryItem(i);
 						if (r.contains("SUCCESS")){
-							writeToOutput(i.toStringFormatted());
-							writeToOutput("\n" + i.toStringUpdate());
+							//writeToOutput(i.toStringFormatted());
+							//writeToOutput("\n" + i.toStringUpdate());
+							writeToOutput(LogInfoGenerator.generateInventoryNewItemStatement(i));
 							parentWindow.update("inventory");
 							this.setVisible(false);
 						}
 						else{
-							writeToOutput(r);
+							//writeToOutput(r);
 						}
 					}
 				}
@@ -459,18 +466,24 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 			if(status == Reference.RETURN_PRODUCT){
 				if(((ReturnItem)item).status.equals(Reference.STATUS_PENDING)){
 					ReturnItem i = new ReturnItem(item.SKU, item.UPC, item.name, item.brand, item.color, item.size, item.type, item.gender, item.client, item.date, notes.getText(), item.price, item.cost, item.quantity, ((JComboBox<Object>)returnStatus).getSelectedItem().toString());
-
+					if(!i.status.equals(((ReturnItem)item).status))
+						writeToOutput(LogInfoGenerator.generateReturnEditItemStatement(i.UPC, i.name, i.quantity, ((ReturnItem)item).status, i.status) + "\n");
+					
 					if(i.status.equals(Reference.STATUS_TO_INVENTORY)){
 						ArrayList<InventoryItem> returnedTo = server.searchInventory("UPC='" + i.UPC + "'");
+						int oldVal = returnedTo.get(0).quantity;
 						returnedTo.get(0).quantity += item.quantity;
+						writeToOutput(LogInfoGenerator.generateTransactionIncomingItemStatement(returnedTo.get(0).UPC, returnedTo.get(0).name, oldVal, returnedTo.get(0).quantity) + "\n");
 						server.updateInventoryItem(returnedTo.get(0));
 						parentWindow.update("inventory");
 					}
+
+					writeToOutput("\n");
 					
 					String r = server.updateReturnItem(i);					
-					writeToOutput(r);
-					writeToOutput("\n\n" + i.toStringFormatted());
-					writeToOutput("\n" + i.toStringUpdate());
+					//writeToOutput(r);
+					//writeToOutput("\n\n" + i.toStringFormatted());
+					//writeToOutput("\n" + i.toStringUpdate());
 					source.updateItem(i);
 					//parentWindow.update();  //too much updating
 					this.setVisible(false);
@@ -478,9 +491,9 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 					ReturnItem i = new ReturnItem(item.SKU, item.UPC, item.name, item.brand, item.color, item.size, item.type, item.gender, item.client, item.date, notes.getText(), item.price, item.cost, item.quantity, ((ReturnItem)item).status);
 				
 					String r = server.updateReturnItem(i);
-					writeToOutput(r);
-					writeToOutput("\n\n" + i.toStringFormatted());
-					writeToOutput("\n" + i.toStringUpdate());
+					//writeToOutput(r);
+					//writeToOutput("\n\n" + i.toStringFormatted());
+					//writeToOutput("\n" + i.toStringUpdate());
 					source.updateItem(i);
 					this.setVisible(false);
 				}
@@ -520,7 +533,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 	
 	public void actionConfirmed(String action){
 		if (action.equals("delete")){
-			writeToOutput(server.removeInventoryItem(new InventoryItem(item)));
+			//writeToOutput(server.removeInventoryItem(new InventoryItem(item)));
 			source.delete();
 			this.setVisible(false);
 		}
@@ -529,7 +542,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 			actionPerformed(new ActionEvent(Submit, 1, "submit"));
 		}
 		if (action.equals("see_conflicts")){
-			writeToOutput("conflict");
+			//writeToOutput("conflict");
 			new SearchGUI(server, parentWindow, "UPC='" + ((JTextField)upc).getText() + "'", keys);
 		}
 		if (action.equals("generateLabels")){

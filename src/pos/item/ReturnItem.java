@@ -111,8 +111,6 @@ public class ReturnItem extends Item{
 		//s += "SKU: " + SKU;
 		s += "UPC: " + UPC;
 		s += "\nName: " + name;
-		s += "\nPrice: " + price;
-		s += "\nCost: " + cost;
 		s += "\nQuantity: " + quantity;
 		s += "\nStatus: " + status;
 		return s;

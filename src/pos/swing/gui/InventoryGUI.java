@@ -1,6 +1,7 @@
 package pos.swing.gui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -146,7 +147,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		ICContent.add(ICMultipleText, c);
 		
 		ICOutput = new JTextArea();
-		ICOutput.setFont(ICOutput.getFont().deriveFont(14f));
+		ICOutput.setFont(new Font("Courier New", Font.PLAIN, 14));
 		ICOutput.setLineWrap(true);
 		ICOutput.setWrapStyleWord(true);
 		ICOutput.setBorder(new EmptyBorder(5,5,5,5));
@@ -366,7 +367,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 				
 				change = toChange.get(0).quantity - oldVal;
 				
-				String statement = LogInfoGenerator.generateIncomingStatement(toChange.get(0).UPC, toChange.get(0).name, oldVal, toChange.get(0).quantity);
+				String statement = LogInfoGenerator.generateTransactionIncomingItemStatement(toChange.get(0).UPC, toChange.get(0).name, oldVal, toChange.get(0).quantity);
 				writeToOutput(statement + "\n\n");
 				//TODO log the change
 			} else if(toChange.size() > 1){
@@ -402,7 +403,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 					
 					change = toChange.get(0).quantity - oldVal;
 					
-					String statement = LogInfoGenerator.generateOutgoingStatement(toChange.get(0).UPC, toChange.get(0).name, oldVal, toChange.get(0).quantity);
+					String statement = LogInfoGenerator.generateTransactionOutgoingItemStatement(toChange.get(0).UPC, toChange.get(0).name, oldVal, toChange.get(0).quantity);
 					writeToOutput(statement + "\n\n");
 					//TODO log the change
 				} else {
@@ -435,13 +436,13 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 					server.insertReturnItem(item);
 					updateReturn();
 
-					String statement = LogInfoGenerator.generateReturnStatement(item.UPC, item.name, item.quantity, item.status);
+					String statement = LogInfoGenerator.generateTransactionReturnItemStatement(item.UPC, item.name, item.quantity, item.status);
 					if(item.status == Reference.STATUS_TO_INVENTORY){
 						int oldVal = toReturn.get(0).quantity;
 						toReturn.get(0).quantity += item.quantity;
 						server.updateInventoryItem(toReturn.get(0));
 						updateInventory();
-						statement += "\n" + LogInfoGenerator.generateIncomingStatement(item.UPC, item.name, oldVal, toReturn.get(0).quantity);
+						statement += "\n" + LogInfoGenerator.generateTransactionIncomingItemStatement(item.UPC, item.name, oldVal, toReturn.get(0).quantity);
 					}
 					writeToOutput(statement + "\n\n");
 					//TODO log change
