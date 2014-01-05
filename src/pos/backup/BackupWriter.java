@@ -53,10 +53,12 @@ public class BackupWriter {
 	 * @param i Inventory items to be exported
 	 */
 	public void exportInventoryToCSV(ArrayList<InventoryItem> i){
+		out.println("INVENTORY");
 		out.println("SKU,UPC,NAME,BRAND,COLOR,SIZE,TYPE,GENDER,CLIENT,DATE,NOTES,PRICE,COST,QUANTITY");
 		while (!i.isEmpty()){
 			out.println(i.remove(0).toSrtingCSV());
 		}
+		out.println("");
 		parent.writeToOutput("\nSUCCESS\n");
 	}
 	
@@ -65,10 +67,12 @@ public class BackupWriter {
 	 * @param i Return items to be exported
 	 */
 	public void exportReturnToCSV(ArrayList<ReturnItem> i){
+		out.println("RETURN");
 		out.println("SKU,UPC,NAME,BRAND,COLOR,SIZE,TYPE,GENDER,CLIENT,DATE,NOTES,PRICE,COST,QUANTITY,STATUS");
 		while (!i.isEmpty()){
 			out.println(i.remove(0).toSrtingCSV());
 		}
+		out.println("");
 		parent.writeToOutput("\nSUCCESS\n");
 	}
 	

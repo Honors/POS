@@ -7,13 +7,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -28,6 +27,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import pos.backup.BackupReader;
 import pos.backup.BackupWriter;
 import pos.core.Confirmable;
 import pos.lib.Reference;
@@ -328,7 +328,7 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		if(event.getSource().equals(IMBackup)){
 			int n = JOptionPane.showConfirmDialog(this, "Are you sure?\nThis will overwrite any existing exports with the same name.", "Backup", JOptionPane.YES_NO_OPTION);
 			if(n == 0)
-				actionConfirmed("inventory_backup");
+				actionConfirmed("backup");
 		}
 		
 		if (event.getSource().equals(IMRestore)){
@@ -460,22 +460,45 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 			new ProductInfoGUI(server, this, null, new InventoryItem(), keys, Reference.NEW_PRODUCT);
 		}
 		
-		if (action.equals("inventory_backup")){
-			String f = IMTextEntry.getText();
-			if (f.length() < 1 || f.charAt(1) != ':'){
-				f = path + "\\backups\\" + new Date().toString().replace(' ', '_').replace(':', '_') + ".csv";
+		if (action.equals("backup")){
+			JFileChooser fileChooser = new JFileChooser(path);
+			int returnVal = fileChooser.showSaveDialog(new JFrame());
+			if(returnVal == JFileChooser.APPROVE_OPTION){
+				File file = fileChooser.getSelectedFile();
+				if(!file.getPath().endsWith(".csv"))
+					file = new File(file.getPath() + ".csv");
+				
+				BackupWriter backup = new BackupWriter(file.getPath(), this, server);
+				try{
+					backup.exportInventoryToCSV();
+					backup.exportReturnToCSV();
+				} catch (Exception r){
+					System.out.println(r);
+				}
+				backup.close();
 			}
-			BackupWriter backup = new BackupWriter(f, this, server);
-			try{
-				backup.exportInventoryToCSV();
-			} catch (Exception r){
-				System.out.println(r);
-			}
-			backup.close();
 		}
 		
 		if (action.equals("restore")){
-			//TODO rewrite import (this doesn't work and i have no idea how it worked in the first place)
+			JFileChooser fileChooser = new JFileChooser(path);
+			int returnVal = fileChooser.showOpenDialog(new JFrame());
+			if(returnVal == JFileChooser.APPROVE_OPTION){
+				BackupReader backup = new BackupReader(fileChooser.getSelectedFile().getPath());
+				ArrayList<InventoryItem> inventoryItems = backup.readInventoryFromFile();
+				ArrayList<ReturnItem> returnItems = backup.readReturnFromFile();
+				backup.close();
+				
+				server.deleteAllInventory();
+				server.deleteAllReturn();
+				
+				while(!inventoryItems.isEmpty()){
+					server.insertInventoryItem(inventoryItems.remove(0));
+				}
+				
+				while(!returnItems.isEmpty()){
+					server.insertReturnItem(returnItems.remove(0));
+				}
+			}
 			//inventory.restoreFromBackup(textEntry.getText());
 		}
 	}
