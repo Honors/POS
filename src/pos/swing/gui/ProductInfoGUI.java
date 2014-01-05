@@ -414,7 +414,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 						//writeToOutput(r);
 						//writeToOutput("\n\n" + i.toStringFormatted());
 						//writeToOutput("\n" + i.toStringUpdate());
-						writeToOutput(LogInfoGenerator.generateInventoryEditItemStatement((InventoryItem)item, i));
+						writeToOutput(LogInfoGenerator.generateInventoryEditItemStatement((InventoryItem)item, i) + "\n\n");
 						source.updateItem(i);
 						this.setVisible(false);
 					}
@@ -453,7 +453,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 						if (r.contains("SUCCESS")){
 							//writeToOutput(i.toStringFormatted());
 							//writeToOutput("\n" + i.toStringUpdate());
-							writeToOutput(LogInfoGenerator.generateInventoryNewItemStatement(i));
+							writeToOutput(LogInfoGenerator.generateInventoryNewItemStatement(i) + "\n\n");
 							parentWindow.update("inventory");
 							this.setVisible(false);
 						}

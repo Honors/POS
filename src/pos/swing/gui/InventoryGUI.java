@@ -147,16 +147,15 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		ICContent.add(ICMultipleText, c);
 		
 		ICOutput = new JTextArea();
+		ICOutput.setEditable(false);
 		ICOutput.setFont(new Font("Courier New", Font.PLAIN, 14));
-		ICOutput.setLineWrap(true);
-		ICOutput.setWrapStyleWord(true);
 		ICOutput.setBorder(new EmptyBorder(5,5,5,5));
 		ICOutputPane = new JScrollPane(ICOutput);
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weighty = 1;
 		c.gridwidth = 5;
-		c.ipadx = 500;
+		c.ipadx = 700;
 		c.ipady = 550;
 		c.insets = new Insets(5,5,5,5);
 		ICContent.add(ICOutputPane, c);
