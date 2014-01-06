@@ -41,6 +41,7 @@ import pos.swing.JToggleEnableButton;
 import pos.core.Keys;
 import pos.core.OutputWindow;
 import pos.dialog.DialogSingleComboBox;
+import pos.filter.CSVFilter;
 import pos.swing.SearchResult;
 
 public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListener, Confirmable, ChangeListener {
@@ -462,6 +463,8 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		
 		if (action.equals("backup")){
 			JFileChooser fileChooser = new JFileChooser(path);
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			fileChooser.addChoosableFileFilter(new CSVFilter());
 			int returnVal = fileChooser.showSaveDialog(new JFrame());
 			if(returnVal == JFileChooser.APPROVE_OPTION){
 				File file = fileChooser.getSelectedFile();
@@ -482,6 +485,8 @@ public class InventoryGUI extends JFramePOS implements OutputWindow, ActionListe
 		
 		if (action.equals("restore")){
 			JFileChooser fileChooser = new JFileChooser(path);
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			fileChooser.addChoosableFileFilter(new CSVFilter());
 			int returnVal = fileChooser.showOpenDialog(new JFrame());
 			if(returnVal == JFileChooser.APPROVE_OPTION){
 				BackupReader backup = new BackupReader(fileChooser.getSelectedFile().getPath());

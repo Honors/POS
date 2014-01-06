@@ -12,8 +12,9 @@ import pos.core.OutputWindow;
 import pos.swing.JFramePOS;
 import pos.swing.gui.ProductInfoGUI;
 
-@SuppressWarnings("serial")
 public class SearchResult extends JTextArea implements MouseListener{
+
+	private static final long serialVersionUID = 2992374815754805458L;
 	
 	private Item item;
 	private Keys key;
