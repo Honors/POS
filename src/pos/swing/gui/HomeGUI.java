@@ -60,6 +60,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		
 		executeField = new JTextField();
 		executeField.addActionListener(this);
+		executeField.setFont(new Font("Courier New", Font.PLAIN, 12));
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weightx = 1;
@@ -114,13 +115,12 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		c.insets = new Insets(5,5,5,5);
 		content.add(outputPane, c);
 		
-		setTitle("POS");
+		setTitle("Point of Sale");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setContentPane(content);
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
-		System.out.println(logo.getSize());
 	}
 	
 	@Override
@@ -139,7 +139,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		}
 		
 		if (event.getSource().equals(reportButton)){
-			//TODO ReportGUI and systems
+			new ReportGUI();
 		}
 	}
 	

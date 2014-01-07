@@ -13,7 +13,7 @@ public class LogInfoGenerator {
 	}
 	
 	public static String generateTransactionReturnItemStatement(String upc, String name, int quantity, String status){
-		return "[#] (" + TimeStamp.simpleDateAndTime() + ") UPC: " + upc + ", Name: " + name + ", " + quantity + " " + status;
+		return "[*] (" + TimeStamp.simpleDateAndTime() + ") UPC: " + upc + ", Name: " + name + ", " + quantity + " " + status;
 	}
 	
 	public static String generateReturnEditItemStatement(String upc, String name, int quantity, String oldStatus, String newStatus){
@@ -21,15 +21,15 @@ public class LogInfoGenerator {
 	}
 	
 	public static String generateElementNewStatement(String type, String element){
-		return "[" + type + "] (" + TimeStamp.simpleDateAndTime() + ") New: " + element;
+		return "[Element] (" + TimeStamp.simpleDateAndTime() + ") New " + type + ": " + element;
 	}
 
 	public static String generateElementEditStatement(String type, String oldElement, String newElement){
-		return "[" + type + "] (" + TimeStamp.simpleDateAndTime() + ") Edit: " + oldElement + "  ->  " + newElement;
+		return "[Element] (" + TimeStamp.simpleDateAndTime() + ") Edit " + type + ": " + oldElement + "  ->  " + newElement;
 	}
 	
 	public static String generateElementDeleteStatement(String type, String delElement, String migElement){
-		return "[" + type + "] (" + TimeStamp.simpleDateAndTime() + ") Delete: " + delElement + "  ->  " + migElement;
+		return "[Element] (" + TimeStamp.simpleDateAndTime() + ") Delete " + type + ": " + delElement + "  ->  " + migElement;
 	}
 	
 	public static String generateInventoryNewItemStatement(InventoryItem newItem){
