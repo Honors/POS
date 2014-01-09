@@ -29,7 +29,7 @@ public class ServerManager {
 		try{
 			con.prepareStatement(q).execute();
 			con.commit();
-			s += q + " :: SUCCEEDED";
+			s += "SUCCESS";
 		} catch (Exception e){
 			System.out.println(e);
 			s += e.toString();

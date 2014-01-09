@@ -29,7 +29,7 @@ public class LogInfoGenerator {
 	}
 	
 	public static String generateElementDeleteStatement(String type, String delElement, String migElement){
-		return "[Element] (" + TimeStamp.simpleDateAndTime() + ") Delete " + type + ": " + delElement + "  ->  " + migElement;
+		return "[Element] (" + TimeStamp.simpleDateAndTime() + ") Delete " + type + ": " + delElement + ", migrated to " + migElement;
 	}
 	
 	public static String generateInventoryNewItemStatement(InventoryItem newItem){
@@ -61,6 +61,10 @@ public class LogInfoGenerator {
 		statement += (!oldItem.client.equals(newItem.client)) ? "    *Client: " + oldItem.client +"  ->  " + newItem.client + "\n" : "";
 			  
 	    return statement;
+	}
+	
+	public static String generateServerCommandStatement(String command, String result){
+		return "[Server] (" + TimeStamp.simpleDateAndTime() + ") Execute\n    Command: " + command + "\n    Result: " + result;
 	}
 	
 	public static String generateServerBackupStatement(String filePath){

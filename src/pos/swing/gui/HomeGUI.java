@@ -14,6 +14,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import pos.core.ServerManager;
+import pos.log.LogInfoGenerator;
 import pos.swing.JFramePOS;
 import pos.core.Keys;
 import pos.core.OutputWindow;
@@ -126,12 +127,12 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if(event.getSource().equals(executeField) || event.getSource().equals(executeButton)){
-			writeToOutput(server.exec(executeField.getText()));
+			writeToOutput(LogInfoGenerator.generateServerCommandStatement(executeField.getText(), server.exec(executeField.getText())) + "\n\n");
 			executeField.setText("");
 		}
 		
 		if (event.getSource().equals(inventoryButton)){
-			new InventoryGUI(server, this, path, keys);
+			new MaintinanceGUI(server, this, path, keys);
 		}
 		
 		if (event.getSource().equals(searchButton)){

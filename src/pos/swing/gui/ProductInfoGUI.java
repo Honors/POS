@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import pos.core.Confirmable;
 import pos.item.Item;
 import pos.item.ReturnItem;
 import pos.lib.Reference;
@@ -24,7 +23,7 @@ import pos.core.OutputWindow;
 import pos.swing.SearchResult;
 
 @SuppressWarnings("serial")
-public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirmable{
+public class ProductInfoGUI extends JFramePOS implements ActionListener{
 	
 	private Item item;
 	private SearchResult source;
@@ -438,9 +437,10 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 						Object[] options = {"CREATE NEW", "SEE CONFLICTS"};
 						int n = JOptionPane.showOptionDialog(new JFrame(), "Duplicate UPC/product.\nPress \"CREATE NEW\" to create new entry.\n Press \"SEE CONFLICTS\" to see a list of\nconflicting products", "Notice", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
 						if(n == 0){
-							actionConfirmed("create_new");
+							confirmed = true;
+							actionPerformed(new ActionEvent(Submit, 1, "submit"));
 						} else {
-							actionConfirmed("see_conflicts");
+							new SearchGUI(server, parentWindow, "UPC='" + ((JTextField)upc).getText() + "'", keys);
 						}
 					}
 					else{
@@ -485,12 +485,13 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 		if (event.getSource().equals(Delete)){
 			int n = JOptionPane.showConfirmDialog(new JFrame(), "Are you sure you wish to delete this product record?\nThis action is PERMANENT.", "Delete...", JOptionPane.YES_NO_OPTION);
 			if(n == 0){
-				actionConfirmed("delete");
+				source.delete();
+				this.setVisible(false);
 			}	
 		}
 		
 		if (event.getSource().equals(generateLabels)){
-			actionConfirmed("generateLabels");
+			//TODO generate labels
 		}
 		
 		if (event.getActionCommand().equals("updateName")){
@@ -511,23 +512,6 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Confirm
 				generatedName.add(((JComboBox<Object>)gender).getSelectedItem().toString());
 			}
 			((JTextField)name).setText(arrayToSentence(generatedName));
-		}
-	}
-	
-	public void actionConfirmed(String action){
-		if (action.equals("delete")){
-			source.delete();
-			this.setVisible(false);
-		}
-		if (action.equals("create_new")){
-			confirmed = true;
-			actionPerformed(new ActionEvent(Submit, 1, "submit"));
-		}
-		if (action.equals("see_conflicts")){
-			new SearchGUI(server, parentWindow, "UPC='" + ((JTextField)upc).getText() + "'", keys);
-		}
-		if (action.equals("generateLabels")){
-			//TODO FileChooser, Generate Labels
 		}
 	}
 	

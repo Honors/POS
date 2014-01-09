@@ -28,4 +28,10 @@ public String toDateFormatted(){
 	  Date date = new Date();
 	  return f.format(date);
   }
+  
+  public static String sanitizedDateandTime() {
+	  SimpleDateFormat f = new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss");
+	  Date date = new Date();
+	  return f.format(date);
+  }
 }
