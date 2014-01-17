@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,14 +19,20 @@ import pos.log.LogInfoGenerator;
 import pos.swing.JFramePOS;
 import pos.core.Keys;
 import pos.core.OutputWindow;
+import pos.core.UpdatableWindow;
 
 @SuppressWarnings("serial")
-public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
+public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, UpdatableWindow{
 	
 	//TODO create logo
 	private ImageIcon imgLogo = new ImageIcon(this.getClass().getResource("/resources/images/logo/logo.png"));
 	
 	private String path;
+	
+	private JMenuBar menuBar;
+	private JMenu adminMenu;
+	private JMenuItem maintinanceItem;
+	
 	private JPanel content, executeBar;
 	private JLabel logo;
 	private JButton inventoryButton, searchButton, reportButton, executeButton;
@@ -37,6 +44,17 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 	public HomeGUI(ServerManager i, String p){
 		super(i, null, new Keys(p));
 		path = p;
+ 		
+		menuBar = new JMenuBar();
+		
+		adminMenu = new JMenu("Admin");
+		
+		maintinanceItem = new JMenuItem("Maintinance");
+		maintinanceItem.addActionListener(this);
+		
+		adminMenu.add(maintinanceItem);
+		
+		menuBar.add(adminMenu);
 		
 		content = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -79,9 +97,9 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		c.weightx = 0;
 		executeBar.add(executeButton, c);
 		
-		inventoryButton = new JButton("INVENTORY");
+		inventoryButton = new JButton("TRANSACTION");
 		inventoryButton.addActionListener(this);
-		inventoryButton.setMnemonic(KeyEvent.VK_I);
+		inventoryButton.setMnemonic(KeyEvent.VK_T);
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weightx = .5;
@@ -118,6 +136,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		
 		setTitle("Point of Sale");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setJMenuBar(menuBar);
 		setContentPane(content);
 		pack();
 		setLocationRelativeTo(null);
@@ -132,15 +151,19 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		}
 		
 		if (event.getSource().equals(inventoryButton)){
-			new MaintinanceGUI(server, this, path, keys);
+			TransactionGUI maintinanceWindow = new TransactionGUI(server, this, keys);
 		}
 		
 		if (event.getSource().equals(searchButton)){
-			new SearchGUI(server, this, "", keys);
+			SearchGUI searchWindow = new SearchGUI(server, this, "", keys);
 		}
 		
 		if (event.getSource().equals(reportButton)){
-			new ReportGUI();
+			ReportGUI reportWindow = new ReportGUI();
+		}
+		
+		if (event.getSource().equals(maintinanceItem)){
+			MaintinanceGUI maintinanceWindow = new MaintinanceGUI(server, this, path, keys);
 		}
 	}
 	
@@ -152,10 +175,9 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 	public void clearOutput(){
 		output.setText("");
 	}
-
+	
 	@Override
 	public void update(String command) {
 
 	}
-
 }

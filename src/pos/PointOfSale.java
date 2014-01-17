@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.*;
+import java.io.IOException;
 
 
 public class PointOfSale extends JFrame implements ActionListener{
@@ -117,8 +118,8 @@ public class PointOfSale extends JFrame implements ActionListener{
 	 * (for quick login while debugging)
 	 */
 	public void autoLogin(){
-		fieldUser.setText("nicky");
-		fieldPass.setText("dicarloisthebestest");
+		fieldUser.setText("bwhs");
+		fieldPass.setText("");
 		submit.doClick();
 	}
 	

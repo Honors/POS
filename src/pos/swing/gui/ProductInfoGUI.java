@@ -6,9 +6,15 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+import org.apache.pdfbox.exceptions.COSVisitorException;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 
 import pos.item.Item;
 import pos.item.ReturnItem;
@@ -20,10 +26,12 @@ import pos.item.InventoryItem;
 import pos.swing.JFramePOS;
 import pos.core.Keys;
 import pos.core.OutputWindow;
+import pos.core.UpdatableWindow;
 import pos.swing.SearchResult;
 
-@SuppressWarnings("serial")
-public class ProductInfoGUI extends JFramePOS implements ActionListener{
+public class ProductInfoGUI extends JFramePOS implements ActionListener, UpdatableWindow{
+	
+	private static final long serialVersionUID = 2663648763612880306L;
 	
 	private Item item;
 	private SearchResult source;
@@ -36,6 +44,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener{
 	private JComponent returnStatus;
 	private JTextArea notes;
 	private JButton Submit, Delete, generateLabels;
+	private JScrollPane notesPane;
 	
 	private boolean isNew, isEditable, isReturn;
 	private boolean update = false;
@@ -306,7 +315,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener{
 		labelNotes = new JLabel("Notes:");
 		lLabelCollumn.gridy = 7;
 		content.add(labelNotes, lLabelCollumn);
-
+		
 		notes = new JTextArea();
 		notes.setLineWrap(true);
 		notes.setText(item.notes);
@@ -314,12 +323,14 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener{
 		notes.setBorder(new JTextField().getBorder());
 		notes.setOpaque(true);
 		notes.setBackground(new JTextField().getBackground());
+		notes.setBorder(new EmptyBorder(5,5,5,5));
 		lLabelCollumn.gridy = 8;
 		lLabelCollumn.ipady = 100;
 		lLabelCollumn.gridwidth = 4;
-		lLabelCollumn.insets = new Insets(5,20,10,20);
-		content.add(notes, lLabelCollumn);
-		
+		lLabelCollumn.insets = new Insets(5,20,10,20);	
+		notesPane = new JScrollPane(notes);
+		content.add(notesPane, lLabelCollumn);
+
 
 		if(isEditable || isReturn){
 			Submit = new JButton("UPDATE");
@@ -491,7 +502,9 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener{
 		}
 		
 		if (event.getSource().equals(generateLabels)){
-			//TODO generate labels
+
+			
+			
 		}
 		
 		if (event.getActionCommand().equals("updateName")){
@@ -517,6 +530,11 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener{
 	
 	public void writeToOutput(String s){
 		parentWindow.writeToOutput(s);
+	}
+
+	@Override
+	public void update(String command) {
+		
 	}
 
 }

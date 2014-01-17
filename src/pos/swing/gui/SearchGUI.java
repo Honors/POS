@@ -17,10 +17,12 @@ import pos.item.InventoryItem;
 import pos.swing.JFramePOS;
 import pos.core.Keys;
 import pos.core.OutputWindow;
+import pos.core.UpdatableWindow;
 import pos.swing.SearchResult;
 
-@SuppressWarnings("serial")
-public class SearchGUI extends JFramePOS implements ActionListener{
+public class SearchGUI extends JFramePOS implements ActionListener, UpdatableWindow{
+	
+	private static final long serialVersionUID = 3928694164475396987L;
 	
 	private JPanel content, searchFields, resultsPanel;
 	private JToggleEnableButton brandLabel, sizeLabel, typeLabel, genderLabel, colorLabel, clientLabel;
@@ -460,5 +462,11 @@ public class SearchGUI extends JFramePOS implements ActionListener{
 		System.out.println(command);
 		
 		return command;
+	}
+
+	@Override
+	public void update(String command) {
+		// TODO Auto-generated method stub
+		
 	}
 }

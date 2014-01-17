@@ -1,7 +1,6 @@
 package pos.core;
 
-public interface OutputWindow {
+public interface OutputWindow extends UpdatableWindow{
 	public void writeToOutput(String s);
 	public void clearOutput();
-	public void update(String command);
 }

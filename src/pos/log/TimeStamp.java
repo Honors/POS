@@ -30,7 +30,7 @@ public String toDateFormatted(){
   }
   
   public static String sanitizedDateandTime() {
-	  SimpleDateFormat f = new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss");
+	  SimpleDateFormat f = new SimpleDateFormat("MM-dd-yyyy_HH.mm.ss");
 	  Date date = new Date();
 	  return f.format(date);
   }

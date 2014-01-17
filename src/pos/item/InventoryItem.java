@@ -111,7 +111,7 @@ public class InventoryItem extends Item {
 		s += "\",\""  + gender;
 		s += "\",\""  + client;
 		s += "\",\""  + date;
-		s += "\",\"" + notes;
+		s += "\",\""  + removeLineBreaks(notes);;
 		s += "\",\""  + price;
 		s += "\",\""  + cost;
 		s += "\",\""  + quantity;

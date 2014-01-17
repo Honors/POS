@@ -9,7 +9,6 @@ import pos.lib.Reference;
 import pos.swing.RegisterContent;
 import pos.core.ServerManager;
 import pos.core.Keys;
-
 public class RegisterGUI extends JFramePOS{
 
 	private static final long serialVersionUID = 6343961546615340321L;

@@ -31,4 +31,11 @@ public class Reference {
 	public final static String STATUS_TO_INVENTORY = "Return to Inventory";
 	
 	public final static ArrayList<String> STATUSES = new ArrayList<String>(Arrays.asList(STATUS_PENDING, STATUS_TO_VENDER, STATUS_TO_INVENTORY));
+	
+	public final static String REPORT_INVENTORY_ITEM = "Inventory Item Report";
+	public final static String REPORT_INVENTORY_STOCK = "Inventory Stock Status Report";
+	
+	public final static ArrayList<String> REPORT_TYPES = new ArrayList<String>(Arrays.asList(REPORT_INVENTORY_STOCK, REPORT_INVENTORY_ITEM));
+	
+	
 }

@@ -1,5 +1,8 @@
 package pos.item;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Item {
 	
 	public int SKU;
@@ -34,4 +37,12 @@ public class Item {
 		return null;
 	}
 
+	public String removeLineBreaks(String inputText){
+		Pattern p;
+		Matcher m;
+		p = Pattern.compile("\n");
+		m = p.matcher(inputText);
+		String str = m.replaceAll("<br>");
+		return str;
+	}
 }
