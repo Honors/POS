@@ -4,18 +4,17 @@ package pos.swing.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import pos.core.ServerManager;
 import pos.log.LogInfoGenerator;
+import pos.log.ReadableLogger;
 import pos.swing.JFramePOS;
 import pos.core.Keys;
 import pos.core.OutputWindow;
@@ -33,10 +32,9 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 	private JMenu adminMenu;
 	private JMenuItem maintinanceItem;
 	
-	private JPanel content, executeBar;
+	private JPanel content;
 	private JLabel logo;
-	private JButton inventoryButton, searchButton, reportButton, executeButton;
-	private JTextField executeField;
+	private JButton inventoryButton, searchButton, reportButton;
 	private JTextArea output;
 	private JScrollPane outputPane;
 	
@@ -70,38 +68,12 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 		c.gridwidth = 3;
 		content.add(logo, c);
 		
-		executeBar = new JPanel(new GridBagLayout());
-		c.gridx = 0;
-		c.gridy = 1;
-		c.ipady = 5;
-		c.gridwidth = 3;
-		content.add(executeBar, c);
-		
-		executeField = new JTextField();
-		executeField.addActionListener(this);
-		executeField.setFont(new Font("Courier New", Font.PLAIN, 12));
-		c.gridx = 0;
-		c.gridy = 0;
-		c.weightx = 1;
-		c.gridwidth = 1;
-		c.insets = new Insets(0,0,0,5);
-		executeBar.add(executeField, c);
-		
-		executeButton = new JButton("EXECUTE");
-		executeButton.addActionListener(this);
-		executeButton.setOpaque(true);
-		executeButton.setBackground(new Color(0xFF3A3A));
-		c.gridx = 1;
-		c.gridy = 0;
-		c.insets = new Insets(0,0,0,0);
-		c.weightx = 0;
-		executeBar.add(executeButton, c);
-		
 		inventoryButton = new JButton("TRANSACTION");
 		inventoryButton.addActionListener(this);
 		inventoryButton.setMnemonic(KeyEvent.VK_T);
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 1;
+		c.gridwidth = 1;
 		c.weightx = .5;
 		c.insets = new Insets(5,5,0,5);
 		content.add(inventoryButton, c);
@@ -126,7 +98,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 		output.setBorder(new EmptyBorder(5,5,5,5));
 		outputPane = new JScrollPane(output);
 		c.gridx = 0;
-		c.gridy = 3;
+		c.gridy = 2;
 		c.ipadx = 500;
 		c.ipady = 400;
 		c.weighty = 1;
@@ -141,14 +113,12 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+		
+		writeToOutput(LogInfoGenerator.generateProgramStartStatement());
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		if(event.getSource().equals(executeField) || event.getSource().equals(executeButton)){
-			writeToOutput(LogInfoGenerator.generateServerCommandStatement(executeField.getText(), server.exec(executeField.getText())) + "\n\n");
-			executeField.setText("");
-		}
 		
 		if (event.getSource().equals(inventoryButton)){
 			TransactionGUI maintinanceWindow = new TransactionGUI(server, this, keys);
@@ -169,7 +139,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 	
 	public void writeToOutput(String s){
 		output.append(s);
-		//Log to the text file
+		ReadableLogger.write(path, s);
 	}
 	
 	public void clearOutput(){

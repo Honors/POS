@@ -6,15 +6,10 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import org.apache.pdfbox.exceptions.COSVisitorException;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
 
 import pos.item.Item;
 import pos.item.ReturnItem;
@@ -419,7 +414,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 					InventoryItem i = new InventoryItem(item.SKU, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), item.date, notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), item.quantity);
 					if (item.UPC.length() * ((JTextField)name).getText().length() > 0){
 						server.updateInventoryItem(i);
-						writeToOutput(LogInfoGenerator.generateInventoryEditItemStatement((InventoryItem)item, i) + "\n\n");
+						writeToOutput(LogInfoGenerator.generateInventoryEditItemStatement((InventoryItem)item, i));
 						source.updateItem(i);
 						this.setVisible(false);
 					}
@@ -457,7 +452,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 					else{
 						String r = server.insertInventoryItem(i);
 						if (r.contains("SUCCESS")){
-							writeToOutput(LogInfoGenerator.generateInventoryNewItemStatement(i) + "\n\n");
+							writeToOutput(LogInfoGenerator.generateInventoryNewItemStatement(i));
 							parentWindow.update("inventory");
 							this.setVisible(false);
 						}
@@ -468,13 +463,13 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 				if(((ReturnItem)item).status.equals(Reference.STATUS_PENDING)){
 					ReturnItem i = new ReturnItem(item.SKU, item.UPC, item.name, item.brand, item.color, item.size, item.type, item.gender, item.client, item.date, notes.getText(), item.price, item.cost, item.quantity, ((JComboBox<Object>)returnStatus).getSelectedItem().toString());
 					if(!i.status.equals(((ReturnItem)item).status))
-						writeToOutput(LogInfoGenerator.generateReturnEditItemStatement(i.UPC, i.name, i.quantity, ((ReturnItem)item).status, i.status) + "\n");
+						writeToOutput(LogInfoGenerator.generateReturnEditItemStatement(i.UPC, i.name, i.quantity, ((ReturnItem)item).status, i.status));
 					
 					if(i.status.equals(Reference.STATUS_TO_INVENTORY)){
 						ArrayList<InventoryItem> returnedTo = server.searchInventory("UPC='" + i.UPC + "'");
 						int oldVal = returnedTo.get(0).quantity;
 						returnedTo.get(0).quantity += item.quantity;
-						writeToOutput(LogInfoGenerator.generateTransactionIncomingItemStatement(returnedTo.get(0).UPC, returnedTo.get(0).name, oldVal, returnedTo.get(0).quantity) + "\n");
+						writeToOutput(LogInfoGenerator.generateTransactionIncomingItemStatement(returnedTo.get(0).UPC, returnedTo.get(0).name, oldVal, returnedTo.get(0).quantity));
 						server.updateInventoryItem(returnedTo.get(0));
 						parentWindow.update("inventory");
 					}

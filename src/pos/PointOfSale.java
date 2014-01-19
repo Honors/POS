@@ -10,7 +10,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.*;
-import java.io.IOException;
 
 
 public class PointOfSale extends JFrame implements ActionListener{

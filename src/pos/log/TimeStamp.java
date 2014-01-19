@@ -7,15 +7,7 @@ import java.text.SimpleDateFormat;
  */
 import java.util.Date;
 
-public class TimeStamp<L, S> extends Tuple<L,S>{
-  public TimeStamp(L l, S s){
-    super(l,s);
-  }
-
-  @SuppressWarnings("deprecation")
-public String toDateFormatted(){
-    return(new String("[" + (new Date((this.car()).toString())).toString() + "] [" + (this.cdr()).toString()) + "]");
-  }
+public class TimeStamp{
 
   public static String simpleDateAndTime(){
 	  SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");

@@ -7,22 +7,20 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.ArrayList;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -36,33 +34,36 @@ import pos.core.ServerManager;
 import pos.item.InventoryItem;
 import pos.item.ReturnItem;
 import pos.swing.JFramePOS;
-import pos.swing.JToggleEnableButton;
 import pos.core.Keys;
 import pos.core.OutputWindow;
 import pos.core.UpdatableWindow;
-import pos.dialog.DialogSingleComboBox;
 import pos.filter.CSVFilter;
 import pos.swing.SearchResult;
 
-public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeListener, UpdatableWindow{
+public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeListener, UpdatableWindow, OutputWindow, KeyListener{
 
 	private static final long serialVersionUID = -1245352016605793408L;
 
 	private String path;
+	private ArrayList<String> executedCommands;
+	private int index;
 		
-	private JScrollPane IMOutput, RMOutput;
-	private JTextField IMTextEntry, RMTextEntry;
-	private JPanel IMContent, RMContent, IMResults, RMResults, IMSearchBar, RMSearchBar;
+	private JScrollPane IMOutput, RMOutput, CScrollOutput;
+	private JTextField IMTextEntry, RMTextEntry, CTextEntry;
+	private JPanel IMContent, RMContent, IMResults, RMResults, IMSearchBar, RMSearchBar, CContent, CSearchBar;
 	private JTabbedPane tabs;
-	private JButton IMBackup, IMRestore, IMNew, IMEnter, RMEnter, IMRegister;
+	private JButton IMBackup, IMRestore, IMNew, IMEnter, RMEnter, IMRegister, CEnter;
+	private JTextArea CTextOutput;
 	
 	public MaintinanceGUI(ServerManager i, OutputWindow out, String p, Keys keys){
 		super(i,out,keys);
 		path = p;
+		executedCommands = new ArrayList<String>();
+		index = -1;
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.ipady = 5;
-		c.insets = new Insets(7,5,0,5);
+		c.insets = new Insets(5,5,0,5);
 		c.fill = GridBagConstraints.BOTH;
 		c.anchor = GridBagConstraints.NORTH;
 		
@@ -71,7 +72,7 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 		c.ipadx = 0;
 		c.weighty = 0;
 		c.gridwidth = 1;
-		c.insets = new Insets(6,5,0,5);
+		c.insets = new Insets(5,5,0,5);
 		
 		IMSearchBar = new JPanel(new GridBagLayout());
 		c.gridx = 0;
@@ -144,7 +145,7 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 		c.ipadx = 0;
 		c.weighty = 0;
 		c.gridwidth = 1;
-		c.insets = new Insets(6,5,0,5);
+		c.insets = new Insets(5,5,0,5);
 		
 		RMSearchBar = new JPanel(new GridBagLayout());
 		c.gridx = 0;
@@ -179,10 +180,56 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 		c.insets = new Insets(5,5,5,5);
 		RMContent.add(RMOutput, c);
 		
+		CContent = new JPanel();
+		CContent.setLayout(new GridBagLayout());
+		c.ipady = 5;
+		c.ipadx = 0;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.insets = new Insets(5,5,0,5);
+		
+		CSearchBar = new JPanel(new GridBagLayout());
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 1;
+		CContent.add(CSearchBar, c);
+		
+		CTextEntry = new JTextField();
+		CTextEntry.addActionListener(this);
+		CTextEntry.addKeyListener(this);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.insets = new Insets(0,0,0,5);
+		CSearchBar.add(CTextEntry, c);
+		
+		CEnter = new JButton("ENTER");
+		CEnter.addActionListener(this);
+		CEnter.setOpaque(true);
+		CEnter.setBackground(new Color(0x98CC98));
+		c.gridx = 1;
+		c.gridy = 0;
+		c.insets = new Insets(0,0,0,0);
+		c.weightx = 0;
+		CSearchBar.add(CEnter, c);
+		
+		CTextOutput = new JTextArea();
+		CTextOutput.setEditable(false);
+		CTextOutput.setFont(new Font("Courier New", Font.PLAIN, 14));
+		CTextOutput.setBorder(new EmptyBorder(5,5,5,5));
+		CScrollOutput = new JScrollPane(CTextOutput);
+		c.gridx = 0;
+		c.gridy = 1;
+		c.insets = new Insets(5,5,5,5);
+		c.weightx = 1;
+		c.weighty = 1;
+		CContent.add(CScrollOutput, c);
+		
+		
 		tabs = new JTabbedPane();
 		tabs.addChangeListener(this);
 		tabs.addTab("Inventory Maintenance", IMContent);
 		tabs.addTab("Return Maintenance", RMContent);
+		tabs.addTab("Console", CContent);
 		
 		setTitle("Maintinance");
 		setContentPane(tabs);
@@ -196,10 +243,10 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 	
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		IMTextEntry.requestFocus();
 		
 		if(event.getSource().equals(IMTextEntry) || event.getSource().equals((IMEnter))){
 			updateInventory();
+			IMTextEntry.requestFocus();
 		}
 		
 		if(event.getSource().equals(IMNew)){
@@ -222,7 +269,7 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 					backup.exportInventoryToCSV();
 					backup.exportReturnToCSV();
 					backup.close();
-					parentWindow.writeToOutput(LogInfoGenerator.generateServerBackupStatement(file.getAbsolutePath()) + "\n\n");
+					parentWindow.writeToOutput(LogInfoGenerator.generateServerBackupStatement(file.getAbsolutePath()));
 				} catch (Exception r){
 					System.out.println(r);
 				}
@@ -253,7 +300,7 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 						server.insertReturnItem(returnItems.remove(0));
 					}
 					
-					parentWindow.writeToOutput(LogInfoGenerator.generateServerRestoreStatement(fileChooser.getSelectedFile().getAbsolutePath()) + "\n\n");
+					parentWindow.writeToOutput(LogInfoGenerator.generateServerRestoreStatement(fileChooser.getSelectedFile().getAbsolutePath()));
 				}
 			}
 		}
@@ -262,6 +309,13 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 			new RegisterGUI(server, parentWindow, keys);
 		}
 		
+		if (event.getSource().equals(CTextEntry) || event.getSource().equals(CEnter)){
+			executedCommands.add(0, CTextEntry.getText());
+			index = -1;
+			writeToOutput(LogInfoGenerator.generateServerCommandStatement(CTextEntry.getText(), server.exec(CTextEntry.getText())));
+			CTextEntry.setText("");
+			CTextEntry.requestFocus();
+		}
 	}
 	
 	public void updateInventory(){
@@ -353,4 +407,44 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 		if(command.equals("return") || command.equals(""))
 			updateReturn();
 	}
+
+	@Override
+	public void writeToOutput(String s) {
+		CTextOutput.append(s);
+		parentWindow.writeToOutput(s);
+	}
+
+	@Override
+	public void clearOutput() {
+		CTextOutput.setText("");
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent event) {
+		if(event.getExtendedKeyCode() == KeyEvent.VK_UP){
+			index++;
+			try{
+			CTextEntry.setText(executedCommands.get(index));
+			}catch(Exception e){
+				index--;
+				CTextEntry.setText(executedCommands.get(executedCommands.size() - 1));
+			}
+		}
+		if(event.getExtendedKeyCode() == KeyEvent.VK_DOWN){
+			index--;
+			try{
+			CTextEntry.setText(executedCommands.get(index));
+			}catch(Exception e){
+				index++;
+				CTextEntry.setText(executedCommands.get(0));
+			}
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent event) {}
+
+	@Override
+	public void keyTyped(KeyEvent event) {}
 }
