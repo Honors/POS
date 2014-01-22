@@ -6,13 +6,20 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import net.sourceforge.barbecue.BarcodeException;
+import net.sourceforge.barbecue.output.OutputException;
+import pos.filter.CSVFilter;
+import pos.filter.PDFFilter;
 import pos.item.Item;
 import pos.item.ReturnItem;
+import pos.label.PDFLabelGenerator;
+import pos.label.UPCGenerator;
 import pos.lib.Reference;
 import pos.log.LogInfoGenerator;
 import pos.log.TimeStamp;
@@ -497,8 +504,22 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 		}
 		
 		if (event.getSource().equals(generateLabels)){
-
-			
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			fileChooser.addChoosableFileFilter(new PDFFilter());
+			fileChooser.setSelectedFile(new File(((JTextField)name).getText() + " Labels.pdf"));
+			int returnVal = fileChooser.showSaveDialog(new JFrame());
+			if(returnVal == JFileChooser.APPROVE_OPTION){
+				String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+				if(!filePath.endsWith(".pdf"))
+					filePath += ".pdf";
+				PDFLabelGenerator labelGen = new PDFLabelGenerator(0.5f, 0.9f, 6, 3, 1.5f, 2.0f, 1.7f, 2.35f);
+				try {
+					labelGen.generateSingleItemLabelPage(fileChooser.getSelectedFile().getAbsolutePath(), ((JTextField)name).getText(), UPCGenerator.generateBarcode(item.UPC), item.UPC);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 			
 		}
 		

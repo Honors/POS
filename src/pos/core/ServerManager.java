@@ -10,11 +10,11 @@ import pos.item.ReturnItem;
 
 public class ServerManager {
 	
-	public static final int BRAND = 0;
-	
 	private Connection con;
+	public static String host;
 	
 	public ServerManager(String host, String username, String password){
+		this.host = host;
 		try{
 			con = DriverManager.getConnection(host, username, password);
 			System.out.println("CONNECTION SUCCESSFUL");
