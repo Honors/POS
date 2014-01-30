@@ -76,6 +76,10 @@ public class LogInfoGenerator {
 	}
 	
 	public static String generateProgramStartStatement(){
-		return System.lineSeparator() + "[POS] (" + TimeStamp.simpleDateAndTime() + ") Instance Began" + System.lineSeparator() + System.lineSeparator();
+		return "[POS] (" + TimeStamp.simpleDateAndTime() + ") Instance Began" + System.lineSeparator() + System.lineSeparator();
+	}
+	
+	public static String generateLabelStatement(String name, String upc, String filePath){
+		return "[Label] (" + TimeStamp.simpleDateAndTime() + ") Name: " + name + " UPC: " + upc + " Path: " + filePath + System.lineSeparator() + System.lineSeparator();
 	}
 }

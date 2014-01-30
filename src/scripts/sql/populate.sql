@@ -35,3 +35,40 @@ cost varchar(255),
 quantity int,
 status varchar(255)
 )
+
+--elements created
+CREATE TABLE CLIENT
+(
+ID int,
+element varchar(255)
+)
+
+CREATE TABLE BRAND
+(
+ID int,
+element varchar(255)
+)
+
+CREATE TABLE TYPE
+(
+ID int,
+element varchar(255)
+)
+
+CREATE TABLE GENDER
+(
+ID int,
+element varchar(255)
+)
+
+CREATE TABLE COLOR
+(
+ID int,
+element varchar(255)
+)
+
+CREATE TABLE SIZE
+(
+ID int,
+element varchar(255)
+)

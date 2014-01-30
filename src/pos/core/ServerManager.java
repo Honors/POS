@@ -11,10 +11,10 @@ import pos.item.ReturnItem;
 public class ServerManager {
 	
 	private Connection con;
-	public static String host;
+	
+	//create remove update delete count
 	
 	public ServerManager(String host, String username, String password){
-		this.host = host;
 		try{
 			con = DriverManager.getConnection(host, username, password);
 			System.out.println("CONNECTION SUCCESSFUL");
@@ -38,6 +38,27 @@ public class ServerManager {
 	}
 	
 	public String getElement(int identifier){
+		String element;
+		switch(identifier){
+		case Reference.BRAND:  element = "BRAND";
+							   break;
+		case Reference.COLOR:  element = "COLOR";
+							   break;
+		case Reference.GENDER: element = "GENDER";
+						       break;
+		case Reference.TYPE:   element = "TYPE";
+							   break;
+		case Reference.CLIENT: element = "CLIENT";
+							   break;
+		case Reference.SIZE:   element = "SIZE";
+							   break;
+		default:			   element = null;
+						       break;
+		}
+		return element;
+	}
+	
+	public String getItemElement(int identifier){
 		String element;
 		switch(identifier){
 		case Reference.SKU:      element = "SKU";
@@ -123,7 +144,7 @@ public class ServerManager {
 
 	public String updateInventoryElement(int identifier, String oldElement, String newElement){
 		try{
-			String statement = "UPDATE Inventory SET " + getElement(identifier) + " = case when " + getElement(identifier) + " = "+ wrap(identifier, oldElement) +" then " + wrap(identifier, newElement) + " else " + getElement(identifier) + " end";
+			String statement = "UPDATE Inventory SET " + getItemElement(identifier) + " = case when " + getElement(identifier) + " = "+ wrap(identifier, oldElement) +" then " + wrap(identifier, newElement) + " else " + getElement(identifier) + " end";
 			con.prepareStatement(statement).execute();
 			con.commit();
 			return "SUCCESS";
@@ -373,16 +394,48 @@ public class ServerManager {
 		return i;
 	}
 	
-	public String dumpAllReturnFormatted(){
-		
-		return null;
-	}
-	
-	public void restoreReturnFromBackup(String filename){
-		
-	}
-	
 	public void deleteAllReturn(){
 		
+	}
+	
+	public void deleteAllElements(int identifier){
+		try{
+			con.prepareStatement("DELETE FROM " + getElement(identifier)).execute();
+		} catch(Exception e){
+			System.out.println(e);
+		}
+	}
+	
+	//DESCRIPTION ELEMENTS
+	public void writeAllElements(int identifier, ArrayList<String> elements){
+		deleteAllElements(identifier);
+		for(int i = 0; i < elements.size(); i++){
+			insertElement(identifier, i, elements.get(i));
+		}
+	}
+	
+	public String insertElement(int identifier, int index, String element){
+		try{
+			con.prepareStatement("INSERT INTO " + getElement(identifier) + " VALUES ( " + index + ", '" + element + "' )").execute(); 
+			con.commit();
+		} catch (Exception e){
+			System.out.println(e);
+			return "FAILED. SQL EXCEPTION:\n" + e;
+		}
+		return "SUCCESS: ELEMENT INSERTED";
+	}
+	
+	public ArrayList<String> readElements(int identifier){
+		ArrayList<String> elements = new ArrayList<String>();
+		try{
+			ResultSet r = con.prepareStatement("SELECT * FROM " + getElement(identifier)).executeQuery();
+			con.commit();
+			while(r.next()){
+				elements.add(r.getString("element"));
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return elements;
 	}
 }

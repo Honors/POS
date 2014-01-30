@@ -40,7 +40,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 	
 	
 	public HomeGUI(ServerManager i, String p){
-		super(i, null, new Keys(p));
+		super(i, null, new Keys(i));
 		path = p;
  		
 		menuBar = new JMenuBar();

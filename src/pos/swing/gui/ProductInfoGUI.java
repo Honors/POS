@@ -516,6 +516,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 				PDFLabelGenerator labelGen = new PDFLabelGenerator(0.5f, 0.9f, 6, 3, 1.5f, 2.0f, 1.7f, 2.35f);
 				try {
 					labelGen.generateSingleItemLabelPage(fileChooser.getSelectedFile().getAbsolutePath(), ((JTextField)name).getText(), UPCGenerator.generateBarcode(item.UPC), item.UPC);
+					writeToOutput(LogInfoGenerator.generateLabelStatement(((JTextField)name).getText(), item.UPC, filePath));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

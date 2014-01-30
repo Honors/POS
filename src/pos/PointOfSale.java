@@ -3,6 +3,8 @@ package pos;
 import javax.swing.*;
 
 import pos.core.ServerManager;
+import pos.label.PDFLabelGenerator;
+import pos.label.UPCGenerator;
 import pos.swing.gui.HomeGUI;
 
 import java.awt.Dimension;

@@ -1,5 +1,6 @@
 package pos.label;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import net.sourceforge.barbecue.Barcode;
@@ -18,7 +19,8 @@ public class UPCGenerator {
 		Barcode barcode = BarcodeFactory.createCode128(code);
         barcode.setBarHeight(50);
         barcode.setBarWidth(1);
-        return BarcodeImageHandler.getImage(barcode).getSubimage(0,0,barcode.getBounds().width, barcode.getBounds().height - 1);
+        barcode.setDrawingText(false);
+        return BarcodeImageHandler.getImage(barcode);
 	}
 
 }

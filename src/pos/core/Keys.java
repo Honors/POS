@@ -1,13 +1,10 @@
 package pos.core;
 
-import java.io.*;
 import java.util.ArrayList;
 
 import pos.lib.Reference;
 
 public class Keys {
-	
-	public String keyPath;
 	
 	public ArrayList<String> brands;
 	public ArrayList<String> colors;
@@ -16,7 +13,9 @@ public class Keys {
 	public ArrayList<String> genders;
 	public ArrayList<String> clients;
 	
-	public Keys(String path){
+	public ServerManager server;
+	
+	public Keys(ServerManager server){
 		brands = new ArrayList<String>();
 		colors = new ArrayList<String>();
 		sizes = new ArrayList<String>();
@@ -24,12 +23,12 @@ public class Keys {
 		genders = new ArrayList<String>();
 		clients = new ArrayList<String>();
 		
-		keyPath = path + "\\keys";
+		this.server = server;
 		
 		readAll();
 	}
 	
-	public boolean readAll(){
+	public void readAll(){
 		try{
 			readBrands();
 			readTypes();
@@ -37,10 +36,8 @@ public class Keys {
 			readSizes();
 			readGenders();
 			readClients();
-		return true;
 		} catch (Exception e){
 			e.printStackTrace();
-			return false;
 		}
 	}
 	
@@ -68,145 +65,55 @@ public class Keys {
 		}
 	}
 	
-	public boolean readBrands(){
-		brands = new ArrayList<String>();
-		BufferedReader in;
+	public void readBrands(){
 		try{
-			 File file = new File(keyPath + "\\brands.csv");
-			 file.createNewFile();
-			 in = new BufferedReader(new FileReader(file)); 
-			 String s = in.readLine();
-			 while (s != null){
-				String t = s;
-				t = t.replace((char)34, ' ');
-				t = t.trim();
-				brands.add(t);
-				s = in.readLine();
-			 }
-			 in.close();
-			 return true;
+			brands = server.readElements(Reference.BRAND);
 		 } catch (Exception e){
 			 System.out.println(e);
-			 return false;
 		 }
 	}
 	
-	public boolean readTypes(){
-		types = new ArrayList<String>();
-		BufferedReader in;
+	public void readTypes(){
 		try{
-			 File file = new File(keyPath + "\\types.csv");
-			 file.createNewFile();
-			 in = new BufferedReader(new FileReader(file)); 
-			 String s = in.readLine();
-			 while (s != null){
-				String t = s;
-				t = t.replace((char)34, ' ');
-				t = t.trim();
-				types.add(t);
-				s = in.readLine();
-			 }
-			 in.close();
-			 return true;
+			types = server.readElements(Reference.TYPE);
 		 } catch (Exception e){
 			 System.out.println(e);
-			 return false;
 		 }
 	}
 
-	public boolean readColors(){
-		colors = new ArrayList<String>();
-		BufferedReader in;
+	public void readColors(){
 		try{
-			 File file = new File(keyPath + "\\colors.csv");
-			 file.createNewFile();
-			 in = new BufferedReader(new FileReader(file)); 
-			 String s = in.readLine();
-			 while (s != null){
-				String t = s;
-				t = t.replace((char)34, ' ');
-				t = t.trim();
-				colors.add(t);
-				s = in.readLine();
-			 }
-			 in.close();
-			 return true;
+			colors = server.readElements(Reference.COLOR);
 		 } catch (Exception e){
 			 System.out.println(e);
-			 return false;
 		 }
 	}
 
-	public boolean readSizes(){
-		sizes = new ArrayList<String>();
-		BufferedReader in;
+	public void readSizes(){
 		try{
-			File file = new File(keyPath + "\\sizes.csv");
-			 file.createNewFile();
-			 in = new BufferedReader(new FileReader(file)); 
-			 String s = in.readLine();
-			 while (s != null){
-				String t = s;
-				t = t.replace((char)34, ' ');
-				t = t.trim();
-				sizes.add(t);
-				s = in.readLine();
-			 }
-			 in.close();
-			 return true;
+			sizes = server.readElements(Reference.SIZE);
 		 } catch (Exception e){
 			 System.out.println(e);
-			 return false;
 		 }
 	}
 
-	public boolean readGenders(){
-		genders = new ArrayList<String>();
-		BufferedReader in;
+	public void readGenders(){
 		try{
-			 File file = new File(keyPath + "\\genders.csv");
-			 file.createNewFile();
-			 in = new BufferedReader(new FileReader(file)); 
-			 String s = in.readLine();
-			 while (s != null){
-				String t = s;
-				t = t.replace((char)34, ' ');
-				t = t.trim();
-				genders.add(t);
-				s = in.readLine();
-			 }
-			 in.close();
-			 return false;
+			genders = server.readElements(Reference.GENDER);
 		 } catch (Exception e){
 			 System.out.println(e);
-			 return true;
 		 }
 	}
 
-	public boolean readClients(){
-		clients = new ArrayList<String>();
-		BufferedReader in;
+	public void readClients(){
 		try{
-			 File file = new File(keyPath + "\\clients.csv");
-			 file.createNewFile();
-			 in = new BufferedReader(new FileReader(file)); 
-			 String s = in.readLine();
-			 while (s != null){
-				String t = s;
-				t = t.replace((char)34, ' ');
-				t = t.trim();
-				clients.add(t);
-				s = in.readLine();
-			 }
-			 in.close();
-			 return true;
+			clients = server.readElements(Reference.CLIENT);
 		 } catch (Exception e){
 			 System.out.println(e);
-			 return false;
 		 }
 	}
 	
-	public boolean writeAll(){
+	public void writeAll(){
 		try{
 			writeAllBrands();
 			writeAllTypes();
@@ -214,115 +121,11 @@ public class Keys {
 			writeAllSizes();
 			writeAllGenders();
 			writeAllClients();
-			return true;
 		} catch(Exception e){
 			e.printStackTrace();
-			return false;
 		}
 	}
-	
-	public boolean write(String name, int identifier){
-		try{
-			if(identifier == Reference.BRAND){
-				writeBrand(name);
-			} else if(identifier == Reference.TYPE){
-				writeType(name);
-			} else if(identifier == Reference.COLOR){
-				writeColor(name);
-			} else if(identifier == Reference.SIZE){
-				writeSize(name);
-			} else if(identifier == Reference.GENDER){
-				writeGender(name);
-			} else if(identifier == Reference.CLIENT){
-				writeClient(name);
-			} else {
-				return false;
-			}
-			return true;
-		} catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
-	public boolean writeBrand(String name){
-		try{
-			BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\brands.csv", true));
-			out.append("\"" + name + "\"");
-			out.newLine();
-			out.close();
-			return true;
-		} catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
-	public boolean writeColor(String name){
-		try{
-			BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\colors.csv", true));
-			out.append("\"" + name +"\"");
-			out.newLine();
-			out.close();
-			return true;
-		} catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
-	public boolean writeSize(String name){
-		try{
-			BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\sizes.csv", true));
-			out.append("\"" + name + "\"");
-			out.newLine();
-			out.close();
-			return true;
-		} catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
-	public boolean writeType(String name){
-		try{
-			BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\types.csv", true));
-			out.append("\"" + name + "\"");
-			out.newLine();
-			out.close();
-			return true;
-		} catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
-	public boolean writeGender(String name){
-		try{
-			BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\genders.csv", true));
-			out.append("\"" + name +"\"");
-			out.newLine();
-			out.close();
-			return true;
-		} catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
-	public boolean writeClient(String name){
-		try{
-			BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\clients.csv", true));
-			out.append("\"" + name +"\"");
-			out.newLine();
-			out.close();
-			return true;
-		} catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
+
 	public boolean write(int identifier){
 		try{
 			if(identifier == Reference.BRAND){
@@ -347,93 +150,27 @@ public class Keys {
 		}
 	}
 	
-	public boolean writeAllBrands(){
-		try{
-			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\brands.csv", false)); 
-			 for(int i = 0; i < brands.size(); i++){
-				 out.append("\"" + brands.get(i) + "\"");
-				 out.newLine();
-			 }
-			 out.close();
-			 return true;
-		 } catch (Exception e){
-			 System.out.println(e);
-			 return false;
-		 }
+	public void writeAllBrands(){
+		server.writeAllElements(Reference.BRAND, brands);
 	}
 	
-	public boolean writeAllTypes(){
-		try{
-			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\types.csv", false)); 
-			 for(int i = 0; i < types.size(); i++){
-				 out.append("\"" + types.get(i) + "\"");
-				 out.newLine();
-			 }
-			 out.close();
-			 return true;
-		 } catch (Exception e){
-			 System.out.println(e);
-			 return false;
-		 }
+	public void writeAllTypes(){
+		server.writeAllElements(Reference.TYPE, types);
 	}
 	
-	public boolean writeAllColors(){
-		try{
-			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\colors.csv", false)); 
-			 for(int i = 0; i < colors.size(); i++){
-				 out.append("\"" + colors.get(i) + "\"");
-				 out.newLine();
-			 }
-			 out.close();
-			 return true;
-		 } catch (Exception e){
-			 System.out.println(e);
-			 return false;
-		 }
+	public void writeAllColors(){
+		server.writeAllElements(Reference.COLOR, colors);
 	}
 	
-	public boolean writeAllSizes(){
-		try{
-			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\sizes.csv", false)); 
-			 for(int i = 0; i < sizes.size(); i++){
-				 out.append("\"" + sizes.get(i) + "\"");
-				 out.newLine();
-			 }
-			 out.close();
-			 return true;
-		 } catch (Exception e){
-			 System.out.println(e);
-			 return false;
-		 }
+	public void writeAllSizes(){
+		server.writeAllElements(Reference.SIZE, sizes);
 	}
 	
-	public boolean writeAllGenders(){
-		try{
-			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\genders.csv", false)); 
-			 for(int i = 0; i < genders.size(); i++){
-				 out.append("\"" + genders.get(i) + "\"");
-				 out.newLine();
-			 }
-			 out.close();
-			 return true;
-		 } catch (Exception e){
-			 System.out.println(e);
-			 return false;
-		 }
+	public void writeAllGenders(){	
+		server.writeAllElements(Reference.GENDER, genders);
 	}
 	
-	public boolean writeAllClients(){
-		try{
-			 BufferedWriter out = new BufferedWriter(new FileWriter(keyPath + "\\clients.csv", false)); 
-			 for(int i = 0; i < clients.size(); i++){
-				 out.append("\"" + clients.get(i) + "\"");
-				 out.newLine();
-			 }
-			 out.close();
-			 return true;
-		 } catch (Exception e){
-			 System.out.println(e);
-			 return false;
-		 }
+	public void writeAllClients(){	
+		server.writeAllElements(Reference.CLIENT, clients);
 	}
 }
