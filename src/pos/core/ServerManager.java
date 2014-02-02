@@ -103,6 +103,7 @@ public class ServerManager {
 	
 	//INVENTORY MANAGEMENT METHODS
 	public ArrayList<InventoryItem> searchInventory(String s){
+		// find criteria
 		ArrayList<InventoryItem> results = new ArrayList<InventoryItem>();
 		try{
 			ResultSet r = con.prepareStatement("SELECT * FROM INVENTORY WHERE " + s).executeQuery();
@@ -132,6 +133,7 @@ public class ServerManager {
 	}
 	
 	public String updateInventoryItem(InventoryItem i){
+		// update {SKU: i.SKU} i.toJSON()
 		try{
 			con.prepareStatement("UPDATE Inventory SET " + i.toStringUpdate() + " WHERE SKU=" + i.SKU).execute();
 			con.commit();
@@ -143,6 +145,8 @@ public class ServerManager {
 	}
 
 	public String updateInventoryElement(int identifier, String oldElement, String newElement){
+		// update {identifier: oldElement} {identifier: newElement}
+		// update {identifier: {$ne: oldElement}} {identifier: identifier}
 		try{
 			String statement = "UPDATE Inventory SET " + getItemElement(identifier) + " = case when " + getElement(identifier) + " = "+ wrap(identifier, oldElement) +" then " + wrap(identifier, newElement) + " else " + getElement(identifier) + " end";
 			con.prepareStatement(statement).execute();
@@ -155,6 +159,7 @@ public class ServerManager {
 	}
 	
 	public String insertInventoryItem(InventoryItem i){
+		// insert i.toJSON()
 		if (getInventoryItem(i.SKU).SKU != -1){
 			return "FAILED: DUPLICATE SKU";
 		}
@@ -169,6 +174,7 @@ public class ServerManager {
 	}
 	
 	public String removeInventoryItem(InventoryItem i){
+		// remove {SKU: i.SKU}
 		try{
 			con.prepareStatement("DELETE FROM INVENTORY WHERE SKU=" + i.SKU).execute();
 			con.commit();
@@ -180,6 +186,7 @@ public class ServerManager {
 	}
 	
 	public InventoryItem getInventoryItem(int SKU){
+		// find {SKU: SKU}
 		InventoryItem i = new InventoryItem();
 		try{
 			ResultSet r = con.prepareStatement("SELECT * FROM Inventory WHERE SKU = " + SKU).executeQuery();
@@ -208,6 +215,7 @@ public class ServerManager {
 	}
 	
 	public int getNumberOfInventoryItems(){
+		// find -> count
 		try{
 			ResultSet r = con.prepareStatement("SELECT COUNT(SKU) AS SKUs From Inventory").executeQuery();
 			con.commit();
@@ -220,6 +228,7 @@ public class ServerManager {
 	}
 	
 	public int getMaxInventorySKU(){
+		// find {}
 		int i = -1;
 		try{
 			ResultSet r = con.prepareStatement("SELECT * From Inventory").executeQuery();
@@ -234,6 +243,7 @@ public class ServerManager {
 	}
 	
 	public String dumpAllInventoryFormatted(){
+		// find {}
 		String s  = "";
 		try{
 			ResultSet r = con.prepareStatement("SELECT * From Inventory").executeQuery();
@@ -274,6 +284,7 @@ public class ServerManager {
 	}
 	
 	public void deleteAllInventory(){
+		// remove {}
 		try{
 			con.prepareStatement("DELETE FROM INVENTORY").execute();
 		} catch(Exception e){
@@ -292,6 +303,7 @@ public class ServerManager {
 	
 	//RETURN MANAGEMENT METHODS
 	public ArrayList<ReturnItem> searchReturn(String s){
+		// find criteria
 		ArrayList<ReturnItem> results = new ArrayList<ReturnItem>();
 		try{
 			ResultSet r = con.prepareStatement("SELECT * FROM Return WHERE " + s).executeQuery();
@@ -322,6 +334,7 @@ public class ServerManager {
 	}
 	
 	public String updateReturnItem(ReturnItem i){
+		// update {SKU: i.SKU} i.toJSON
 		try{
 			con.prepareStatement("UPDATE Return SET " + i.toStringUpdate() + " WHERE SKU=" + i.SKU).execute();
 			con.commit();
@@ -381,6 +394,7 @@ public class ServerManager {
 	}
 
 	public int getMaxReturnSKU(){
+		// find {}
 		int i = -1;
 		try{
 			ResultSet r = con.prepareStatement("SELECT * From Return").executeQuery();
@@ -399,6 +413,7 @@ public class ServerManager {
 	}
 	
 	public void deleteAllElements(int identifier){
+		// remove {}
 		try{
 			con.prepareStatement("DELETE FROM " + getElement(identifier)).execute();
 		} catch(Exception e){
@@ -415,6 +430,7 @@ public class ServerManager {
 	}
 	
 	public String insertElement(int identifier, int index, String element){
+		// insert {id: index, element: element}
 		try{
 			con.prepareStatement("INSERT INTO " + getElement(identifier) + " VALUES ( " + index + ", '" + element + "' )").execute(); 
 			con.commit();
@@ -426,6 +442,7 @@ public class ServerManager {
 	}
 	
 	public ArrayList<String> readElements(int identifier){
+		// find {}
 		ArrayList<String> elements = new ArrayList<String>();
 		try{
 			ResultSet r = con.prepareStatement("SELECT * FROM " + getElement(identifier)).executeQuery();
