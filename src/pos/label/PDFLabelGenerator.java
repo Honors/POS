@@ -55,9 +55,7 @@ public class PDFLabelGenerator {
 			for(int across = 0; across < numberAcross; across++){
 				int imgX = px_sideMargin + across * px_horizontalPitch + (px_labelWidth - upcImage.getWidth()) / 2;
 				int imgY = 792 - (px_topMargin + down * px_verticalPitch + (px_labelHeight - upcImage.getHeight()) / 2 + upcImage.getHeight());
-				int deltaY = (792 - (px_topMargin + (down + 1) * px_verticalPitch + (px_labelHeight - upcImage.getHeight()) / 2 + upcImage.getHeight())) - imgY;
 				contentStream.drawImage(upcImage, imgX, imgY);
-				System.out.println(deltaY);
 			}
 		}
 		

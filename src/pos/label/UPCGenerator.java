@@ -19,8 +19,8 @@ public class UPCGenerator {
 		Barcode barcode = BarcodeFactory.createCode128(code);
         barcode.setBarHeight(50);
         barcode.setBarWidth(1);
-        barcode.setDrawingText(false);
-        return BarcodeImageHandler.getImage(barcode);
+        barcode.setDrawingText(true);
+        return BarcodeImageHandler.getImage(barcode).getSubimage(0, 0, barcode.getWidth(), barcode.getHeight() - 1);
 	}
 
 }
