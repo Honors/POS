@@ -45,7 +45,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 	private JComponent brand, color, size, type, gender;
 	private JComponent returnStatus;
 	private JTextArea notes;
-	private JButton Submit, Delete, generateLabels;
+	private JButton Submit, generateLabels;
 	private JScrollPane notesPane;
 	
 	private boolean isNew, isEditable, isReturn;
@@ -377,14 +377,6 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 				lInfoCollumn.insets = new Insets(0,20,10,20);
 				content.add(generateLabels, lInfoCollumn);
 			}
-			
-			if (!isNew && !isReturn){
-				Delete = new JButton("DELETE");
-				Delete.addActionListener(this);
-				rInfoCollumn.gridy = 9;
-				rInfoCollumn.insets = new Insets(0,10,10,20);
-				content.add(Delete, rInfoCollumn);
-			}
 		}
 		
 		for(Component n : content.getComponents()){
@@ -421,7 +413,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 					InventoryItem i = new InventoryItem(item.SKU, item.UPC, ((JTextField)name).getText(), ((JComboBox<Object>)brand).getSelectedItem().toString(), ((JComboBox<Object>)color).getSelectedItem().toString(), ((JComboBox<Object>)size).getSelectedItem().toString(), ((JComboBox<Object>)type).getSelectedItem().toString(), ((JComboBox<Object>)gender).getSelectedItem().toString(), ((JComboBox<Object>)client).getSelectedItem().toString(), item.date, notes.getText(), ((JTextField)price).getText(), ((JTextField)cost).getText(), item.quantity);
 					if (item.UPC.length() * ((JTextField)name).getText().length() > 0){
 						server.updateInventoryItem(i);
-						writeToOutput(LogInfoGenerator.generateInventoryEditItemStatement((InventoryItem)item, i));
+						writeToOutput(LogInfoGenerator.generateInventoryEditItemStatement(server.getUsername(), (InventoryItem)item, i));
 						source.updateItem(i);
 						this.setVisible(false);
 					}
@@ -453,14 +445,15 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 							confirmed = true;
 							actionPerformed(new ActionEvent(Submit, 1, "submit"));
 						} else {
-							new SearchGUI(server, parentWindow, "UPC='" + ((JTextField)upc).getText() + "'", keys);
+							new SearchGUI(server, parentWindow, "UPC='" + ((JLabel)upc).getText() + "'", keys);
 						}
 					}
 					else{
 						String r = server.insertInventoryItem(i);
 						if (r.contains("SUCCESS")){
-							writeToOutput(LogInfoGenerator.generateInventoryNewItemStatement(i));
+							writeToOutput(LogInfoGenerator.generateInventoryNewItemStatement(server.getUsername(), i));
 							parentWindow.update("inventory");
+							System.out.println(parentWindow);
 							this.setVisible(false);
 						}
 					}
@@ -470,13 +463,13 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 				if(((ReturnItem)item).status.equals(Reference.STATUS_PENDING)){
 					ReturnItem i = new ReturnItem(item.SKU, item.UPC, item.name, item.brand, item.color, item.size, item.type, item.gender, item.client, item.date, notes.getText(), item.price, item.cost, item.quantity, ((JComboBox<Object>)returnStatus).getSelectedItem().toString());
 					if(!i.status.equals(((ReturnItem)item).status))
-						writeToOutput(LogInfoGenerator.generateReturnEditItemStatement(i.UPC, i.name, i.quantity, ((ReturnItem)item).status, i.status));
+						writeToOutput(LogInfoGenerator.generateReturnEditItemStatement(server.getUsername(), i.UPC, i.name, i.quantity, ((ReturnItem)item).status, i.status));
 					
 					if(i.status.equals(Reference.STATUS_TO_INVENTORY)){
 						ArrayList<InventoryItem> returnedTo = server.searchInventory("UPC='" + i.UPC + "'");
 						int oldVal = returnedTo.get(0).quantity;
 						returnedTo.get(0).quantity += item.quantity;
-						writeToOutput(LogInfoGenerator.generateTransactionIncomingItemStatement(returnedTo.get(0).UPC, returnedTo.get(0).name, oldVal, returnedTo.get(0).quantity));
+						writeToOutput(LogInfoGenerator.generateTransactionIncomingItemStatement(server.getUsername(), returnedTo.get(0).UPC, returnedTo.get(0).name, oldVal, returnedTo.get(0).quantity));
 						server.updateInventoryItem(returnedTo.get(0));
 						parentWindow.update("inventory");
 					}
@@ -495,13 +488,6 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 				}
 			}
 		}
-		if (event.getSource().equals(Delete)){
-			int n = JOptionPane.showConfirmDialog(new JFrame(), "Are you sure you wish to delete this product record?\nThis action is PERMANENT.", "Delete...", JOptionPane.YES_NO_OPTION);
-			if(n == 0){
-				source.delete();
-				this.setVisible(false);
-			}	
-		}
 		
 		if (event.getSource().equals(generateLabels)){
 			JFileChooser fileChooser = new JFileChooser();
@@ -516,7 +502,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 				PDFLabelGenerator labelGen = new PDFLabelGenerator(0.5f, 0.9f, 6, 3, 1.5f, 2.0f, 1.7f, 2.35f);
 				try {
 					labelGen.generateSingleItemLabelPage(fileChooser.getSelectedFile().getAbsolutePath(), ((JTextField)name).getText(), UPCGenerator.generateBarcode(item.UPC), item.UPC);
-					writeToOutput(LogInfoGenerator.generateLabelStatement(((JTextField)name).getText(), item.UPC, filePath));
+					writeToOutput(LogInfoGenerator.generateLabelStatement(server.getUsername(), ((JTextField)name).getText(), item.UPC, filePath));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

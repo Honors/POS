@@ -3,8 +3,6 @@ package pos;
 import javax.swing.*;
 
 import pos.core.ServerManager;
-import pos.label.PDFLabelGenerator;
-import pos.label.UPCGenerator;
 import pos.swing.gui.HomeGUI;
 
 import java.awt.Dimension;
@@ -35,26 +33,9 @@ public class PointOfSale extends JFrame implements ActionListener{
 		c.ipady = 5;
 		c.insets = new Insets(5,5,0,5);
 
-		labelUrl = new JLabel("Inventory Directory: ");
-		c.gridx = 0;
-		c.gridy = 0;
-		content.add(labelUrl, c);
-		
-		fieldUrl = new JTextField(17);
-		fieldUrl.addActionListener(this);
-		fieldUrl.setActionCommand("submit");
-		//TODO dynamically choose url from past usage
-		//TODO implement "Browse" button
-		fieldUrl.setText("C:\\POS");
-		c.gridx = 1;
-		c.gridy = 0;
-		c.gridwidth = 2;
-
-		content.add(fieldUrl, c);
-		
 		labelUser = new JLabel("Username: ");
 		c.gridx = 0;
-		c.gridy = 1;
+		c.gridy = 0;
 		c.gridwidth = 1;
 		c.insets = new Insets(3,5,0,5);
 		content.add(labelUser, c);
@@ -63,13 +44,13 @@ public class PointOfSale extends JFrame implements ActionListener{
 		fieldUser.addActionListener(this);
 		fieldUser.setActionCommand("submit");
 		c.gridx = 1;
-		c.gridy = 1;
+		c.gridy = 0;
 		c.gridwidth = 2;
 		content.add(fieldUser, c);
 		
 		labelPass = new JLabel("Password: ");
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 1;
 		c.gridwidth = 1;
 		content.add(labelPass, c);
 		
@@ -77,7 +58,7 @@ public class PointOfSale extends JFrame implements ActionListener{
 		fieldPass.addActionListener(this);
 		fieldPass.setActionCommand("submit");
 		c.gridx = 1;
-		c.gridy = 2;
+		c.gridy = 1;
 		c.gridwidth = 2;
 		content.add(fieldPass, c);
 		
@@ -86,7 +67,7 @@ public class PointOfSale extends JFrame implements ActionListener{
 		submit.setActionCommand("submit");
 		submit.setPreferredSize(new Dimension(10,25));
 		c.gridx = 1;
-		c.gridy = 3;
+		c.gridy = 2;
 		c.gridwidth = 1;
 		c.weightx = 0.5;
 		c.insets = new Insets(5,5,5,3);
@@ -98,7 +79,7 @@ public class PointOfSale extends JFrame implements ActionListener{
 		cancel.setActionCommand("cancel");
 		cancel.setPreferredSize(new Dimension(10,25));
 		c.gridx = 2;
-		c.gridy = 3;
+		c.gridy = 2;
 		c.insets = new Insets(5,3,5,5);
 		content.add(cancel, c);
 		
@@ -110,7 +91,7 @@ public class PointOfSale extends JFrame implements ActionListener{
 		setResizable(false);
 		setVisible(true);
 		
-		autoLogin();
+		//autoLogin();
 	}
 	
 	
@@ -119,8 +100,8 @@ public class PointOfSale extends JFrame implements ActionListener{
 	 * (for quick login while debugging)
 	 */
 	public void autoLogin(){
-		fieldUser.setText("bwhs");
-		fieldPass.setText("");
+		fieldUser.setText("watterson");
+		fieldPass.setText("eagles");
 		submit.doClick();
 	}
 	
@@ -130,9 +111,17 @@ public class PointOfSale extends JFrame implements ActionListener{
 
 	public void actionPerformed(ActionEvent event){
 		if(event.getActionCommand().equals("submit")){
-			ServerManager server = new ServerManager("jdbc:derby:" + fieldUrl.getText() + "\\databases\\inventory", fieldUser.getText(), fieldPass.getPassword().toString());
-			new HomeGUI(server, "c:\\POS");
-			this.setVisible(false);
+			ServerManager server = new ServerManager(fieldUser.getText(), new String(fieldPass.getPassword()));
+			if(server.connected()){
+				if(server.validLogin()){
+					new HomeGUI(server, "c:\\POS");
+					this.setVisible(false);
+				} else {
+					JOptionPane.showMessageDialog(new JFrame(), "Invalid username or password", "Login Error", JOptionPane.ERROR_MESSAGE);
+				}
+			} else {
+				JOptionPane.showMessageDialog(new JFrame(), "Invalid Host directory or URL", "Login Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		if(event.getActionCommand().equals("cancel")){
 			this.setVisible(false);

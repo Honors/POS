@@ -4,36 +4,40 @@ import pos.item.InventoryItem;
 
 public class LogInfoGenerator {
 
-	public static String generateTransactionIncomingItemStatement(String upc, String name, int oldVal, int newVal){
-		return "[+] (" + TimeStamp.simpleDateAndTime() + ") UPC: " + upc + ", Name: " + name + ", " + oldVal + "  ->  " + newVal + System.lineSeparator() + System.lineSeparator();
+	private static String begin(String identifier, String username){
+		return "[" + identifier + "] (" + username + ") (" + TimeStamp.simpleDateAndTime() + ")";
 	}
 	
-	public static String generateTransactionOutgoingItemStatement(String upc, String name, int oldVal, int newVal){
-		return "[-] (" + TimeStamp.simpleDateAndTime() + ") UPC: " + upc + ", Name: " + name + ", " + oldVal + "  ->  " + newVal + System.lineSeparator() + System.lineSeparator();
+	public static String generateTransactionIncomingItemStatement(String username, String upc, String name, int oldVal, int newVal){
+		return begin("+",username) + " UPC: " + upc + ", Name: " + name + ", " + oldVal + "  ->  " + newVal + System.lineSeparator() + System.lineSeparator();
 	}
 	
-	public static String generateTransactionReturnItemStatement(String upc, String name, int quantity, String status){
-		return "[*] (" + TimeStamp.simpleDateAndTime() + ") UPC: " + upc + ", Name: " + name + ", " + quantity + " " + status + System.lineSeparator() + System.lineSeparator();
+	public static String generateTransactionOutgoingItemStatement(String username, String upc, String name, int oldVal, int newVal){
+		return begin("-",username) + " UPC: " + upc + ", Name: " + name + ", " + oldVal + "  ->  " + newVal + System.lineSeparator() + System.lineSeparator();
 	}
 	
-	public static String generateReturnEditItemStatement(String upc, String name, int quantity, String oldStatus, String newStatus){
-		return "[Return] (" + TimeStamp.simpleDateAndTime() + ") UPC: " + upc + ", Name: " + name + ", " + quantity + " " + oldStatus + "  ->  " + newStatus + System.lineSeparator() + System.lineSeparator();
+	public static String generateTransactionReturnItemStatement(String username, String upc, String name, int quantity, String status){
+		return begin("*",username) + " UPC: " + upc + ", Name: " + name + ", " + quantity + " " + status + System.lineSeparator() + System.lineSeparator();
 	}
 	
-	public static String generateElementNewStatement(String type, String element){
-		return "[Element] (" + TimeStamp.simpleDateAndTime() + ") New " + type + ": " + element + System.lineSeparator() + System.lineSeparator();
+	public static String generateReturnEditItemStatement(String username, String upc, String name, int quantity, String oldStatus, String newStatus){
+		return begin("Return",username) + " UPC: " + upc + ", Name: " + name + ", " + quantity + " " + oldStatus + "  ->  " + newStatus + System.lineSeparator() + System.lineSeparator();
+	}
+	
+	public static String generateElementNewStatement(String username, String type, String element){
+		return begin("Element",username) + " New " + type + ": " + element + System.lineSeparator() + System.lineSeparator();
 	}
 
-	public static String generateElementEditStatement(String type, String oldElement, String newElement){
-		return "[Element] (" + TimeStamp.simpleDateAndTime() + ") Edit " + type + ": " + oldElement + "  ->  " + newElement + System.lineSeparator() + System.lineSeparator();
+	public static String generateElementEditStatement(String username, String type, String oldElement, String newElement){
+		return begin("Element",username) + " Edit " + type + ": " + oldElement + "  ->  " + newElement + System.lineSeparator() + System.lineSeparator();
 	}
 	
-	public static String generateElementDeleteStatement(String type, String delElement, String migElement){
-		return "[Element] (" + TimeStamp.simpleDateAndTime() + ") Delete " + type + ": " + delElement + ", migrated to " + migElement + System.lineSeparator() + System.lineSeparator();
+	public static String generateElementDeleteStatement(String username, String type, String delElement, String migElement){
+		return begin("Element",username) + " Delete " + type + ": " + delElement + ", migrated to " + migElement + System.lineSeparator() + System.lineSeparator();
 	}
 	
-	public static String generateInventoryNewItemStatement(InventoryItem newItem){
-		return "[Inventory] ("  + TimeStamp.simpleDateAndTime() + ") New Item:" + System.lineSeparator() +
+	public static String generateInventoryNewItemStatement(String username, InventoryItem newItem){
+		return begin("Inventory",username) + " New Item:" + System.lineSeparator() +
 			   "    Name: " + newItem.name +"" + System.lineSeparator() +
 			   "    UPC: " + newItem.UPC +"" + System.lineSeparator() +
 			   "    Cost: " + newItem.cost +"" + System.lineSeparator() +
@@ -47,8 +51,8 @@ public class LogInfoGenerator {
 			   "    Client: " + newItem.client + System.lineSeparator() + System.lineSeparator();
 	}
 	
-	public static String generateInventoryEditItemStatement(InventoryItem oldItem, InventoryItem newItem){
-		String statement = "[Inventory] ("  + TimeStamp.simpleDateAndTime() + ") Edit Item:" + System.lineSeparator() + "";
+	public static String generateInventoryEditItemStatement(String username, InventoryItem oldItem, InventoryItem newItem){
+		String statement = begin("Inventory",username) + " Edit Item:" + System.lineSeparator() + "";
 		statement += (!oldItem.name.equals(newItem.name)) ? "    *Name: " + oldItem.name +"  ->  " + newItem.name + "" + System.lineSeparator() : "    Name: " + oldItem.name +"" + System.lineSeparator() + "";
 		statement += "    UPC: " + oldItem.UPC +"" + System.lineSeparator() + "";
 		statement += (!oldItem.cost.equals(newItem.cost)) ? "    *Cost: " + oldItem.cost + "  ->  " + newItem.cost + "" + System.lineSeparator() : "";
@@ -63,23 +67,23 @@ public class LogInfoGenerator {
 	    return statement;
 	}
 	
-	public static String generateServerCommandStatement(String command, String result){
-		return "[Server] (" + TimeStamp.simpleDateAndTime() + ") Execute" + System.lineSeparator() + "    Command: " + command + "" + System.lineSeparator() + "    Result: " + result + System.lineSeparator() + System.lineSeparator();
+	public static String generateServerCommandStatement(String username, String command, String result){
+		return begin("Server",username) + " Execute" + System.lineSeparator() + "    Command: " + command + "" + System.lineSeparator() + "    Result: " + result + System.lineSeparator() + System.lineSeparator();
 	}
 	
-	public static String generateServerBackupStatement(String filePath){
-		return "[Backup] (" + TimeStamp.simpleDateAndTime() + ") Path: " + filePath + System.lineSeparator() + System.lineSeparator();
+	public static String generateServerBackupStatement(String username, String filePath){
+		return begin("Backup",username) + " Path: " + filePath + System.lineSeparator() + System.lineSeparator();
 	}
 	
-	public static String generateServerRestoreStatement(String filePath){
-		return "[Restore] (" + TimeStamp.simpleDateAndTime() + ") Path: " + filePath + System.lineSeparator() + System.lineSeparator();
+	public static String generateServerRestoreStatement(String username, String filePath){
+		return begin("Restore",username) + " Path: " + filePath + System.lineSeparator() + System.lineSeparator();
 	}
 	
-	public static String generateProgramStartStatement(){
-		return "[POS] (" + TimeStamp.simpleDateAndTime() + ") Instance Began" + System.lineSeparator() + System.lineSeparator();
+	public static String generateProgramStartStatement(String username){
+		return begin("POS",username) + " Instance Began" + System.lineSeparator() + System.lineSeparator();
 	}
 	
-	public static String generateLabelStatement(String name, String upc, String filePath){
-		return "[Label] (" + TimeStamp.simpleDateAndTime() + ") Name: " + name + " UPC: " + upc + " Path: " + filePath + System.lineSeparator() + System.lineSeparator();
+	public static String generateLabelStatement(String username, String name, String upc, String filePath){
+		return begin("Label",username) + " Name: " + name + " UPC: " + upc + " Path: " + filePath + System.lineSeparator() + System.lineSeparator();
 	}
 }

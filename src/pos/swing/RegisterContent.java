@@ -339,7 +339,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 			if(addDialog.getValidated()){
 				getAssociatedList().add(addDialog.getValidatedInput().trim());
 				keys.write(identifier);
-				parentWindow.writeToOutput(LogInfoGenerator.generateElementNewStatement(getType(), addDialog.getValidatedInput()));
+				parentWindow.writeToOutput(LogInfoGenerator.generateElementNewStatement(server.getUsername(), getType(), addDialog.getValidatedInput()));
 				updateList();
 		
 				TreePath pathToNewElement = find((DefaultMutableTreeNode)tree.getModel().getRoot(), addDialog.getValidatedInput());
@@ -358,7 +358,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 				getAssociatedList().set(getAssociatedList().indexOf(oldName), newName);
 				keys.write(identifier);
 				server.updateInventoryElement(identifier, oldName, newName);
-				parentWindow.writeToOutput(LogInfoGenerator.generateElementEditStatement(getType(), oldName, addDialog.getValidatedInput()));
+				parentWindow.writeToOutput(LogInfoGenerator.generateElementEditStatement(server.getUsername(), getType(), oldName, addDialog.getValidatedInput()));
 				updateList();
 				
 				TreePath pathToNewElement = find((DefaultMutableTreeNode)tree.getModel().getRoot(), newName);
@@ -380,7 +380,7 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 				getAssociatedList().remove(toDelete);
 				keys.write(identifier);
 				server.updateInventoryElement(identifier, toDelete, dialog.getValidatedInput());
-				parentWindow.writeToOutput(LogInfoGenerator.generateElementDeleteStatement(getType(), toDelete, dialog.getValidatedInput()));
+				parentWindow.writeToOutput(LogInfoGenerator.generateElementDeleteStatement(server.getUsername(), getType(), toDelete, dialog.getValidatedInput()));
 				updateList();
 				
 				tree.requestFocus();

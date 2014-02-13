@@ -183,7 +183,7 @@ public class TransactionGUI extends JFramePOS implements ActionListener, OutputW
 					
 					change = toChange.get(0).quantity - oldVal;
 					
-					String statement = LogInfoGenerator.generateTransactionIncomingItemStatement(toChange.get(0).UPC, toChange.get(0).name, oldVal, toChange.get(0).quantity);
+					String statement = LogInfoGenerator.generateTransactionIncomingItemStatement(server.getUsername(), toChange.get(0).UPC, toChange.get(0).name, oldVal, toChange.get(0).quantity);
 					writeToOutput(statement);
 					//TODO log the change
 				} else if(toChange.size() > 1){
@@ -219,7 +219,7 @@ public class TransactionGUI extends JFramePOS implements ActionListener, OutputW
 						
 						change = toChange.get(0).quantity - oldVal;
 						
-						String statement = LogInfoGenerator.generateTransactionOutgoingItemStatement(toChange.get(0).UPC, toChange.get(0).name, oldVal, toChange.get(0).quantity);
+						String statement = LogInfoGenerator.generateTransactionOutgoingItemStatement(server.getUsername(), toChange.get(0).UPC, toChange.get(0).name, oldVal, toChange.get(0).quantity);
 						writeToOutput(statement);
 						//TODO log the change
 					} else {
@@ -252,13 +252,13 @@ public class TransactionGUI extends JFramePOS implements ActionListener, OutputW
 						server.insertReturnItem(item);
 						//updateReturn();
 
-						String statement = LogInfoGenerator.generateTransactionReturnItemStatement(item.UPC, item.name, item.quantity, item.status);
+						String statement = LogInfoGenerator.generateTransactionReturnItemStatement(server.getUsername(), item.UPC, item.name, item.quantity, item.status);
 						if(item.status == Reference.STATUS_TO_INVENTORY){
 							int oldVal = toReturn.get(0).quantity;
 							toReturn.get(0).quantity += item.quantity;
 							server.updateInventoryItem(toReturn.get(0));
 							//updateInventory();
-							statement += LogInfoGenerator.generateTransactionIncomingItemStatement(item.UPC, item.name, oldVal, toReturn.get(0).quantity);
+							statement += LogInfoGenerator.generateTransactionIncomingItemStatement(server.getUsername(), item.UPC, item.name, oldVal, toReturn.get(0).quantity);
 						}
 						writeToOutput(statement);
 						//TODO log change

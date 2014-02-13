@@ -5,6 +5,10 @@ import java.util.Arrays;
 
 public class Reference {
 	
+	public static final String TABLE_INVENTORY = "SpiritStore.INVENTORY";
+	public static final String TABLE_RETURN = "SpiritStore.RETURN";
+	public static final String TABLE_LOGIN = "SpiritStore.LOGIN";
+	
 	public static final int SKU = 0;
 	public static final int UPC = 1;
 	public static final int NAME = 2;
@@ -37,5 +41,8 @@ public class Reference {
 	
 	public final static ArrayList<String> REPORT_TYPES = new ArrayList<String>(Arrays.asList(REPORT_INVENTORY_STOCK, REPORT_INVENTORY_ITEM));
 	
+	public final static String ADMIN = "Admin";
+	public final static String USER = "User";
 	
+	public final static String[] AUTHENTIFICATIONS = {USER, ADMIN};
 }

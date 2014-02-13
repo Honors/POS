@@ -250,7 +250,7 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 		}
 		
 		if(event.getSource().equals(IMNew)){
-			new ProductInfoGUI(server, parentWindow, null, new InventoryItem(), keys, Reference.NEW_PRODUCT);
+			new ProductInfoGUI(server, this, null, new InventoryItem(), keys, Reference.NEW_PRODUCT);
 		}
 		
 		if(event.getSource().equals(IMBackup)){
@@ -269,7 +269,7 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 					backup.exportInventoryToCSV();
 					backup.exportReturnToCSV();
 					backup.close();
-					parentWindow.writeToOutput(LogInfoGenerator.generateServerBackupStatement(file.getAbsolutePath()));
+					parentWindow.writeToOutput(LogInfoGenerator.generateServerBackupStatement(server.getUsername(), file.getAbsolutePath()));
 				} catch (Exception r){
 					System.out.println(r);
 				}
@@ -300,7 +300,7 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 						server.insertReturnItem(returnItems.remove(0));
 					}
 					
-					parentWindow.writeToOutput(LogInfoGenerator.generateServerRestoreStatement(fileChooser.getSelectedFile().getAbsolutePath()));
+					parentWindow.writeToOutput(LogInfoGenerator.generateServerRestoreStatement(server.getUsername(), fileChooser.getSelectedFile().getAbsolutePath()));
 				}
 			}
 		}
@@ -312,7 +312,7 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 		if (event.getSource().equals(CTextEntry) || event.getSource().equals(CEnter)){
 			executedCommands.add(0, CTextEntry.getText());
 			index = -1;
-			writeToOutput(LogInfoGenerator.generateServerCommandStatement(CTextEntry.getText(), server.exec(CTextEntry.getText())));
+			consoleOut(LogInfoGenerator.generateServerCommandStatement(server.getUsername(), CTextEntry.getText(), server.exec(CTextEntry.getText())));
 			CTextEntry.setText("");
 			CTextEntry.requestFocus();
 		}
@@ -410,7 +410,6 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 
 	@Override
 	public void writeToOutput(String s) {
-		CTextOutput.append(s);
 		parentWindow.writeToOutput(s);
 	}
 
@@ -420,6 +419,11 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 		
 	}
 
+	public void consoleOut(String s){
+		CTextOutput.append(s);
+		parentWindow.writeToOutput(s);
+	}
+	
 	@Override
 	public void keyPressed(KeyEvent event) {
 		if(event.getExtendedKeyCode() == KeyEvent.VK_UP){

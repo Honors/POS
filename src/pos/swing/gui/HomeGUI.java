@@ -30,7 +30,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 	
 	private JMenuBar menuBar;
 	private JMenu adminMenu;
-	private JMenuItem maintinanceItem;
+	private JMenuItem maintinanceItem, loginsItem;
 	
 	private JPanel content;
 	private JLabel logo;
@@ -46,11 +46,16 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 		menuBar = new JMenuBar();
 		
 		adminMenu = new JMenu("Admin");
+		adminMenu.setEnabled(server.isAdmin());
 		
 		maintinanceItem = new JMenuItem("Maintinance");
 		maintinanceItem.addActionListener(this);
 		
+		loginsItem = new JMenuItem("Manage Logins");
+		loginsItem.addActionListener(this);
+		
 		adminMenu.add(maintinanceItem);
+		adminMenu.add(loginsItem);
 		
 		menuBar.add(adminMenu);
 		
@@ -93,7 +98,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 		content.add(reportButton, c);
 		
 		output = new JTextArea();
-		output.setEditable(false);
+		//output.setEditable(false);
 		output.setFont(new Font("Courier New", Font.PLAIN, 14));
 		output.setBorder(new EmptyBorder(5,5,5,5));
 		outputPane = new JScrollPane(output);
@@ -114,26 +119,30 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 		setLocationRelativeTo(null);
 		setVisible(true);
 		
-		writeToOutput(LogInfoGenerator.generateProgramStartStatement());
+		writeToOutput(LogInfoGenerator.generateProgramStartStatement(server.getUsername()));
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		
-		if (event.getSource().equals(inventoryButton)){
+		if(event.getSource().equals(inventoryButton)){
 			TransactionGUI maintinanceWindow = new TransactionGUI(server, this, keys);
 		}
 		
-		if (event.getSource().equals(searchButton)){
+		if(event.getSource().equals(searchButton)){
 			SearchGUI searchWindow = new SearchGUI(server, this, "", keys);
 		}
 		
-		if (event.getSource().equals(reportButton)){
+		if(event.getSource().equals(reportButton)){
 			ReportGUI reportWindow = new ReportGUI();
 		}
 		
-		if (event.getSource().equals(maintinanceItem)){
+		if(event.getSource().equals(maintinanceItem)){
 			MaintinanceGUI maintinanceWindow = new MaintinanceGUI(server, this, path, keys);
+		}
+		
+		if(event.getSource().equals(loginsItem)){
+			LoginManagerGUI loginManagerWindow = new LoginManagerGUI(server, this);
 		}
 	}
 	

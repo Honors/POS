@@ -10,18 +10,81 @@ import pos.item.ReturnItem;
 
 public class ServerManager {
 	
+	private boolean isConnected;
+	private boolean isValidLogin;
+	private boolean isAdmin;
+	
+	private String username;
+	private String password;
+	
+	private String address;
+	private String port;
+	private String database;
+	
 	private Connection con;
 	
 	//create remove update delete count
 	
-	public ServerManager(String host, String username, String password){
+	public ServerManager(String username, String password){
 		try{
-			con = DriverManager.getConnection(host, username, password);
+			Class.forName("com.mysql.jdbc.Driver");
+			address = "192.168.23.107";
+			port = "3306";
+			database = "SpiritStore";
+			String host = "jdbc:mysql://" + address + ":" + port + "/" + database;
+			con = DriverManager.getConnection(host, "root", "eagles");
 			System.out.println("CONNECTION SUCCESSFUL");
 			con.setAutoCommit(false);
+			isConnected = true;
+			isAdmin = login(username, password);
 		} catch (Exception e){
 			System.out.println(e);
+			e.printStackTrace();
+			isConnected = false;
+			isValidLogin = false;
+			isAdmin = false;
 		}
+	}
+	
+	public boolean connected(){
+		return isConnected;
+	}
+	
+	public boolean login(String username, String password){
+		this.username = username;
+		this.password = password;
+		try{
+			ResultSet r = con.prepareStatement("SELECT * FROM LOGIN WHERE username = '" + username + "'").executeQuery();
+			if(r.next()){
+				String pass = r.getString("password");
+				if(pass.equals(password)){
+					isValidLogin = true;
+					return r.getBoolean("admin");
+				} else {
+					isValidLogin = false;
+					return false;
+				}
+			} else {
+				isValidLogin = false;
+				return false;
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			isValidLogin = false;
+			return false;
+		}
+	}
+	
+	public boolean validLogin(){
+		return isValidLogin;
+	}
+	
+	public boolean isAdmin(){
+		return isAdmin;
+	}
+	
+	public String getUsername(){
+		return username;
 	}
 	
 	public String exec(String q){
@@ -135,7 +198,7 @@ public class ServerManager {
 	public String updateInventoryItem(InventoryItem i){
 		// update {SKU: i.SKU} i.toJSON()
 		try{
-			con.prepareStatement("UPDATE Inventory SET " + i.toStringUpdate() + " WHERE SKU=" + i.SKU).execute();
+			con.prepareStatement("UPDATE INVENTORY SET " + i.toStringUpdate() + " WHERE SKU=" + i.SKU).execute();
 			con.commit();
 			return "SUCCESS";
 		} catch (Exception e){
@@ -148,7 +211,7 @@ public class ServerManager {
 		// update {identifier: oldElement} {identifier: newElement}
 		// update {identifier: {$ne: oldElement}} {identifier: identifier}
 		try{
-			String statement = "UPDATE Inventory SET " + getItemElement(identifier) + " = case when " + getElement(identifier) + " = "+ wrap(identifier, oldElement) +" then " + wrap(identifier, newElement) + " else " + getElement(identifier) + " end";
+			String statement = "UPDATE INVENTORY SET " + getItemElement(identifier) + " = case when " + getElement(identifier) + " = "+ wrap(identifier, oldElement) +" then " + wrap(identifier, newElement) + " else " + getElement(identifier) + " end";
 			con.prepareStatement(statement).execute();
 			con.commit();
 			return "SUCCESS";
@@ -164,7 +227,7 @@ public class ServerManager {
 			return "FAILED: DUPLICATE SKU";
 		}
 		try{
-			con.prepareStatement("INSERT INTO Inventory VALUES (" + i.toStringInsert() + ")").execute(); 
+			con.prepareStatement("INSERT INTO INVENTORY VALUES (" + i.toStringInsert() + ")").execute(); 
 			con.commit();
 		} catch (Exception e){
 			System.out.println(e);
@@ -189,7 +252,7 @@ public class ServerManager {
 		// find {SKU: SKU}
 		InventoryItem i = new InventoryItem();
 		try{
-			ResultSet r = con.prepareStatement("SELECT * FROM Inventory WHERE SKU = " + SKU).executeQuery();
+			ResultSet r = con.prepareStatement("SELECT * FROM INVENTORY WHERE SKU = " + SKU).executeQuery();
 			con.commit();
 			r.next();
 			i.SKU = r.getInt("SKU");
@@ -217,7 +280,7 @@ public class ServerManager {
 	public int getNumberOfInventoryItems(){
 		// find -> count
 		try{
-			ResultSet r = con.prepareStatement("SELECT COUNT(SKU) AS SKUs From Inventory").executeQuery();
+			ResultSet r = con.prepareStatement("SELECT COUNT(SKU) AS SKUs From INVENTORY").executeQuery();
 			con.commit();
 			r.next();
 			return r.getInt("SKUs");
@@ -231,7 +294,7 @@ public class ServerManager {
 		// find {}
 		int i = -1;
 		try{
-			ResultSet r = con.prepareStatement("SELECT * From Inventory").executeQuery();
+			ResultSet r = con.prepareStatement("SELECT * From INVENTORY").executeQuery();
 			con.commit();
 			while (r.next()){
 				i = r.getInt("SKU");
@@ -246,7 +309,7 @@ public class ServerManager {
 		// find {}
 		String s  = "";
 		try{
-			ResultSet r = con.prepareStatement("SELECT * From Inventory").executeQuery();
+			ResultSet r = con.prepareStatement("SELECT * From INVENTORY").executeQuery();
 			con.commit();
 			while (r.next()){
 				InventoryItem i = new InventoryItem();
@@ -306,7 +369,7 @@ public class ServerManager {
 		// find criteria
 		ArrayList<ReturnItem> results = new ArrayList<ReturnItem>();
 		try{
-			ResultSet r = con.prepareStatement("SELECT * FROM Return WHERE " + s).executeQuery();
+			ResultSet r = con.prepareStatement("SELECT * FROM " + database + ".RETURN WHERE " + s).executeQuery();
 			con.commit();
 			while (r.next()){
 				ReturnItem i = new ReturnItem();
@@ -336,7 +399,7 @@ public class ServerManager {
 	public String updateReturnItem(ReturnItem i){
 		// update {SKU: i.SKU} i.toJSON
 		try{
-			con.prepareStatement("UPDATE Return SET " + i.toStringUpdate() + " WHERE SKU=" + i.SKU).execute();
+			con.prepareStatement("UPDATE " + database + ".RETURN SET " + i.toStringUpdate() + " WHERE SKU=" + i.SKU).execute();
 			con.commit();
 			return "SUCCESS";
 		} catch (Exception e){
@@ -350,7 +413,7 @@ public class ServerManager {
 			return "FAILED: DUPLICATE SKU";
 		}
 		try{
-			con.prepareStatement("INSERT INTO Return VALUES (" + i.toStringInsert() + ")").execute(); 
+			con.prepareStatement("INSERT INTO " + database + ".RETURN VALUES (" + i.toStringInsert() + ")").execute(); 
 			con.commit();
 		} catch (Exception e){
 			System.out.println(e);
@@ -362,7 +425,7 @@ public class ServerManager {
 	public ReturnItem getReturnItem(int SKU){
 		ReturnItem i = new ReturnItem();
 		try{
-			ResultSet r = con.prepareStatement("SELECT * FROM Return WHERE SKU = " + SKU).executeQuery();
+			ResultSet r = con.prepareStatement("SELECT * FROM " + database + ".RETURN WHERE SKU = " + SKU).executeQuery();
 			con.commit();
 			r.next();
 			i.SKU = r.getInt("SKU");
@@ -397,7 +460,7 @@ public class ServerManager {
 		// find {}
 		int i = -1;
 		try{
-			ResultSet r = con.prepareStatement("SELECT * From Return").executeQuery();
+			ResultSet r = con.prepareStatement("SELECT * From " + database + ".RETURN").executeQuery();
 			con.commit();
 			while (r.next()){
 				i = r.getInt("SKU");
@@ -454,5 +517,83 @@ public class ServerManager {
 			e.printStackTrace();
 		}
 		return elements;
+	}
+	
+	//LOGINS
+	
+	public Object[][] getLoginData(){
+		try{
+			ResultSet r = con.prepareStatement("SELECT * FROM LOGIN", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery();
+			con.commit();
+			r.last();
+			int size = r.getRow();
+			r.beforeFirst();
+			
+			Object[][] loginData = new Object[size][3];
+		
+			for(int collumn = 0; collumn < size; collumn++){
+				r.next();
+				loginData[collumn][0] = r.getString("username");
+				loginData[collumn][1] = r.getString("password");
+				loginData[collumn][2] = r.getBoolean("admin") ? Reference.ADMIN : Reference.USER;
+			}
+			return loginData;
+		} catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public ArrayList<String> getLoginUsernames(){
+		try{
+			ResultSet r = con.prepareStatement("SELECT * FROM LOGIN").executeQuery();
+			con.commit();
+
+			ArrayList<String> usernames = new ArrayList<String>();
+		
+			while(r.next())
+				usernames.add(r.getString("username"));
+			return usernames;
+		} catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public String insertLogin(String u, String p, boolean a){
+		try{
+			con.prepareStatement("INSERT INTO LOGIN VALUES ( '" + u + "', '" + p + "', " + a + ")").execute(); 
+			con.commit();
+		} catch (Exception e){
+			System.out.println(e);
+			return "FAILED. SQL EXCEPTION:\n" + e;
+		}
+		return "SUCCESS: LOGIN INSERTED";
+	}
+	
+	public void deleteLogin(String delUser){
+		try{
+			con.prepareStatement("DELETE FROM LOGIN WHERE username='" + delUser + "'").execute();
+			con.commit();
+		} catch(Exception e){
+			System.out.println(e);
+		}
+	}
+	
+	public void deleteAllLogins(){
+		// remove {}
+		try{
+			con.prepareStatement("DELETE FROM LOGIN").execute();
+		} catch(Exception e){
+			System.out.println(e);
+		}
+	}
+	
+	public void writeAllLogins(String[][] logins){
+		deleteAllLogins();
+		System.out.println(logins.length);
+		for(int i = 0; i < logins.length; i++){
+			insertLogin(logins[i][0], logins[i][1], logins[i][2].equals(Reference.ADMIN));
+		}
 	}
 }

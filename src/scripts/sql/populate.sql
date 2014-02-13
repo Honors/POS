@@ -1,4 +1,4 @@
-CREATE TABLE INVENTORY
+CREATE TABLE SpiritStore.INVENTORY
 (
 SKU int,
 UPC varchar(255),
@@ -14,9 +14,8 @@ notes varchar(255),
 price varchar(255),
 cost varchar(255),
 quantity int
-)
+);
 
---created
 CREATE TABLE RETURN
 (
 SKU int,
@@ -34,41 +33,48 @@ price varchar(255),
 cost varchar(255),
 quantity int,
 status varchar(255)
-)
+);
+
+CREATE TABLE SpiritStore.LOGIN
+(
+username varchar(255),
+password varchar(255),
+admin boolean
+);
 
 --elements created
-CREATE TABLE CLIENT
+CREATE TABLE SpiritStore.CLIENT
 (
 ID int,
 element varchar(255)
-)
+);
 
-CREATE TABLE BRAND
+CREATE TABLE SpiritStore.BRAND
 (
 ID int,
 element varchar(255)
-)
+);
 
-CREATE TABLE TYPE
+CREATE TABLE SpiritStore.TYPE
 (
 ID int,
 element varchar(255)
-)
+);
 
-CREATE TABLE GENDER
+CREATE TABLE SpiritStore.GENDER
 (
 ID int,
 element varchar(255)
-)
+);
 
-CREATE TABLE COLOR
+CREATE TABLE SpiritStore.COLOR
 (
 ID int,
 element varchar(255)
-)
+);
 
-CREATE TABLE SIZE
+CREATE TABLE SpiritStore.SIZE
 (
 ID int,
 element varchar(255)
-)
+);
