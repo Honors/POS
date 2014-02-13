@@ -16,7 +16,7 @@ cost varchar(255),
 quantity int
 );
 
-CREATE TABLE RETURN
+CREATE TABLE SpiritStore.RETURN
 (
 SKU int,
 UPC varchar(255),
