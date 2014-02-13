@@ -42,7 +42,6 @@ password varchar(255),
 admin boolean
 );
 
---elements created
 CREATE TABLE SpiritStore.CLIENT
 (
 ID int,
