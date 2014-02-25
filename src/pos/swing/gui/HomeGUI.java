@@ -98,7 +98,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 		content.add(reportButton, c);
 		
 		output = new JTextArea();
-		//output.setEditable(false);
+		output.setEditable(false);
 		output.setFont(new Font("Courier New", Font.PLAIN, 14));
 		output.setBorder(new EmptyBorder(5,5,5,5));
 		outputPane = new JScrollPane(output);

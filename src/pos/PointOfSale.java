@@ -17,9 +17,9 @@ public class PointOfSale extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 4617631829653620264L;
 	
 	private JPanel content;
-	private JTextField fieldUrl, fieldUser;
+	private JTextField fieldUser;
 	private JPasswordField fieldPass;
-	private JLabel labelUrl, labelUser, labelPass, logging;
+	private JLabel labelUser, labelPass;
 	private JButton submit, cancel;
 	
 	/**
@@ -62,13 +62,6 @@ public class PointOfSale extends JFrame implements ActionListener{
 		c.gridwidth = 2;
 		content.add(fieldPass, c);
 		
-		logging = new JLabel("Logging in...");
-		logging.setForeground(logging.getBackground());
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridwidth = 1;
-		content.add(logging, c);
-		
 		submit = new JButton("LOGIN");
 		submit.addActionListener(this);
 		submit.setActionCommand("submit");
@@ -76,6 +69,7 @@ public class PointOfSale extends JFrame implements ActionListener{
 		c.gridx = 1;
 		c.gridy = 2;
 		c.weightx = 0.5;
+		c.gridwidth = 1;
 		c.insets = new Insets(5,5,5,3);
 		c.fill= GridBagConstraints.BOTH;
 		content.add(submit, c);
@@ -116,12 +110,7 @@ public class PointOfSale extends JFrame implements ActionListener{
 	}
 
 	public void actionPerformed(ActionEvent event){
-		if(event.getActionCommand().equals("submit")){
-			logging.setForeground(new JLabel("Text").getForeground());
-			logging.revalidate();
-			revalidate();
-			logging.repaint();
-			repaint();
+		if(event.getSource().equals(submit) || event.getSource().equals(fieldUser) || event.getSource().equals(fieldPass)){
 			ServerManager server = new ServerManager(fieldUser.getText(), new String(fieldPass.getPassword()));
 			if(server.connected()){
 				if(server.validLogin()){

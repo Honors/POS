@@ -22,17 +22,19 @@ public class ServerManager {
 	private String database;
 	
 	private Connection con;
+	private Config properties;
 	
 	//create remove update delete count
 	
 	public ServerManager(String username, String password){
+		properties = new Config();
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			address = "192.168.23.107";
-			port = "3306";
-			database = "SpiritStore";
+			address = properties.getProperty(Reference.SERVER_ADDRESS);
+			port = properties.getProperty(Reference.SQLDB_PORT);
+			database = properties.getProperty(Reference.SQLDB_NAME);
 			String host = "jdbc:mysql://" + address + ":" + port + "/" + database;
-			con = DriverManager.getConnection(host, "root", "eagles");
+			con = DriverManager.getConnection(host, properties.getProperty(Reference.SQLDB_USERNAME), properties.getProperty(Reference.SQLDB_PASSWORD));
 			System.out.println("CONNECTION SUCCESSFUL");
 			con.setAutoCommit(false);
 			isConnected = true;

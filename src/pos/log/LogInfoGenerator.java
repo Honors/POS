@@ -5,7 +5,7 @@ import pos.item.InventoryItem;
 public class LogInfoGenerator {
 
 	private static String begin(String identifier, String username){
-		return "[" + identifier + "] (" + username + ") (" + TimeStamp.simpleDateAndTime() + ")";
+		return "[" + identifier + "] (" + username + " " + TimeStamp.simpleDateAndTime() + ")";
 	}
 	
 	public static String generateTransactionIncomingItemStatement(String username, String upc, String name, int oldVal, int newVal){
