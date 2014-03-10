@@ -29,8 +29,8 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 	private String path;
 	
 	private JMenuBar menuBar;
-	private JMenu adminMenu;
-	private JMenuItem maintinanceItem, loginsItem;
+	private JMenu adminMenu, helpMenu;
+	private JMenuItem maintinanceItem, loginsItem, aboutItem;
 	
 	private JPanel content;
 	private JLabel logo;
@@ -39,9 +39,8 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 	private JScrollPane outputPane;
 	
 	
-	public HomeGUI(ServerManager i, String p){
+	public HomeGUI(ServerManager i){
 		super(i, null, new Keys(i));
-		path = p;
  		
 		menuBar = new JMenuBar();
 		
@@ -50,14 +49,22 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 		
 		maintinanceItem = new JMenuItem("Maintinance");
 		maintinanceItem.addActionListener(this);
+		adminMenu.add(maintinanceItem);
 		
 		loginsItem = new JMenuItem("Manage Logins");
 		loginsItem.addActionListener(this);
-		
-		adminMenu.add(maintinanceItem);
 		adminMenu.add(loginsItem);
 		
 		menuBar.add(adminMenu);
+		
+		helpMenu = new JMenu("Help");
+		
+		aboutItem = new JMenuItem("About");
+		aboutItem.addActionListener(this);
+		helpMenu.add(aboutItem);
+		
+		menuBar.add(helpMenu);
+
 		
 		content = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -126,23 +133,36 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 	public void actionPerformed(ActionEvent event) {
 		
 		if(event.getSource().equals(inventoryButton)){
-			TransactionGUI maintinanceWindow = new TransactionGUI(server, this, keys);
+			new TransactionGUI(server, this, keys);
 		}
 		
 		if(event.getSource().equals(searchButton)){
-			SearchGUI searchWindow = new SearchGUI(server, this, "", keys);
+			new SearchGUI(server, this, "", keys);
 		}
 		
 		if(event.getSource().equals(reportButton)){
-			ReportGUI reportWindow = new ReportGUI();
+			new ReportGUI();
 		}
 		
 		if(event.getSource().equals(maintinanceItem)){
-			MaintinanceGUI maintinanceWindow = new MaintinanceGUI(server, this, path, keys);
+			new MaintinanceGUI(server, this, path, keys);
 		}
 		
 		if(event.getSource().equals(loginsItem)){
-			LoginManagerGUI loginManagerWindow = new LoginManagerGUI(server, this);
+			new LoginManagerGUI(server);
+		}
+		
+		if(event.getSource().equals(aboutItem)){
+			String aboutMessage = "This is the inventory and transactions manager for" + "\n" +
+								 "the Bishop Watterson High School Spirit Store" + "\n" +
+								 "\n" +
+								 "Version: 1.0.1" + "\n" +
+								 "\n" +
+								 "By: James Madden, Matt Neary" + "\n" +
+								 "\n" + 
+								 "Property of Bishop Watterson High School";
+			
+       	 	JOptionPane.showMessageDialog(new JFrame(),aboutMessage, "About", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 	

@@ -1,10 +1,6 @@
 package pos.core;
 
-import java.io.File;
-import java.net.URISyntaxException;
 import java.util.*;
-
-import org.apache.commons.io.FileUtils;
 
 import pos.lib.Reference;
  

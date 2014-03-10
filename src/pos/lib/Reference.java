@@ -52,4 +52,7 @@ public class Reference {
 	public final static String SQLDB_NAME = "sqldb_name";
 	public final static String SQLDB_USERNAME = "sqldb_username";
 	public final static String SQLDB_PASSWORD = "sqldb_password";
+	
+	public final static String READABLE_LOG_IDENTIFIER = "activities";
+	public final static String CHANGE_LOG_IDENTIFIER = "changes";
 }

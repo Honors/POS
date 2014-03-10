@@ -3,6 +3,7 @@ package pos;
 import javax.swing.*;
 
 import pos.core.ServerManager;
+import pos.log.Fetcher;
 import pos.swing.gui.HomeGUI;
 
 import java.awt.Dimension;
@@ -112,15 +113,19 @@ public class PointOfSale extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent event){
 		if(event.getSource().equals(submit) || event.getSource().equals(fieldUser) || event.getSource().equals(fieldPass)){
 			ServerManager server = new ServerManager(fieldUser.getText(), new String(fieldPass.getPassword()));
-			if(server.connected()){
-				if(server.validLogin()){
-					new HomeGUI(server, "c:\\POS");
-					this.setVisible(false);
+			if(Fetcher.verify()){
+				if(server.connected()){
+					if(server.validLogin()){
+						new HomeGUI(server);
+						this.setVisible(false);
+					} else {
+						JOptionPane.showMessageDialog(new JFrame(), "Invalid username or password", "Login Error", JOptionPane.ERROR_MESSAGE);
+					}
 				} else {
-					JOptionPane.showMessageDialog(new JFrame(), "Invalid username or password", "Login Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(new JFrame(), "Invalid Host directory or URL", "Login Error", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
-				JOptionPane.showMessageDialog(new JFrame(), "Invalid Host directory or URL", "Login Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(new JFrame(), "Invalid logging destination", "Login Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		if(event.getActionCommand().equals("cancel")){

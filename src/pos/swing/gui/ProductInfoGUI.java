@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import net.sourceforge.barbecue.BarcodeException;
-import net.sourceforge.barbecue.output.OutputException;
-import pos.filter.CSVFilter;
 import pos.filter.PDFFilter;
 import pos.item.Item;
 import pos.item.ReturnItem;

@@ -15,7 +15,6 @@ public class ServerManager {
 	private boolean isAdmin;
 	
 	private String username;
-	private String password;
 	
 	private String address;
 	private String port;
@@ -54,7 +53,6 @@ public class ServerManager {
 	
 	public boolean login(String username, String password){
 		this.username = username;
-		this.password = password;
 		try{
 			ResultSet r = con.prepareStatement("SELECT * FROM LOGIN WHERE username = '" + username + "'").executeQuery();
 			if(r.next()){

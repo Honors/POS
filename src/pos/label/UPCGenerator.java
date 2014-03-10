@@ -1,6 +1,5 @@
 package pos.label;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import net.sourceforge.barbecue.Barcode;

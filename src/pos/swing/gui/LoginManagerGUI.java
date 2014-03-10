@@ -16,11 +16,9 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import pos.core.OutputWindow;
 import pos.core.ServerManager;
 import pos.dialog.DialogNewLogin;
 import pos.lib.Reference;
@@ -32,16 +30,14 @@ public class LoginManagerGUI extends JFrame implements ActionListener, TableMode
 	String [] collumnNames = {"Username", "Password", "Authentification"};
 	
 	private ServerManager server;
-	private OutputWindow parentWindow;
 	
 	private JPanel content;
 	private JButton newLogin, delLogin;
 	private JTable loginTable;
 	private JScrollPane loginScroll;
 	
-	public LoginManagerGUI(ServerManager s, OutputWindow p){
+	public LoginManagerGUI(ServerManager s){
 		server = s;
-		parentWindow = p;
 		
 		GridBagConstraints c_table = new GridBagConstraints();
 		c_table.gridx = 0;

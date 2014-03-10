@@ -4,11 +4,12 @@ import java.net.*;
 import java.util.*;
 import java.io.*;
 
+import pos.core.Config;
 import pos.lib.Reference;
 
 import com.google.gson.*;
 
-class Fetcher {
+public class Fetcher {
   public static String POST(String targetURL, String urlParameters)
   {
     URL url;
@@ -30,8 +31,7 @@ class Fetcher {
       connection.setDoOutput(true);
 
       //Send request
-      DataOutputStream wr = new DataOutputStream (
-                  connection.getOutputStream ());
+      DataOutputStream wr = new DataOutputStream (connection.getOutputStream ());
       wr.writeBytes (urlParameters);
       wr.flush ();
       wr.close ();
@@ -43,7 +43,7 @@ class Fetcher {
       StringBuffer response = new StringBuffer();
       while((line = rd.readLine()) != null) {
         response.append(line);
-        response.append('\r');
+        response.append("\r\n");
       }
       rd.close();
       return response.toString();
@@ -62,23 +62,37 @@ class Fetcher {
   }
 
   public static boolean update(String type, String message) {
+	Config properties = new Config();
     Map<String, String> contents = new HashMap<String, String>();
     contents.put("type", type);
     contents.put("message", message);
     Gson gson = new Gson();
     String body = gson.toJson(contents);
-    String resp = Fetcher.POST(httpWrap(Reference.SERVER_ADDRESS) + ":" + Reference.SERVER_PORT + "/", body);
+    String http = httpWrap(properties.getProperty(Reference.SERVER_ADDRESS)) + ":" + properties.getProperty(Reference.SERVER_PORT) + "/";
+    System.out.println(http);
+    String resp = Fetcher.POST(http, body);
     Map<String, Boolean> parsedResp = gson.fromJson(resp, Map.class);
     return parsedResp.get("success");
   }
 
   public static ArrayList<String> read(String type) {
+	Config properties = new Config();
     Gson gson = new Gson();
-    String resp = Fetcher.POST(httpWrap(Reference.SERVER_ADDRESS) + ":" + Reference.SERVER_PORT + "/" + type, "{}");
+    String resp = Fetcher.POST(httpWrap(properties.getProperty(Reference.SERVER_ADDRESS)) + ":" + properties.getProperty(Reference.SERVER_PORT) + "/" + type, "{}");
     ArrayList<String> parsedResp = gson.fromJson(resp, ArrayList.class);
     return parsedResp;
   }
 
+  public static boolean verify() {
+	  try {
+		  String resp = Fetcher.POST("http://10.2.18.112:8080/status", "{}");
+		  return resp.contains("success");
+	  } catch(Exception e) {
+		  e.printStackTrace();
+	      return false;
+	  }
+  }
+  
   private static String httpWrap(String toHttp){
 	  if(toHttp.startsWith("http://"))
 		  return toHttp;
