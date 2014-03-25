@@ -336,16 +336,6 @@ public class ServerManager {
 		return s;
 	}
 	
-	public void restoreInventoryFromBackup(String filename){
-		BackupReader backup = new BackupReader(filename);
-		ArrayList<InventoryItem> i = backup.readFromLog();
-		deleteAllInventory();
-		while (!i.isEmpty()){
-			insertInventoryItem(i.remove(0));
-		} 
-		
-	}
-	
 	public void deleteAllInventory(){
 		// remove {}
 		try{

@@ -5,9 +5,12 @@ import java.util.Arrays;
 
 public class Reference {
 	
-	public static final String TABLE_INVENTORY = "SpiritStore.INVENTORY";
-	public static final String TABLE_RETURN = "SpiritStore.RETURN";
-	public static final String TABLE_LOGIN = "SpiritStore.LOGIN";
+	public static final String DB_TABLE_INVENTORY = "SpiritStore.INVENTORY";
+	public static final String DB_TABLE_RETURN = "SpiritStore.RETURN";
+	public static final String DB_TABLE_LOGIN = "SpiritStore.LOGIN";
+	
+	public static final String INVENTORY_IDENTIFIER = "inventory";
+	public static final String RETURN_IDENTIFIER = "return";
 	
 	public static final int SKU = 0;
 	public static final int UPC = 1;
@@ -33,6 +36,9 @@ public class Reference {
 	public final static String STATUS_PENDING = "Pending";
 	public final static String STATUS_TO_VENDER = "Return to Vender";
 	public final static String STATUS_TO_INVENTORY = "Return to Inventory";
+	public final static String STATUS_INCOMING = "Incoming";
+	public final static String STATUS_OUTGOING = "Outgoing";
+	public final static String STATUS_NEW_ITEM = "New Item";
 	
 	public final static ArrayList<String> STATUSES = new ArrayList<String>(Arrays.asList(STATUS_PENDING, STATUS_TO_VENDER, STATUS_TO_INVENTORY));
 	

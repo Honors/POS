@@ -69,7 +69,6 @@ public class BackupWriter {
 		out.println("RETURN");
 		out.println("SKU,UPC,NAME,BRAND,COLOR,SIZE,TYPE,GENDER,CLIENT,DATE,NOTES,PRICE,COST,QUANTITY,STATUS");
 		while (!i.isEmpty()){
-			System.out.println(i.get(0).toSrtingCSV());
 			out.println(i.remove(0).toSrtingCSV());
 			
 		}

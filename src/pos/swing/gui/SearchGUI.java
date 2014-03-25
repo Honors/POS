@@ -459,8 +459,6 @@ public class SearchGUI extends JFramePOS implements ActionListener, UpdatableWin
 			command = "SKU>-1";
 		}
 		
-		System.out.println(command);
-		
 		return command;
 	}
 

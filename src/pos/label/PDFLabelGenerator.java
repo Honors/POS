@@ -34,8 +34,6 @@ public class PDFLabelGenerator {
 		int px_verticalPitch = (int)(verticalPitch * 72.0f);
 		int px_horizontalPitch = (int)(horizontalPitch * 72.0f);
 		
-		System.out.println(px_verticalPitch);
-		
 		PDDocument document = new PDDocument();
 		PDPage page = new PDPage();
 		document.addPage(page);

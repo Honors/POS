@@ -28,6 +28,7 @@ import javax.swing.event.ChangeListener;
 import pos.backup.BackupReader;
 import pos.backup.BackupWriter;
 import pos.lib.Reference;
+import pos.log.Fetcher;
 import pos.log.LogInfoGenerator;
 import pos.log.TimeStamp;
 import pos.core.ServerManager;
@@ -48,12 +49,12 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 	private ArrayList<String> executedCommands;
 	private int index;
 		
-	private JScrollPane IMOutput, RMOutput, CScrollOutput;
+	private JScrollPane IMOutput, RMOutput, CScrollOutput, LScrollOutput;
 	private JTextField IMTextEntry, RMTextEntry, CTextEntry;
-	private JPanel IMContent, RMContent, IMResults, RMResults, IMSearchBar, RMSearchBar, CContent, CSearchBar;
+	private JPanel IMContent, RMContent, IMResults, RMResults, IMSearchBar, RMSearchBar, CContent, CSearchBar, LContent;
 	private JTabbedPane tabs;
 	private JButton IMBackup, IMRestore, IMNew, IMEnter, RMEnter, IMRegister, CEnter;
-	private JTextArea CTextOutput;
+	private JTextArea CTextOutput, LTextOutput;
 	
 	public MaintinanceGUI(ServerManager i, OutputWindow out, String p, Keys keys){
 		super(i,out,keys);
@@ -224,11 +225,29 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 		c.weighty = 1;
 		CContent.add(CScrollOutput, c);
 		
+		LContent = new JPanel(new GridBagLayout());
+		c.ipady = 5;
+		c.ipadx = 0;
+		c.weighty = 0;
+		c.gridwidth = 1;
+		c.insets = new Insets(5,5,5,5);
 		
+		LTextOutput = new JTextArea();
+		LTextOutput.setEditable(false);
+		LTextOutput.setFont(new Font("Courier New", Font.PLAIN, 14));
+		LTextOutput.setBorder(new EmptyBorder(5,5,5,5));
+		LScrollOutput = new JScrollPane(LTextOutput);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 1;
+		c.weighty = 1;
+		LContent.add(LScrollOutput, c);
+
 		tabs = new JTabbedPane();
 		tabs.addChangeListener(this);
 		tabs.addTab("Inventory Maintenance", IMContent);
 		tabs.addTab("Return Maintenance", RMContent);
+		tabs.addTab("Log", LContent);
 		tabs.addTab("Console", CContent);
 		
 		setTitle("Maintinance");
@@ -239,6 +258,7 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 
 		updateInventory();
 		updateReturn();
+		updateLog();
 	}
 	
 	@Override
@@ -383,6 +403,20 @@ public class MaintinanceGUI extends JFramePOS implements ActionListener, ChangeL
 		c.weighty = 1;
 		RMResults.add(new JPanel(), c);
 		this.paintAll(getGraphics());
+	}
+	
+	public void updateLog(){
+		LTextOutput.setText("Loading...");
+
+		(new Thread(new Runnable() {
+			public void run() {
+				ArrayList<String> logItems = Fetcher.read(Reference.READABLE_LOG_IDENTIFIER);
+				LTextOutput.setText("");
+				for(int i = 0; i < logItems.size(); i++){
+					LTextOutput.append(logItems.get(logItems.size() - 1 - i));
+				}
+			}
+		})).start();
 	}
 	
 	@Override

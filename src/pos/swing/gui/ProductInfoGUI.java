@@ -18,6 +18,7 @@ import pos.item.ReturnItem;
 import pos.label.PDFLabelGenerator;
 import pos.label.UPCGenerator;
 import pos.lib.Reference;
+import pos.log.ChangeLogger;
 import pos.log.LogInfoGenerator;
 import pos.log.TimeStamp;
 import pos.core.ServerManager;
@@ -449,8 +450,8 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 						String r = server.insertInventoryItem(i);
 						if (r.contains("SUCCESS")){
 							writeToOutput(LogInfoGenerator.generateInventoryNewItemStatement(server.getUsername(), i));
+							ChangeLogger.write(Reference.INVENTORY_IDENTIFIER, TimeStamp.sanitizedDateandTime(), i.SKU, Reference.STATUS_NEW_ITEM, i.quantity);
 							parentWindow.update("inventory");
-							System.out.println(parentWindow);
 							this.setVisible(false);
 						}
 					}
@@ -459,14 +460,17 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 			if(status == Reference.RETURN_PRODUCT){
 				if(((ReturnItem)item).status.equals(Reference.STATUS_PENDING)){
 					ReturnItem i = new ReturnItem(item.SKU, item.UPC, item.name, item.brand, item.color, item.size, item.type, item.gender, item.client, item.date, notes.getText(), item.price, item.cost, item.quantity, ((JComboBox<Object>)returnStatus).getSelectedItem().toString());
-					if(!i.status.equals(((ReturnItem)item).status))
+					if(!i.status.equals(((ReturnItem)item).status)){
 						writeToOutput(LogInfoGenerator.generateReturnEditItemStatement(server.getUsername(), i.UPC, i.name, i.quantity, ((ReturnItem)item).status, i.status));
-					
+						ChangeLogger.write(Reference.RETURN_IDENTIFIER, TimeStamp.sanitizedDateandTime(), item.SKU, Reference.STATUS_PENDING, -i.quantity);
+						ChangeLogger.write(Reference.RETURN_IDENTIFIER, TimeStamp.sanitizedDateandTime(), item.SKU, i.status, i.quantity);
+					}
 					if(i.status.equals(Reference.STATUS_TO_INVENTORY)){
 						ArrayList<InventoryItem> returnedTo = server.searchInventory("UPC='" + i.UPC + "'");
 						int oldVal = returnedTo.get(0).quantity;
 						returnedTo.get(0).quantity += item.quantity;
 						writeToOutput(LogInfoGenerator.generateTransactionIncomingItemStatement(server.getUsername(), returnedTo.get(0).UPC, returnedTo.get(0).name, oldVal, returnedTo.get(0).quantity));
+						ChangeLogger.write(Reference.INVENTORY_IDENTIFIER, TimeStamp.sanitizedDateandTime(), returnedTo.get(0).SKU, Reference.STATUS_INCOMING, item.quantity);
 						server.updateInventoryItem(returnedTo.get(0));
 						parentWindow.update("inventory");
 					}

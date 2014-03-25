@@ -43,7 +43,6 @@ public class Fetcher {
       StringBuffer response = new StringBuffer();
       while((line = rd.readLine()) != null) {
         response.append(line);
-        response.append("\r\n");
       }
       rd.close();
       return response.toString();
@@ -69,7 +68,6 @@ public class Fetcher {
     Gson gson = new Gson();
     String body = gson.toJson(contents);
     String http = httpWrap(properties.getProperty(Reference.SERVER_ADDRESS)) + ":" + properties.getProperty(Reference.SERVER_PORT) + "/";
-    System.out.println(http);
     String resp = Fetcher.POST(http, body);
     Map<String, Boolean> parsedResp = gson.fromJson(resp, Map.class);
     return parsedResp.get("success");
@@ -78,7 +76,8 @@ public class Fetcher {
   public static ArrayList<String> read(String type) {
 	Config properties = new Config();
     Gson gson = new Gson();
-    String resp = Fetcher.POST(httpWrap(properties.getProperty(Reference.SERVER_ADDRESS)) + ":" + properties.getProperty(Reference.SERVER_PORT) + "/" + type, "{}");
+    String http = httpWrap(properties.getProperty(Reference.SERVER_ADDRESS)) + ":" + properties.getProperty(Reference.SERVER_PORT) + "/" + type;
+    String resp = Fetcher.POST(http, "{}");
     ArrayList<String> parsedResp = gson.fromJson(resp, ArrayList.class);
     return parsedResp;
   }

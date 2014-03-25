@@ -29,6 +29,7 @@ import pos.dialog.DialogSingleComboBox;
 import pos.item.InventoryItem;
 import pos.item.ReturnItem;
 import pos.lib.Reference;
+import pos.log.ChangeLogger;
 import pos.log.LogInfoGenerator;
 import pos.log.TimeStamp;
 import pos.swing.JFramePOS;
@@ -185,7 +186,9 @@ public class TransactionGUI extends JFramePOS implements ActionListener, OutputW
 					
 					String statement = LogInfoGenerator.generateTransactionIncomingItemStatement(server.getUsername(), toChange.get(0).UPC, toChange.get(0).name, oldVal, toChange.get(0).quantity);
 					writeToOutput(statement);
-					//TODO log the change
+
+					ChangeLogger.write(Reference.INVENTORY_IDENTIFIER, TimeStamp.sanitizedDateandTime(), toChange.get(0).SKU, Reference.STATUS_INCOMING, change);
+					
 				} else if(toChange.size() > 1){
 					JOptionPane.showMessageDialog(new JFrame(),"Scanned item has duplicates", "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
@@ -217,11 +220,14 @@ public class TransactionGUI extends JFramePOS implements ActionListener, OutputW
 						server.updateInventoryItem(toChange.get(0));
 						//updateInventory();
 						
-						change = toChange.get(0).quantity - oldVal;
+						change = oldVal - toChange.get(0).quantity;
 						
 						String statement = LogInfoGenerator.generateTransactionOutgoingItemStatement(server.getUsername(), toChange.get(0).UPC, toChange.get(0).name, oldVal, toChange.get(0).quantity);
 						writeToOutput(statement);
-						//TODO log the change
+
+						ChangeLogger.write(Reference.INVENTORY_IDENTIFIER, TimeStamp.sanitizedDateandTime(), toChange.get(0).SKU, Reference.STATUS_OUTGOING, change);
+
+						
 					} else {
 						JOptionPane.showMessageDialog(new JFrame(),"Scanned item's quantity cannot decrease below 0\nThe quantity for the scanned item is 0", "ERROR", JOptionPane.ERROR_MESSAGE);
 					}
@@ -250,18 +256,18 @@ public class TransactionGUI extends JFramePOS implements ActionListener, OutputW
 						}
 						
 						server.insertReturnItem(item);
-						//updateReturn();
 
 						String statement = LogInfoGenerator.generateTransactionReturnItemStatement(server.getUsername(), item.UPC, item.name, item.quantity, item.status);
 						if(item.status == Reference.STATUS_TO_INVENTORY){
 							int oldVal = toReturn.get(0).quantity;
 							toReturn.get(0).quantity += item.quantity;
+							int change = toReturn.get(0).quantity - oldVal;
 							server.updateInventoryItem(toReturn.get(0));
-							//updateInventory();
 							statement += LogInfoGenerator.generateTransactionIncomingItemStatement(server.getUsername(), item.UPC, item.name, oldVal, toReturn.get(0).quantity);
+							ChangeLogger.write(Reference.INVENTORY_IDENTIFIER, TimeStamp.sanitizedDateandTime(), toReturn.get(0).SKU, Reference.STATUS_INCOMING, change);
 						}
 						writeToOutput(statement);
-						//TODO log change
+						ChangeLogger.write(Reference.RETURN_IDENTIFIER, TimeStamp.sanitizedDateandTime(), item.SKU, status, item.quantity);
 					}
 				} else if (toReturn.size() > 1){
 					JOptionPane.showMessageDialog(new JFrame(),"Scanned item has duplicates", "ERROR", JOptionPane.ERROR_MESSAGE);
