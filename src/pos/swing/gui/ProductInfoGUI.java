@@ -26,10 +26,10 @@ import pos.item.InventoryItem;
 import pos.swing.JFramePOS;
 import pos.core.Keys;
 import pos.core.OutputWindow;
-import pos.core.UpdatableWindow;
+import pos.core.UpdateableContent;
 import pos.swing.SearchResult;
 
-public class ProductInfoGUI extends JFramePOS implements ActionListener, UpdatableWindow{
+public class ProductInfoGUI extends JFramePOS implements ActionListener, UpdateableContent{
 	
 	private static final long serialVersionUID = 2663648763612880306L;
 	
@@ -451,7 +451,6 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 						if (r.contains("SUCCESS")){
 							writeToOutput(LogInfoGenerator.generateInventoryNewItemStatement(server.getUsername(), i));
 							ChangeLogger.write(Reference.INVENTORY_IDENTIFIER, TimeStamp.sanitizedDateandTime(), i.SKU, Reference.STATUS_NEW_ITEM, i.quantity);
-							parentWindow.update("inventory");
 							this.setVisible(false);
 						}
 					}
@@ -472,7 +471,6 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 						writeToOutput(LogInfoGenerator.generateTransactionIncomingItemStatement(server.getUsername(), returnedTo.get(0).UPC, returnedTo.get(0).name, oldVal, returnedTo.get(0).quantity));
 						ChangeLogger.write(Reference.INVENTORY_IDENTIFIER, TimeStamp.sanitizedDateandTime(), returnedTo.get(0).SKU, Reference.STATUS_INCOMING, item.quantity);
 						server.updateInventoryItem(returnedTo.get(0));
-						parentWindow.update("inventory");
 					}
 
 					writeToOutput("\n");
@@ -537,8 +535,8 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatab
 	}
 
 	@Override
-	public void update(String command) {
-		
+	public void update(String updateIdentifier, String info) {
+		//TODO: Complex Update Processing
 	}
 
 }

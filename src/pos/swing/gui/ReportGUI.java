@@ -18,10 +18,10 @@ import javax.swing.border.EmptyBorder;
 
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
-import pos.core.UpdatableWindow;
+import pos.core.UpdateableContent;
 import pos.lib.Reference;
 
-public class ReportGUI extends JFrame implements ActionListener, UpdatableWindow {
+public class ReportGUI extends JFrame implements ActionListener, UpdateableContent {
 
 	private static final long serialVersionUID = -3818721107019469865L;
 
@@ -141,7 +141,7 @@ public class ReportGUI extends JFrame implements ActionListener, UpdatableWindow
 	}
 
 	@Override
-	public void update(String command) {
-		
+	public void update(String updateIdentifier, String info) {
+		//TODO: Make Everything Before This
 	}
 }

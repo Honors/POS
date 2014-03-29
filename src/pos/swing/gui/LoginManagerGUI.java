@@ -20,10 +20,11 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import pos.core.ServerManager;
+import pos.core.UpdateableContent;
 import pos.dialog.DialogNewLogin;
 import pos.lib.Reference;
 
-public class LoginManagerGUI extends JFrame implements ActionListener, TableModelListener{
+public class LoginManagerGUI extends JFrame implements ActionListener, TableModelListener, UpdateableContent{
 
 	private static final long serialVersionUID = -2146259808509575903L;
 	
@@ -160,5 +161,12 @@ public class LoginManagerGUI extends JFrame implements ActionListener, TableMode
 	@Override
 	public void tableChanged(TableModelEvent event) {
 		server.writeAllLogins(getTableData(loginTable));
+	}
+
+	@Override
+	public void update(String updateIdentifier, String info) {
+		if(updateIdentifier.equals(Reference.LOGIN_UPDATED)){
+			updateTable();
+		}
 	}
 }

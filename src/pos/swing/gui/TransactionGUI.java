@@ -279,12 +279,6 @@ public class TransactionGUI extends JFramePOS implements ActionListener, OutputW
 	}
 
 	@Override
-	public void update(String command) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void writeToOutput(String s) {
 		ICOutput.append(s);
 		parentWindow.writeToOutput(s);

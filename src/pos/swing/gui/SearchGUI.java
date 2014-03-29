@@ -17,10 +17,10 @@ import pos.item.InventoryItem;
 import pos.swing.JFramePOS;
 import pos.core.Keys;
 import pos.core.OutputWindow;
-import pos.core.UpdatableWindow;
+import pos.core.UpdateableContent;
 import pos.swing.SearchResult;
 
-public class SearchGUI extends JFramePOS implements ActionListener, UpdatableWindow{
+public class SearchGUI extends JFramePOS implements ActionListener, UpdateableContent{
 	
 	private static final long serialVersionUID = 3928694164475396987L;
 	
@@ -387,7 +387,7 @@ public class SearchGUI extends JFramePOS implements ActionListener, UpdatableWin
 		ArrayList<InventoryItem> i = server.searchInventory(getSearchCommand());
 		boolean colorized = true;
 		while (!i.isEmpty()){
-			SearchResult s = new SearchResult(this, parentWindow, i.remove(0), keys, Reference.VIEW_PRODUCT);
+			SearchResult s = new SearchResult(server, parentWindow, i.remove(0), keys, Reference.VIEW_PRODUCT);
 			s.setOpaque(true);
 			if(colorized)
 				s.setBackground(new Color(0xD4EBF2));
@@ -463,8 +463,8 @@ public class SearchGUI extends JFramePOS implements ActionListener, UpdatableWin
 	}
 
 	@Override
-	public void update(String command) {
-		// TODO Auto-generated method stub
+	public void update(String updateIdentifier, String info) {
+		//TODO: Determine what to update
 		
 	}
 }

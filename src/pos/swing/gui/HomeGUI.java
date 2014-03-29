@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,10 +19,9 @@ import pos.log.ReadableLogger;
 import pos.swing.JFramePOS;
 import pos.core.Keys;
 import pos.core.OutputWindow;
-import pos.core.UpdatableWindow;
 
 @SuppressWarnings("serial")
-public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, UpdatableWindow{
+public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 	
 	//TODO create logo
 	private ImageIcon imgLogo = new ImageIcon(this.getClass().getResource("/resources/images/logo/logo.png"));
@@ -30,7 +30,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 	
 	private JMenuBar menuBar;
 	private JMenu adminMenu, helpMenu;
-	private JMenuItem maintinanceItem, loginsItem, aboutItem;
+	private JMenuItem maintinanceItem, loginsItem, changeHistoryItem, aboutItem;
 	
 	private JPanel content;
 	private JLabel logo;
@@ -54,6 +54,10 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 		loginsItem = new JMenuItem("Manage Logins");
 		loginsItem.addActionListener(this);
 		adminMenu.add(loginsItem);
+		
+		changeHistoryItem = new JMenuItem("Change History");
+		changeHistoryItem.addActionListener(this);
+		adminMenu.add(changeHistoryItem);
 		
 		menuBar.add(adminMenu);
 		
@@ -152,6 +156,10 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 			new LoginManagerGUI(server);
 		}
 		
+		if(event.getSource().equals(changeHistoryItem)){
+			new ChangeHistoryGUI(server);
+		}
+		
 		if(event.getSource().equals(aboutItem)){
 			String aboutMessage = "This is the inventory and transactions manager for" + "\n" +
 								 "the Bishop Watterson High School Spirit Store" + "\n" +
@@ -173,10 +181,5 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow, 
 	
 	public void clearOutput(){
 		output.setText("");
-	}
-	
-	@Override
-	public void update(String command) {
-
 	}
 }

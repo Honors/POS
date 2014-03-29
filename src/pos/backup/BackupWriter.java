@@ -10,6 +10,7 @@ import pos.core.OutputWindow;
 
 /**
  * This class writes server data to a backup CSV file
+ * @deprecated No longer necessary with a SQL server
  */
 public class BackupWriter {
 	PrintWriter out;

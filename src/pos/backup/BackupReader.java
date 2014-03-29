@@ -9,6 +9,7 @@ import pos.item.ReturnItem;
 
 /**
  * This class reads in data to the server from a backup CSV file
+ * @deprecated No longer necessary with a SQL server
  */
 public class BackupReader {
 	BufferedReader in;

@@ -52,13 +52,21 @@ public class Reference {
 	
 	public final static String[] AUTHENTIFICATIONS = {USER, ADMIN};
 	
-	public final static String SERVER_ADDRESS = "server_address";
-	public final static String SERVER_PORT = "server_port";
-	public final static String SQLDB_PORT = "sqldb_port";
-	public final static String SQLDB_NAME = "sqldb_name";
-	public final static String SQLDB_USERNAME = "sqldb_username";
-	public final static String SQLDB_PASSWORD = "sqldb_password";
-	
 	public final static String READABLE_LOG_IDENTIFIER = "activities";
 	public final static String CHANGE_LOG_IDENTIFIER = "changes";
+	
+	public final static String INVENTORY_UPDATED = "inventory_updated";
+	public final static String RETURN_UPDATED = "return_updated";
+	public final static String BRAND_UPDATED = "brand_updated";
+	public final static String COLOR_UPDATED = "color_updated";
+	public final static String SIZE_UPDATED = "size_updated";
+	public final static String TYPE_UPDATED = "type_updated";
+	public final static String GENDER_UPDATED = "gender_updated";
+	public final static String CLIENT_UPDATED = "client_updated";
+	public final static String LOGIN_UPDATED = "login_updated";
+	public final static String READABLE_LOG_UPDATED = "readable_log_updated";
+	public final static String CHANGE_LOG_UPDATED = "change_log_updated";
+
+
+
 }

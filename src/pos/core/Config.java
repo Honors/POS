@@ -2,11 +2,15 @@ package pos.core;
 
 import java.util.*;
 
+import pos.lib.ConfigElements;
 import pos.lib.Reference;
  
 public class Config
 {
-   Properties configFile;
+	
+   private Properties configFile;
+   private static final boolean external = false;
+   
    public Config()
    {
     configFile = new java.util.Properties();
@@ -19,17 +23,27 @@ public class Config
  
    public String getProperty(String key)
    {
-    String value = this.configFile.getProperty(key);
-    return value;
+    return this.configFile.getProperty(key);
    }
    
    public void copyDefaultConfigFile(){
 	   //TODO: make the file copy
-   	configFile.put(Reference.SERVER_ADDRESS, "10.2.18.112");
-   	configFile.put(Reference.SQLDB_PORT, "3306");
-   	configFile.put(Reference.SQLDB_NAME, "SpiritStore");
-   	configFile.put(Reference.SQLDB_USERNAME, "root");
-   	configFile.put(Reference.SQLDB_PASSWORD, "eagles");
-   	configFile.put(Reference.SERVER_PORT, "8080");
+	   if(external){
+		   	configFile.put(ConfigElements.SERVER_ADDRESS, "10.2.18.112");
+		   	configFile.put(ConfigElements.SQLDB_PORT, "3306");
+		   	configFile.put(ConfigElements.SQLDB_NAME, "SpiritStore");
+		   	configFile.put(ConfigElements.SQLDB_USERNAME, "root");
+		   	configFile.put(ConfigElements.SQLDB_PASSWORD, "eagles");
+		   	configFile.put(ConfigElements.SERVER_PORT, "8080");
+		   	configFile.put(ConfigElements.LOGGING, "true");
+	   } else {
+		    configFile.put(ConfigElements.SERVER_ADDRESS, "localhost");
+		   	configFile.put(ConfigElements.SQLDB_PORT, "3306");
+		   	configFile.put(ConfigElements.SQLDB_NAME, "SpiritStore");
+		   	configFile.put(ConfigElements.SQLDB_USERNAME, "root");
+		   	configFile.put(ConfigElements.SQLDB_PASSWORD, "ericpaul");
+		   	configFile.put(ConfigElements.SERVER_PORT, "8080");
+		   	configFile.put(ConfigElements.LOGGING, "false");
+	   }
    }
 }

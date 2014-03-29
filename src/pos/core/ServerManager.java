@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import pos.backup.BackupReader;
+import pos.lib.ConfigElements;
 import pos.lib.Reference;
 import pos.item.InventoryItem;
 import pos.item.ReturnItem;
@@ -29,11 +30,11 @@ public class ServerManager {
 		properties = new Config();
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			address = properties.getProperty(Reference.SERVER_ADDRESS);
-			port = properties.getProperty(Reference.SQLDB_PORT);
-			database = properties.getProperty(Reference.SQLDB_NAME);
+			address = properties.getProperty(ConfigElements.SERVER_ADDRESS);
+			port = properties.getProperty(ConfigElements.SQLDB_PORT);
+			database = properties.getProperty(ConfigElements.SQLDB_NAME);
 			String host = "jdbc:mysql://" + address + ":" + port + "/" + database;
-			con = DriverManager.getConnection(host, properties.getProperty(Reference.SQLDB_USERNAME), properties.getProperty(Reference.SQLDB_PASSWORD));
+			con = DriverManager.getConnection(host, properties.getProperty(ConfigElements.SQLDB_USERNAME), properties.getProperty(ConfigElements.SQLDB_PASSWORD));
 			System.out.println("CONNECTION SUCCESSFUL");
 			con.setAutoCommit(false);
 			isConnected = true;
@@ -346,12 +347,16 @@ public class ServerManager {
 	}
 
 	public String generateInventoryUPC(){
-		String upc = String.valueOf(getMaxInventorySKU() + 1);
-		int initialLength = upc.length();
-		for(int i = initialLength; i < 10; i++){
-			upc += String.valueOf(0);
+		String upc = "";
+		for(int i = 0; i < 10; i++){
+			int number = (int)(Math.random() * 10);
+			upc += String.valueOf(number);
 		}
-		return upc;
+		ArrayList<InventoryItem> duplicates = this.searchInventory("upc = '" + upc + "'");
+		if(duplicates.size() == 0)
+			return upc;
+		else
+			return generateInventoryUPC();
 	}
 	
 	//RETURN MANAGEMENT METHODS

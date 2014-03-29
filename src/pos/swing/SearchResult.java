@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import pos.item.Item;
 import pos.core.Keys;
 import pos.core.OutputWindow;
+import pos.core.ServerManager;
 import pos.swing.JFramePOS;
 import pos.swing.gui.ProductInfoGUI;
 
@@ -18,13 +19,13 @@ public class SearchResult extends JTextArea implements MouseListener{
 	
 	private Item item;
 	private Keys key;
-	private JFramePOS parentWindow;
+	private ServerManager server;
 	private OutputWindow outWindow;
 	
 	private int itemStatus;
 	
-	public SearchResult(JFramePOS p, OutputWindow out, Item i, Keys _key, int status){
-		parentWindow = p;
+	public SearchResult(ServerManager server, OutputWindow out, Item i, Keys _key, int status){
+		this.server = server;
 		outWindow = out;
 		item = i;
 		key = _key;
@@ -48,7 +49,7 @@ public class SearchResult extends JTextArea implements MouseListener{
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		new ProductInfoGUI(parentWindow.server, outWindow, this, item, key, itemStatus);
+		new ProductInfoGUI(server, outWindow, this, item, key, itemStatus);
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {
