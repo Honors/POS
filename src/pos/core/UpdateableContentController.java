@@ -16,8 +16,8 @@ public class UpdateableContentController {
 	}
 	
 	public static void postUpdate(String updateIdentifier, String info){
-		for(UpdateableContent window : activeContent){
-			window.update(updateIdentifier, info);
+		for(UpdateableContent content : activeContent){
+			content.update(updateIdentifier, info);
 		}
 	}
 }

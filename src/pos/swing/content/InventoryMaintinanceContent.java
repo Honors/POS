@@ -24,6 +24,8 @@ import pos.backup.BackupWriter;
 import pos.core.Keys;
 import pos.core.OutputWindow;
 import pos.core.ServerManager;
+import pos.core.UpdateableContent;
+import pos.core.UpdateableContentController;
 import pos.filter.CSVFilter;
 import pos.item.InventoryItem;
 import pos.item.ReturnItem;
@@ -34,8 +36,10 @@ import pos.swing.SearchResult;
 import pos.swing.gui.ProductInfoGUI;
 import pos.swing.gui.RegisterGUI;
 
-public class InventoryMaintinanceContent extends JPanel implements ActionListener, ChangeListener {
+public class InventoryMaintinanceContent extends JPanel implements UpdateableContent, ActionListener{
 
+	private static final long serialVersionUID = 3127563271754067755L;
+	
 	private JPanel searchBar, results;
 	private JTextField textEntry;
 	private JButton enter, newButton, backup, restore, register;
@@ -127,6 +131,8 @@ public class InventoryMaintinanceContent extends JPanel implements ActionListene
 		c.weighty = 1;
 		c.insets = new Insets(5,5,5,5);
 		add(output, c);
+		
+		UpdateableContentController.addActiveContent(this);
 		
 		updateInventory();
 	}
@@ -234,9 +240,9 @@ public class InventoryMaintinanceContent extends JPanel implements ActionListene
 	}
 
 	@Override
-	public void stateChanged(ChangeEvent e) {
-		updateInventory();
-		textEntry.requestFocus();
+	public void update(String updateIdentifier, String info) {
+		if(updateIdentifier.equals(UpdateableContent.INVENTORY_UPDATED))
+			updateInventory();
 		
 	}
 }

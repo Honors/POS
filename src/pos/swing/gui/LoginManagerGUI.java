@@ -165,7 +165,7 @@ public class LoginManagerGUI extends JFrame implements ActionListener, TableMode
 
 	@Override
 	public void update(String updateIdentifier, String info) {
-		if(updateIdentifier.equals(Reference.LOGIN_UPDATED)){
+		if(updateIdentifier.equals(UpdateableContent.LOGIN_UPDATED)){
 			updateTable();
 		}
 	}

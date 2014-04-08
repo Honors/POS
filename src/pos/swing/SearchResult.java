@@ -10,7 +10,6 @@ import pos.item.Item;
 import pos.core.Keys;
 import pos.core.OutputWindow;
 import pos.core.ServerManager;
-import pos.swing.JFramePOS;
 import pos.swing.gui.ProductInfoGUI;
 
 public class SearchResult extends JTextArea implements MouseListener{

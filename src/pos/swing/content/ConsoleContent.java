@@ -26,6 +26,8 @@ import pos.log.LogInfoGenerator;
 
 public class ConsoleContent extends JPanel implements ActionListener, KeyListener, ChangeListener {
 
+	private static final long serialVersionUID = 2817251225342772103L;
+	
 	private ArrayList<String> executedCommands;
 	private int index;
 	

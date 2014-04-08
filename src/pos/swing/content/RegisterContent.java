@@ -294,12 +294,12 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 	
 	public String getUpdateIdentifierType(){
 		switch(identifier){
-		case Reference.BRAND:  return Reference.BRAND_UPDATED;
-		case Reference.TYPE:   return Reference.TYPE_UPDATED;
-		case Reference.COLOR:  return Reference.COLOR_UPDATED;
-		case Reference.SIZE:   return Reference.SIZE_UPDATED;
-		case Reference.GENDER: return Reference.GENDER_UPDATED;
-		case Reference.CLIENT: return Reference.CLIENT_UPDATED;
+		case Reference.BRAND:  return UpdateableContent.BRAND_UPDATED;
+		case Reference.TYPE:   return UpdateableContent.TYPE_UPDATED;
+		case Reference.COLOR:  return UpdateableContent.COLOR_UPDATED;
+		case Reference.SIZE:   return UpdateableContent.SIZE_UPDATED;
+		case Reference.GENDER: return UpdateableContent.GENDER_UPDATED;
+		case Reference.CLIENT: return UpdateableContent.CLIENT_UPDATED;
 		default:               return "";
 		}
 	}
@@ -363,8 +363,6 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 				tree.scrollPathToVisible(pathToNewElement);
 				tree.requestFocus();
 				updateButtons();
-				
-				UpdateableContentController.postUpdate(getUpdateIdentifierType(), newElement);
 			}
 		}
 		
@@ -384,8 +382,6 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 				tree.scrollPathToVisible(pathToNewElement);
 				tree.requestFocus();
 				updateButtons();
-				
-				UpdateableContentController.postUpdate(getUpdateIdentifierType(), oldName);
 			}
 		}
 		
@@ -404,8 +400,6 @@ public class RegisterContent extends JPanel implements ActionListener, MouseList
 				
 				tree.requestFocus();
 				updateButtons();
-				
-				UpdateableContentController.postUpdate(getUpdateIdentifierType(), toDelete);
 			}
 		}
 		

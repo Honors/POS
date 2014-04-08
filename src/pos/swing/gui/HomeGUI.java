@@ -8,14 +8,12 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import pos.core.ServerManager;
 import pos.log.LogInfoGenerator;
-import pos.log.ReadableLogger;
 import pos.swing.JFramePOS;
 import pos.core.Keys;
 import pos.core.OutputWindow;
@@ -162,13 +160,13 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		
 		if(event.getSource().equals(aboutItem)){
 			String aboutMessage = "This is the inventory and transactions manager for" + "\n" +
-								 "the Bishop Watterson High School Spirit Store" + "\n" +
-								 "\n" +
-								 "Version: 1.0.1" + "\n" +
-								 "\n" +
-								 "By: James Madden, Matt Neary" + "\n" +
-								 "\n" + 
-								 "Property of Bishop Watterson High School";
+								  "the Bishop Watterson High School Spirit Store" + "\n" +
+								  "\n" +
+								  "Version: 1.0.1" + "\n" +
+								  "\n" +
+								  "By: James Madden, Matt Neary" + "\n" +
+								  "\n" + 
+								  "Property of Bishop Watterson High School";
 			
        	 	JOptionPane.showMessageDialog(new JFrame(),aboutMessage, "About", JOptionPane.INFORMATION_MESSAGE);
 		}
@@ -176,7 +174,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 	
 	public void writeToOutput(String s){
 		output.append(s);
-		ReadableLogger.write(path, s);
+		output.append(System.lineSeparator() + System.lineSeparator());
 	}
 	
 	public void clearOutput(){

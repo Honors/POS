@@ -27,6 +27,7 @@ import pos.swing.JFramePOS;
 import pos.core.Keys;
 import pos.core.OutputWindow;
 import pos.core.UpdateableContent;
+import pos.core.UpdateableContentController;
 import pos.swing.SearchResult;
 
 public class ProductInfoGUI extends JFramePOS implements ActionListener, UpdateableContent{
@@ -51,9 +52,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatea
 	private boolean confirmed = false;
 	private int status;
 	
-	@SuppressWarnings("unchecked")
 	public ProductInfoGUI(ServerManager im, OutputWindow g, SearchResult s, Item i, Keys _key, int status){
-		//TODO allow certain changes for different types of returns (Pending, allow status change.  To Vender/To Inventory, NO CHANGES)
 		super(im,g,_key);
 		if (i.SKU > -1){
 			update = true;
@@ -84,6 +83,18 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatea
 			setTitle("Return...");
 		}
 		
+		buildContent();
+		
+		UpdateableContentController.addActiveContent(this);
+		
+		setContentPane(content);
+		pack();
+		setLocationRelativeTo(null);
+		setResizable(false);
+		setVisible(true);
+	}
+	
+	public void buildContent(){
 		GridBagConstraints lLabelCollumn = new GridBagConstraints();
 		lLabelCollumn.anchor = GridBagConstraints.LINE_START;
 		lLabelCollumn.fill = isEditable ? GridBagConstraints.HORIZONTAL : GridBagConstraints.BOTH;
@@ -134,7 +145,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatea
 		lInfoCollumn.gridwidth = 3;
 		content.add(name, lInfoCollumn);
 		lInfoCollumn.gridwidth = 1;
-
+	
 		labelUpc = new JLabel("UPC:");
 		labelUpc.setHorizontalAlignment(JLabel.RIGHT);
 		lLabelCollumn.gridy = 1;
@@ -151,7 +162,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatea
 		labelDate.setHorizontalAlignment(JLabel.RIGHT);
 		rLabelCollumn.gridy = 1;
 		content.add(labelDate, rLabelCollumn);
-
+	
 		date = (isNew) ? new JTextField(item.date, 10) : new JLabel(item.date);
 		if(isNew){
 			((JTextField)date).setText(TimeStamp.simpleDate());
@@ -161,19 +172,19 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatea
 		date.setBackground(new JTextField().getBackground());
 		rInfoCollumn.gridy = 1;
 		content.add(date, rInfoCollumn);
-
+	
 		labelPrice = new JLabel("Price:");
 		labelPrice.setHorizontalAlignment(JLabel.RIGHT);
 		lLabelCollumn.gridy = 2;
 		content.add(labelPrice, lLabelCollumn);
-
+	
 		price = isEditable ? new JTextField(item.price) : new JLabel(item.price);
 		price.setBorder(new JTextField().getBorder());
 		price.setOpaque(true);
 		price.setBackground(new JTextField().getBackground());	
 		lInfoCollumn.gridy = 2;
 		content.add(price, lInfoCollumn);
-
+	
 		labelCost = new JLabel("Cost:");
 		labelCost.setHorizontalAlignment(JLabel.RIGHT);
 		rLabelCollumn.gridy = 2;
@@ -297,7 +308,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatea
 		}
 		rInfoCollumn.gridy = 5;
 		content.add(size, rInfoCollumn);
-
+	
 		labelQuantity = new JLabel("Quantity:");
 		labelQuantity.setHorizontalAlignment(JLabel.RIGHT);
 		lLabelCollumn.gridy = 6;
@@ -330,8 +341,8 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatea
 		lLabelCollumn.insets = new Insets(5,20,10,20);	
 		notesPane = new JScrollPane(notes);
 		content.add(notesPane, lLabelCollumn);
-
-
+	
+	
 		if(isEditable || isReturn){
 			Submit = new JButton("UPDATE");
 			Submit.addActionListener(this);
@@ -350,7 +361,7 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatea
 				rLabelCollumn.gridy = 6;
 				content.add(labelReturnStatus, rLabelCollumn);
 				
-
+	
 				if(((ReturnItem)item).status.equals(Reference.STATUS_PENDING)){
 					returnStatus = new JComboBox<Object>(Reference.STATUSES.toArray());
 					((JComboBox<Object>)returnStatus).setSelectedItem(((ReturnItem)item).status);
@@ -380,12 +391,6 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatea
 		for(Component n : content.getComponents()){
 			n.setFont(n.getFont().deriveFont(14.0f));
 		}
-		
-		setContentPane(content);
-		pack();
-		setLocationRelativeTo(null);
-		setResizable(false);
-		setVisible(true);
 	}
 	
 	public String arrayToSentence(ArrayList<String> array){
@@ -534,9 +539,43 @@ public class ProductInfoGUI extends JFramePOS implements ActionListener, Updatea
 		parentWindow.writeToOutput(s);
 	}
 
+	public void updateContent(){
+		item = server.getInventoryItem(item.SKU);
+		buildContent();
+		setContentPane(content);
+		revalidate();
+		repaint();
+	}
+	
 	@Override
 	public void update(String updateIdentifier, String info) {
-		//TODO: Complex Update Processing
+		if(!isNew && !isEditable){
+			if(updateIdentifier.equals(UpdateableContent.INVENTORY_UPDATED) && !isReturn){
+				if(item.UPC.equals(info))
+					updateContent();
+			} else if(updateIdentifier.equals(UpdateableContent.RETURN_UPDATED) && isReturn){
+				if(item.UPC.equals(info))
+					updateContent();
+			} else if(updateIdentifier.equals(UpdateableContent.BRAND_UPDATED)){
+				if(item.brand.equals(info))
+					updateContent();
+			} else if(updateIdentifier.equals(UpdateableContent.TYPE_UPDATED)){
+				if(item.type.equals(info))
+					updateContent();
+			} else if(updateIdentifier.equals(UpdateableContent.COLOR_UPDATED)){
+				if(item.color.equals(info))
+					updateContent();
+			} else if(updateIdentifier.equals(UpdateableContent.GENDER_UPDATED)){
+				if(item.gender.equals(info))
+					updateContent();
+			} else if(updateIdentifier.equals(UpdateableContent.SIZE_UPDATED)){
+				if(item.size.equals(info))
+					updateContent();
+			} else if(updateIdentifier.equals(UpdateableContent.CLIENT_UPDATED)){
+				if(item.client.equals(info))
+					updateContent();
+			}
+		}
 	}
 
 }

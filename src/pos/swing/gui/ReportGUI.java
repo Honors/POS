@@ -137,7 +137,7 @@ public class ReportGUI extends JFrame implements ActionListener, UpdateableConte
 	
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		
+
 	}
 
 	@Override

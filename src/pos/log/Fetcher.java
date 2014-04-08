@@ -6,7 +6,6 @@ import java.io.*;
 
 import pos.core.Config;
 import pos.lib.ConfigElements;
-import pos.lib.Reference;
 
 import com.google.gson.*;
 
@@ -117,10 +116,5 @@ public class Fetcher {
 		  return toHttp;
 	  else
 		  return "http://" + toHttp;
-  }
-  
-  private void example(){
-    Fetcher.update("activity", "Hello, World");
-    System.out.println(Fetcher.read("activity").get(0));
   }
 }

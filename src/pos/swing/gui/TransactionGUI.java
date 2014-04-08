@@ -281,6 +281,7 @@ public class TransactionGUI extends JFramePOS implements ActionListener, OutputW
 	@Override
 	public void writeToOutput(String s) {
 		ICOutput.append(s);
+		ICOutput.append(System.lineSeparator() + System.lineSeparator());
 		parentWindow.writeToOutput(s);
 	}
 

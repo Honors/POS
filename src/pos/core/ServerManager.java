@@ -3,7 +3,6 @@ package pos.core;
 import java.sql.*;
 import java.util.ArrayList;
 
-import pos.backup.BackupReader;
 import pos.lib.ConfigElements;
 import pos.lib.Reference;
 import pos.item.InventoryItem;

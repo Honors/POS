@@ -18,6 +18,8 @@ import pos.log.Fetcher;
 
 public class ReadableLogContent extends JPanel implements UpdateableContent{
 
+	private static final long serialVersionUID = 5122037499090816116L;
+	
 	private JTextArea textOutput;
 	private JScrollPane scrollOutput;
 	
@@ -44,6 +46,8 @@ public class ReadableLogContent extends JPanel implements UpdateableContent{
 		add(scrollOutput, c);
 		
 		UpdateableContentController.addActiveContent(this);
+		
+		updateLog();
 	}
 	
 	public void updateLog(){
@@ -52,6 +56,7 @@ public class ReadableLogContent extends JPanel implements UpdateableContent{
 		(new Thread(new Runnable() {
 			public void run() {
 				ArrayList<String> logItems = Fetcher.read(Reference.READABLE_LOG_IDENTIFIER);
+				System.out.println(logItems.size());
 				textOutput.setText("");
 				for(int i = 0; i < logItems.size(); i++){
 					textOutput.append(logItems.get(logItems.size() - 1 - i));
@@ -62,7 +67,7 @@ public class ReadableLogContent extends JPanel implements UpdateableContent{
 
 	@Override
 	public void update(String updateIdentifier, String info) {
-		if(updateIdentifier.equals(Reference.READABLE_LOG_UPDATED))
+		if(updateIdentifier.equals(UpdateableContent.READABLE_LOG_UPDATED))
 			updateLog();
 		
 	}

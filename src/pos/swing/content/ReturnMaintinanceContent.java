@@ -12,18 +12,17 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import pos.core.Keys;
 import pos.core.OutputWindow;
 import pos.core.ServerManager;
+import pos.core.UpdateableContent;
+import pos.core.UpdateableContentController;
 import pos.item.ReturnItem;
 import pos.lib.Reference;
-import pos.swing.JFramePOS;
 import pos.swing.SearchResult;
 
-public class ReturnMaintinanceContent extends JPanel implements ActionListener, ChangeListener {
+public class ReturnMaintinanceContent extends JPanel implements UpdateableContent, ActionListener{
 
 	private static final long serialVersionUID = -713707744470247384L;
 	
@@ -85,6 +84,8 @@ public class ReturnMaintinanceContent extends JPanel implements ActionListener, 
 		c.insets = new Insets(5,5,5,5);
 		add(output, c);
 		
+		UpdateableContentController.addActiveContent(this);
+		
 		updateReturn();
 	}
 
@@ -129,8 +130,9 @@ public class ReturnMaintinanceContent extends JPanel implements ActionListener, 
 	}
 
 	@Override
-	public void stateChanged(ChangeEvent e) {
-		updateReturn();
-		textEntry.requestFocus();
+	public void update(String updateIdentifier, String info) {
+		if(updateIdentifier.equals(UpdateableContent.RETURN_UPDATED))
+			updateReturn();
+		
 	}
 }
