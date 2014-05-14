@@ -35,7 +35,7 @@ public class Config
    public void loadDefaults(){
 	   //TODO: make the file copy
 	   if(external){
-		   	defaultFile.put(ConfigElements.SERVER_ADDRESS, "10.2.18.112");
+		   	defaultFile.put(ConfigElements.SERVER_ADDRESS, "192.168.50.2");
 		   	defaultFile.put(ConfigElements.SQLDB_PORT, "3306");
 		   	defaultFile.put(ConfigElements.SQLDB_NAME, "SpiritStore");
 		   	defaultFile.put(ConfigElements.SQLDB_USERNAME, "root");

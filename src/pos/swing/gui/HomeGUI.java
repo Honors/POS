@@ -162,7 +162,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 			String aboutMessage = "This is the inventory and transactions manager for" + "\n" +
 								  "the Bishop Watterson High School Spirit Store" + "\n" +
 								  "\n" +
-								  "Version: 1.0.1" + "\n" +
+								  "Version: 1.0.1_1" + "\n" +
 								  "\n" +
 								  "By: James Madden, Matt Neary" + "\n" +
 								  "\n" + 

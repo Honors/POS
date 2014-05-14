@@ -100,7 +100,8 @@ public class Fetcher {
   public static boolean verify() {
 	if(properties.getProperty(ConfigElements.LOGGING).equals("true")){
 		  try {
-			  String resp = Fetcher.POST("http://10.2.18.112:8080/status", "{}");
+			  Config properties = new Config();
+			  String resp = Fetcher.POST(httpWrap(properties.getProperty(ConfigElements.SERVER_ADDRESS) + ":" + properties.getProperty(ConfigElements.SERVER_PORT)) +  "/status", "{}");
 			  return resp.contains("success");
 		  } catch(Exception e) {
 			  e.printStackTrace();

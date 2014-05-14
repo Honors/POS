@@ -11,6 +11,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.*;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 
 public class PointOfSale extends JFrame implements ActionListener{
@@ -32,7 +38,7 @@ public class PointOfSale extends JFrame implements ActionListener{
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.ipady = 5;
-		c.insets = new Insets(5,5,0,5);
+		c.insets = new Insets(5,5,0,5); 
 
 		labelUser = new JLabel("Username: ");
 		c.gridx = 0;
@@ -91,6 +97,24 @@ public class PointOfSale extends JFrame implements ActionListener{
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setVisible(true);
+		
+		try {
+			Enumeration<NetworkInterface> n = NetworkInterface.getNetworkInterfaces();
+		    for (; n.hasMoreElements();)
+		    {
+		        NetworkInterface e = n.nextElement();
+
+		        Enumeration<InetAddress> a = e.getInetAddresses();
+		        for (; a.hasMoreElements();)
+		        {
+		            InetAddress addr = a.nextElement();
+		            System.out.println("  " + addr.getHostAddress());
+		        }
+		    }
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		//autoLogin();
 	}
