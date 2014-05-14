@@ -28,7 +28,7 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 	
 	private JMenuBar menuBar;
 	private JMenu adminMenu, helpMenu;
-	private JMenuItem maintinanceItem, loginsItem, changeHistoryItem, aboutItem;
+	private JMenuItem maintenanceItem, loginsItem, changeHistoryItem, aboutItem;
 	
 	private JPanel content;
 	private JLabel logo;
@@ -45,9 +45,9 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 		adminMenu = new JMenu("Admin");
 		adminMenu.setEnabled(server.isAdmin());
 		
-		maintinanceItem = new JMenuItem("Maintinance");
-		maintinanceItem.addActionListener(this);
-		adminMenu.add(maintinanceItem);
+		maintenanceItem = new JMenuItem("Maintenance");
+		maintenanceItem.addActionListener(this);
+		adminMenu.add(maintenanceItem);
 		
 		loginsItem = new JMenuItem("Manage Logins");
 		loginsItem.addActionListener(this);
@@ -146,8 +146,8 @@ public class HomeGUI extends JFramePOS implements ActionListener, OutputWindow{
 			new ReportGUI();
 		}
 		
-		if(event.getSource().equals(maintinanceItem)){
-			new MaintinanceGUI(server, this, path, keys);
+		if(event.getSource().equals(maintenanceItem)){
+			new MaintenanceGUI(server, this, path, keys);
 		}
 		
 		if(event.getSource().equals(loginsItem)){

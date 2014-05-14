@@ -22,7 +22,7 @@ import pos.item.ReturnItem;
 import pos.lib.Reference;
 import pos.swing.SearchResult;
 
-public class ReturnMaintinanceContent extends JPanel implements UpdateableContent, ActionListener{
+public class ReturnMaintenanceContent extends JPanel implements UpdateableContent, ActionListener{
 
 	private static final long serialVersionUID = -713707744470247384L;
 	
@@ -35,7 +35,7 @@ public class ReturnMaintinanceContent extends JPanel implements UpdateableConten
 	private OutputWindow parentWindow;
 	private Keys keys;
 	
-	public ReturnMaintinanceContent(ServerManager server, OutputWindow parentWindow, Keys keys){
+	public ReturnMaintenanceContent(ServerManager server, OutputWindow parentWindow, Keys keys){
 		this.server = server;
 		this.parentWindow = parentWindow;
 		this.keys = keys;

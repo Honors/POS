@@ -36,7 +36,7 @@ import pos.swing.SearchResult;
 import pos.swing.gui.ProductInfoGUI;
 import pos.swing.gui.RegisterGUI;
 
-public class InventoryMaintinanceContent extends JPanel implements UpdateableContent, ActionListener{
+public class InventoryMaintenanceContent extends JPanel implements UpdateableContent, ActionListener{
 
 	private static final long serialVersionUID = 3127563271754067755L;
 	
@@ -50,7 +50,7 @@ public class InventoryMaintinanceContent extends JPanel implements UpdateableCon
 	private Keys keys;
 	private String path;
 	
-	public InventoryMaintinanceContent(ServerManager server, OutputWindow parentWindow, Keys keys, String path){
+	public InventoryMaintenanceContent(ServerManager server, OutputWindow parentWindow, Keys keys, String path){
 		this.server = server;
 		this.parentWindow = parentWindow;
 		this.keys = keys;
