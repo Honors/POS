@@ -55,11 +55,11 @@ While scanning, a toggle button is selected to complete certain actions:
 
 When *Return* is selected for a transaction, a dialog box will appear prompting for the return item's status.  There are a number of possible selections:
 
-| Status                | Description                                         |
-| --------------------- | --------------------------------------------------- |
-| "Pending"             | The return status will be determined later          |
-| "Return to Vendor "   | The returned item will be returned to the Vendor    |
-| "Return to Inventory" | The returned itme will be returned to the Inventory |
+| Status | Description |
+| ------ | ----------- |
+| "Pending"            | The return status will be determined later |
+| "Return to Vendor "  | The returned item will be returned to the Vendor |
+| "Return to Inventory" | The returned item will be returned to the Inventory |
 
 >**Note:** When the status "Return to Inventory" is selected, the quantity of the same inventory item in the inventory will be incremented by the number of returned items.
 
@@ -67,10 +67,10 @@ When *Return* is selected for a transaction, a dialog box will appear prompting 
 
 While scanning items there are number of scanning errors that may occur:
 
-| Error                                                                                      | Description            |
-| ------------------------------------------------------------------------------------------ | ---------------------- |
-| "Scanned item does not exist in the inventory"                                             | POS does not recognized the scanned *UPC*                                |
-| "Scanned item has duplicates"                                                              | There are multiple items with the same *UPC*                              |
+| Error | Description |
+| ----- | ----------- |
+| "Scanned item does not exist in the inventory" | POS does not recognized the scanned *UPC* |
+| "Scanned item has duplicates" | There are multiple items with the same *UPC* |
 | "Scanned item's quantity cannot decrease below 0.  The quantity for the scanned item is 0" | A item's quantity is already 0, but the item is scanned as *Outgoing* |
 
 
@@ -78,6 +78,20 @@ While scanning items there are number of scanning errors that may occur:
 **Permission:** User
 
 This screen allows for a item registered in the *Inventory* to be searched for in a number of ways.  Activate a search field by clicking on the label of the search criteria, and search by inputing the the activated field's information and click *Search*.
+
+####Search Criteria
+There are a number of search criteria that you can use to search for an item:
+
+| Field  | Type           | Description |
+| ------ | -------------- | ----------- |
+| Name   | Text Field     | The Name of the item in the inventory
+| UPC    | Text Field     | The UPC of the item in the inventory
+| Brand  | Drop Down Menu | The Brand of the item in the inventory
+| Type   | Drop Down Menu | The Type of the item in the inventory
+| Color  | Drop Down Menu | The Color of the item in the inventory
+| Size   | Drop Down Menu | The Size of the item in the inventory
+| Gender | Drop Down Menu | The Gender of the item in the inventory
+| Client | Drop Down Menu | The Client of the item in the inventory
 
 ###Report Screen
 **Permission:** User
