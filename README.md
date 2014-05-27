@@ -93,6 +93,11 @@ There are a number of search criteria that you can use to search for an item:
 | Gender | Drop Down Menu | The Gender of the item in the inventory
 | Client | Drop Down Menu | The Client of the item in the inventory
 
+>**Note:** Any number of search criteria can be selected.  To have the list show all items in the inventory, deactivate all fields and click search again.
+
+####Search Result
+After a search is executed, several search items appear in the Search Screen's list.  Clicking on one will open a box that allows you to view all the information about the item, but not change any information.
+
 ###Report Screen
 **Permission:** User
 

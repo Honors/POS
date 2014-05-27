@@ -9,7 +9,7 @@ public class Config
 	
    private Properties configFile;
    private Properties defaultFile;
-   private static final boolean external = false;
+   private static final boolean external = true;
    
    public Config()
    {
